@@ -9,6 +9,11 @@ or
 ```./mvnw clean compile```
 ```./mvnw exec:java@server```
 ```./mvnw exec:java@client```
+.mvn 
+maven相关
+src
+test
+
 
 2. **Task 1**
  reads in the data from the sample data file using the Java File IO API
