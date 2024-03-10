@@ -14,8 +14,11 @@ maven相关
 src
 test
 
+1. Data Storage
+```JAVA
+interface Storage
 
-2. **Task 1**
- reads in the data from the sample data file using the Java File IO API
- make use of the File.separator constant
-invalid formatting
+
+
+
+```
