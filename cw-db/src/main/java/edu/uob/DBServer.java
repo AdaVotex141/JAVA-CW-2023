@@ -43,6 +43,7 @@ public class DBServer {
     */
     public String handleCommand(String command) {
         // TODO implement your server logic here
+
         return "";
     }
 
