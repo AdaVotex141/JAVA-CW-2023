@@ -3,6 +3,18 @@
 
 # DB
 ## General design
+
+[] [] USE
+[] [] CREATE
+[] [] INSERT
+[] [] SELECT
+[] [] UPDATE
+[] [] ALTER
+[] [] DELETE
+[] [] DROP
+[] [] JOIN
+
+
 1. get the server and client connected:
 ```mvnw exec:java -Dexec.mainClass="edu.uob.DBServer"```
 ```mvnw exec:java -Dexec.mainClass="edu.uob.DBClient"```
@@ -60,8 +72,8 @@ JOIN: performs an inner join on two tables (returning all permutations of all ma
 
 USE\CREATE\INSERT\UPDATE\ALTER\DELETE\DROP->related to file system
 SELECT->JOIN: only output, but doesn't change the file.
-```
 
+```
 
 
 
@@ -81,9 +93,26 @@ Hashmap<String>(table name): deleted id
 2. √ change all the methods dealing with file systems to DBserver
 3.  generate a txt.file and a delete.txt.file
       1. √ (tested, during the test, create a Globalstatus to track the current database and table the user is dealing with) generate new files when creating new database
-      2. update these two files when creating new tables(used Hashmap)
+      2. √ update these two files when creating new tables(used Hashmap)
+    When testing, when created a new table, instead of append the new ones in the file, it overwrite it.
+
       3. update these two files when dealing with insert and delete in tables
           1. tables:insert/delete
           2. update the latest ID in these two files
 4. √ drop for databases and files
+5. √ Tests for generating folders and files and drop
+   [ERROR] 2 tables but only one in the txt?
+   [ERROR] table cannot be deleted?
+6. USE methods in DATAreader
+    1. √ USE->USE DATABASE,check if it is exists, set the globalstatus, generate a new hashmap based on the current files. generate new TXT based on the hashmap.
+    2. √ USE->USE table, check if it is exists on globalDATABASE, set the globalstatus.
+
+* 12/3:
+deal with the ROW data
+(INSERT, DELETE, UPDATE)
+
+
+* 13/3:
+
+
 

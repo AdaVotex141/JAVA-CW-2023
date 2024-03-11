@@ -52,13 +52,16 @@ public class Database {
         }
     }
 
+
+
+
     //update tables in textfiles whenever creates a new table.
     public void addTableToFile() {
         String filepath=databaseFolderPath+ File.separator + name + ".txt";
         //File textFile = new File(filepath);
         String deletefilePath = databaseFolderPath+ File.separator + name + "deleted" + ".txt";
         //File deletedtextFile=new File(filepath);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filepath,false))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filepath,true))) {
             for (String tableName : tables.keySet()) {
                 writer.write(tableName);
                 writer.newLine();
@@ -68,7 +71,7 @@ public class Database {
             System.err.println("Error adding table information to the file: " + e.getMessage());
             e.printStackTrace();
         }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(deletefilePath,false))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(deletefilePath,true))) {
             for (String tableName : tables.keySet()) {
                 writer.write(tableName);
                 writer.newLine();

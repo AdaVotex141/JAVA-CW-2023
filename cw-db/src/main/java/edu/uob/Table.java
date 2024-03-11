@@ -26,7 +26,7 @@ public class Table{
         this.name=tablename.toLowerCase();
         //check if the database has been created or not.
         Database currentdatabase=(Globalstatus.getInstance().getCurrentDatabase());
-        if (!Database.tables.containsKey(name)) {
+        if (!database.tables.containsKey(name)) {
             try {
                 String filePath = storageFolderPath + File.separator + database.name + File.separator + name + ".tab";
                 this.tableFilePath=filePath;
