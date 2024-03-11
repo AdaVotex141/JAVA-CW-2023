@@ -4,10 +4,17 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 public class DataReader {
-//use String filePath for reading.
+
+    /*
+    READ tab file and print tab file to the terminal.
+    main
+    DataReader.readTabFile(database,table);
+    DataReader.printTabFile(table);
+     */
     public static void readTabFile(Database database,Table table) {
         //StringBuilder content = new StringBuilder();
-        String filePath="databases" + File.separator + database.name + File.separator + table.name + ".tab";
+        DBServer path=new DBServer();
+        String filePath=path.getStorageFolderPath()+ File.separator + database.name + File.separator + table.name + ".tab";;
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             table.attribute = reader.readLine();
@@ -20,6 +27,7 @@ public class DataReader {
                 } else {
                     data = "";
                 }
+                //interact with rowdata and table
                 Rowdata rowData = new Rowdata(id,data);
                 table.datas.add(rowData);
             }
@@ -28,10 +36,15 @@ public class DataReader {
             e.printStackTrace();
         }
     }
+
     public static void printTabFile(Table table) {
         System.out.println(table.attribute);
         for (Rowdata rowdata : table.datas) {
-            System.out.println(rowdata.id + "\t" +rowdata.data);
+            if (rowdata.flag==true){
+                System.out.println(rowdata.getid() + "\t" +rowdata.getData());
+            }else{
+                System.out.println(rowdata.getid()+"");
+            }
         }
     }
 

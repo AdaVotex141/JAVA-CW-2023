@@ -18,13 +18,15 @@ public class Table{
     }
     //Create table->create a tab in the repo, and add it to the databases' hashmap
     //Create with attributes
-    public void createTable(Database database) {
+    public void createTable(Database database,String storageFolderPath) {
         try {
-            String filePath = "databases" + File.separator + database.name + File.separator + name + ".tab";
+            //String filePath = "databases" + File.separator + database.name + File.separator + name + ".tab";
+            String filePath = storageFolderPath + File.separator + database.name + File.separator + name + ".tab";
             File tableFile = new File(filePath);
             if (tableFile.createNewFile()) {
-                System.out.println("Table file for '" + name + "' created successfully.");
+                //System.out.println("Table file for '" + name + "' created successfully.");
                 Database.tables.put(name, this);
+                Database.addTableToFile(storageFolderPath);
             } else {
                 System.err.println("Failed to create table file for '" + name + "'. File already exists.");
             }
@@ -32,10 +34,6 @@ public class Table{
             System.err.println("Failed to create table file for '" + name + "'.");
             //e.printStackTrace();
         }
-    }
-
-    public void createTable(Database database,String attribute){
-
     }
 
 

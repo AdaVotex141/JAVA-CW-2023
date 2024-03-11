@@ -35,6 +35,10 @@ public class DBServer {
         }
     }
 
+    public String getStorageFolderPath(){
+        return storageFolderPath;
+    }
+
     /**
     * KEEP this signature (i.e. {@code edu.uob.DBServer.handleCommand(String)}) otherwise we won't be
     * able to mark your submission correctly.
@@ -43,6 +47,7 @@ public class DBServer {
     */
     public String handleCommand(String command) {
         // TODO implement your server logic here
+
         return "";
     }
 
