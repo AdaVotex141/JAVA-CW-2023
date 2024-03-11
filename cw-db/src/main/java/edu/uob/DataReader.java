@@ -17,7 +17,7 @@ public class DataReader {
         String filePath=path.getStorageFolderPath()+ File.separator + database.name + File.separator + table.name + ".tab";;
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
-            table.attribute = reader.readLine();
+            table.setAttribute(reader.readLine());
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split("\t");
                 int id = Integer.parseInt(parts[0]);
@@ -38,7 +38,7 @@ public class DataReader {
     }
 
     public static void printTabFile(Table table) {
-        System.out.println(table.attribute);
+        System.out.println(table.getAttribute());
         for (Rowdata rowdata : table.datas) {
             if (rowdata.flag==true){
                 System.out.println(rowdata.getid() + "\t" +rowdata.getData());

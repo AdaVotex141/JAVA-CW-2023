@@ -19,6 +19,9 @@ public class Rowdata{
 //    public void detelerow(){
 //        this.flag=false;
 //    }
+    public void update(int id, String data){
+
+    }
 
 
 }

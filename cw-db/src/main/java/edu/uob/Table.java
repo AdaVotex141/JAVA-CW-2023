@@ -1,4 +1,6 @@
 package edu.uob;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.io.File;
@@ -8,41 +10,101 @@ import java.util.Locale;
 public class Table{
     public String name;
     protected boolean flag;
-    public String attribute;
+    private String attribute;
     protected static ArrayList<Rowdata> datas = new ArrayList<>();
+    int latestID;
+    String tableFilePath;
 
-    public Table(String name) {
-        this.name=name.toLowerCase();
+    public Table() {
+        this.name=null;
         this.flag=true;
+        this.attribute="";
         //this.datas = new ArrayList<>();
     }
-    //Create table->create a tab in the repo, and add it to the databases' hashmap
-    //Create with attributes
-    public void createTable(Database database,String storageFolderPath) {
-        try {
-            //String filePath = "databases" + File.separator + database.name + File.separator + name + ".tab";
-            String filePath = storageFolderPath + File.separator + database.name + File.separator + name + ".tab";
-            File tableFile = new File(filePath);
-            if (tableFile.createNewFile()) {
-                //System.out.println("Table file for '" + name + "' created successfully.");
-                Database.tables.put(name, this);
-                Database.addTableToFile(storageFolderPath);
-            } else {
-                System.err.println("Failed to create table file for '" + name + "'. File already exists.");
+
+    public void createTable(Database database,String storageFolderPath,String tablename) {
+        this.name=tablename.toLowerCase();
+        //check if the database has been created or not.
+        Database currentdatabase=(Globalstatus.getInstance().getCurrentDatabase());
+        if (!Database.tables.containsKey(name)) {
+            try {
+                String filePath = storageFolderPath + File.separator + database.name + File.separator + name + ".tab";
+                this.tableFilePath=filePath;
+                File tableFile = new File(tableFilePath);
+                if (tableFile.createNewFile()) {
+                    currentdatabase.tables.put(name, this);
+                    currentdatabase.addTableToFile();
+                } else {
+                    System.err.println("Failed to create table file for '" +name+ "'. File already exists.");
+                }
+            } catch (IOException e) {
+                System.err.println("Failed to create table file for '" +name + "'.");
+                //e.printStackTrace();
             }
-        } catch (IOException e) {
-            System.err.println("Failed to create table file for '" + name + "'.");
-            //e.printStackTrace();
+        }else {
+            System.err.println("Table with name '" + name + "' already exists.");
         }
     }
+    //add the first line to the tab.
+    public void addAttribute(String attribute){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(tableFilePath, true))){
+            writer.write(attribute);
+            writer.newLine();
+            System.out.println("Attribute '" + attribute + "' added to the file.");
+        }catch (IOException e) {
+            System.err.println("Error adding attribute to the file: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    //----------------------------INSERT UPDATE DELETE-------------------------------------
+    public void insertRow(String data){
+        //check for attruibute
+        String filePath = name + ".tab";
 
 
+    }
 
+    public void updateRow(String data){
+
+    }
+
+    public void deleteRow(int id){
+
+    }
 
 
     //Alter
 
-    //Drop
+    //=================================Drop===================================
+    public void dropTable(Database database){
+        //update the hashmap in database
+        if (database.tables.containsKey(name)){
+            database.tables.remove(name);
+            database.addTableToFile();
+            //delete the file.
+            File tableFile = new File(tableFilePath);
+            if (tableFile.exists()) {
+                if (tableFile.delete()) {
+                    System.out.println("Table '" + name + "' deleted successfully.");
+                } else {
+                    System.err.println("Failed to delete table file for '" + name + "'.");
+                }
+            } else {
+                System.err.println("Table file for '" + name + "' does not exist.");
+            }
+        } else {
+            System.err.println("Table with name '" + name + "' not found in the database.");
+        }
+    }
+
+
+    public void setAttribute(String setAttribute){
+        this.attribute=setAttribute;
+    }
+
+    public String getAttribute(){
+        return this.attribute;
+    }
 
 
 

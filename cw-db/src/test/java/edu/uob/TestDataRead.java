@@ -24,8 +24,9 @@ public class TestDataRead {
         Database testDatabase= new Database("TestDatabase2");
         testDatabase.createDatabase(server.getStorageFolderPath());
         Globalstatus.getInstance().setCurrentDatabase(testDatabase);
-        Table testTable = new Table("testTable");
-        testTable.createTable(Globalstatus.getInstance().getCurrentDatabase(),server.getStorageFolderPath());
+        Table testTable = new Table();
+        testTable.createTable(Globalstatus.getInstance().getCurrentDatabase(),server.getStorageFolderPath(),"TestTable");
+
     }
     @Test
     public void TestDataReader(){
