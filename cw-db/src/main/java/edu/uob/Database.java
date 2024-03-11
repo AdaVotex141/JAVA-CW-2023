@@ -10,7 +10,7 @@ public class Database {
     protected boolean flag;
     protected static HashMap<String, Table> tables = new HashMap<>();
     public Database(String name){
-        this.name=name;
+        this.name=name.toLowerCase();
         this.flag=true;
         //this.tables = new HashMap<>();
     }

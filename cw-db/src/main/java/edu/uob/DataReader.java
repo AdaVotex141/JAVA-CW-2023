@@ -14,21 +14,26 @@ public class DataReader {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split("\t");
                 int id = Integer.parseInt(parts[0]);
-                String data = parts.length > 1 ? parts[1] : "";
+                String data;
+                if (parts.length > 1) {
+                    data = parts[1];
+                } else {
+                    data = "";
+                }
                 Rowdata rowData = new Rowdata(id,data);
                 table.datas.add(rowData);
-                //content.append(line).append("\n");
             }
         } catch (IOException e) {
             System.err.println("Error reading the tab file: " + e.getMessage());
             e.printStackTrace();
         }
-        //return content.toString();
     }
-//    public static void printTabFile(String filePath) {
-//        String fileContent = readTabFile(filePath);
-//        System.out.println(fileContent);
-//    }
+    public static void printTabFile(Table table) {
+        System.out.println(table.attribute);
+        for (Rowdata rowdata : table.datas) {
+            System.out.println(rowdata.id + "\t" +rowdata.data);
+        }
+    }
 
 
 }

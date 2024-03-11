@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 public class Table{
     public String name;
@@ -11,7 +12,7 @@ public class Table{
     protected static ArrayList<Rowdata> datas = new ArrayList<>();
 
     public Table(String name) {
-        this.name=name;
+        this.name=name.toLowerCase();
         this.flag=true;
         //this.datas = new ArrayList<>();
     }
@@ -31,6 +32,10 @@ public class Table{
             System.err.println("Failed to create table file for '" + name + "'.");
             //e.printStackTrace();
         }
+    }
+
+    public void createTable(Database database,String attribute){
+
     }
 
 
