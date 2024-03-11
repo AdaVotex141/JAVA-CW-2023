@@ -16,9 +16,35 @@ test
 
 1. Data Storage
 ```JAVA
-interface Storage
+interface Storage{
+    String name;
+    boolean flag;
+    public void create;
+    public void drop;
+}
+
+class Databases implements Storage{
+    HashMap<Integer, String> tables;
+
+}
+class Table implements Storage{
+    ArrayList<Rowdata> datas;
+}
+class Rowdata implements Storage{
+    public int id;
+    public String data;
+
+}
 
 
+class DataReader{
+    //reads in the current data 
 
+    //print them on the terminal
+}
 
+```
+2.HandleComments
+```JAVA
+interface CommandHandler
 ```
