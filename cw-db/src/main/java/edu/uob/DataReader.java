@@ -6,10 +6,9 @@ import java.io.IOException;
 public class DataReader {
 
     /*
-    READ tab file and print tab file to the terminal.
-    main
-    DataReader.readTabFile(database,table);
-    DataReader.printTabFile(table);
+    ReadTabFile
+    useDatabase
+    useTable
      */
 
     //read a tab file and generate it to a table.
@@ -28,7 +27,7 @@ public class DataReader {
                 } else {
                     data = "";
                 }
-                //interact with rowdata and table
+                //add the data to the
                 Rowdata rowData = new Rowdata(id,data);
                 table.datas.add(rowData);
             }
@@ -68,7 +67,7 @@ public class DataReader {
             System.err.println("Database folder '" + searchFolder + "' does not exist in the specified path.");
         }
     }
-    //USE TABLE
+    //INSERT INTO [TABLE]
     public void useTable(String searchFile,String path){
         //check whether the folder exists in the folderpath.
         String FilePath = path + File.separator + Globalstatus.getInstance().getCurrentDatabase()
@@ -89,16 +88,16 @@ public class DataReader {
     }
 
     //print an entire table
-    public static void printTabFile(Table table) {
-        System.out.println(table.getAttribute());
-        for (Rowdata rowdata : table.datas) {
-            if (rowdata.flag==true){
-                System.out.println(rowdata.getid() + "\t" +rowdata.getData());
-            }else{
-                System.out.println(rowdata.getid()+"");
-            }
-        }
-    }
+//    public static void printTabFile(Table table) {
+//        System.out.println(table.getAttribute());
+//        for (Rowdata rowdata : table.datas) {
+//            if (rowdata.flag==true){
+//                System.out.println(rowdata.getid() + "\t" +rowdata.getData());
+//            }else{
+//                System.out.println(rowdata.getid()+"");
+//            }
+//        }
+//    }
 
 
 }
