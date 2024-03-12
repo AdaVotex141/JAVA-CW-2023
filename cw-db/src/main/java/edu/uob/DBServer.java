@@ -10,6 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Paths;
 import java.nio.file.Files;
+import java.util.ArrayList;
 
 /** This class implements the DB server. */
 public class DBServer {
@@ -47,9 +48,33 @@ public class DBServer {
     */
     public String handleCommand(String command) {
         // TODO implement your server logic here
-        String returnCommand;
+        String returnCommand="";
+        Tokenrise tokenrise=new Tokenrise(command);
+        CommandHandler commandHandler=new CommandHandler(storageFolderPath);
+        ArrayList<String> tokens=tokenrise.getTokens();
+        String firstToken = tokens.get(0).toLowerCase();
+        if (firstToken.equals("create")){
+            commandHandler.create(tokens);
+        }else if(firstToken.equals("insert")){
+            commandHandler.insert(tokens);
+        }else if(firstToken.equals("select")){
+            commandHandler.select(tokens);
+        }else if(firstToken.equals("update")){
+            commandHandler.update(tokens);
+        }else if(firstToken.equals("alter")){
+            commandHandler.alter(tokens);
+        }else if(firstToken.equals("delete")){
+            commandHandler.delete(tokens);
+        }else if(firstToken.equals("join")){
+            commandHandler.join(tokens);
+        }else if(firstToken.equals("drop")){
+            commandHandler.drop(tokens);
+        }else if(firstToken.equals("use")){
+            commandHandler.use(tokens);
+        }else{
 
-        return "[OK]";
+        }
+        return returnCommand;
     }
 
     //  === Methods below handle networking aspects of the project - you will not need to change these ! ===
