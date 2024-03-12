@@ -27,10 +27,6 @@ public class TestDataRead {
         File file = new File(parentFolder + File.separator + filename + ".tab");
         assert file.exists() && file.isFile() : "File does not exist: " + file.getAbsolutePath();
     }
-    private static void assertTabNOTExists(String parentFolder, String filename) {
-        File file = new File(parentFolder + File.separator + filename + ".tab");
-        assert !file.exists() : "File exists: " + file.getAbsolutePath();
-    }
     private static void assertTXTExists(String parentFolder, String foldername) {
         File file = new File(parentFolder + File.separator + foldername + ".txt");
         File deletedfile = new File(parentFolder + File.separator + "deleted"+ foldername + ".txt");
@@ -49,22 +45,23 @@ public class TestDataRead {
         testTable.createTable(Globalstatus.getInstance().getCurrentDatabase(),server.getStorageFolderPath(),"TestTable");
         Table testTable2 = new Table();
         testTable2.createTable(Globalstatus.getInstance().getCurrentDatabase(),server.getStorageFolderPath(),"TestTable2");
+
         Globalstatus.getInstance().setCurrentTable(testTable);
 
 
         assertDatabaseExists(server.getStorageFolderPath(), "testdatabase");
         assertTabExists(server.getStorageFolderPath() + File.separator + "testdatabase", "testtable");
         assertTabExists(server.getStorageFolderPath() + File.separator + "testdatabase", "testtable2");
-//
+
         Table tableDelete= Globalstatus.getInstance().getCurrentTable();
         Database databaseDelete = Globalstatus.getInstance().getCurrentDatabase();
         tableDelete.dropTable(databaseDelete);
-//        assertTabExists(server.getStorageFolderPath() + File.separator + "testdatabase", "testtable2");
-//        databaseDelete.dropDatabase();
-
-
-
+        assertTabExists(server.getStorageFolderPath() + File.separator + "testdatabase", "testtable2");
+        databaseDelete.dropDatabase();
     }
+
+
+
 
 //Test the txt files are updated.
 //    @Test

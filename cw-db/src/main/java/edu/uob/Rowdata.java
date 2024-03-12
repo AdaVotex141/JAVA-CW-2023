@@ -16,12 +16,6 @@ public class Rowdata{
     public String getData(){
         return this.data;
     }
-//    public void detelerow(){
-//        this.flag=false;
-//    }
-    public void update(int id, String data){
-
-    }
 
 
 }

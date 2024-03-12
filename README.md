@@ -95,17 +95,60 @@ Hashmap<String>(table name): deleted id
       1. √ (tested, during the test, create a Globalstatus to track the current database and table the user is dealing with) generate new files when creating new database
       2. √ update these two files when creating new tables(used Hashmap)
     When testing, when created a new table, instead of append the new ones in the file, it overwrite it.
-
       3. update these two files when dealing with insert and delete in tables
           1. tables:insert/delete
           2. update the latest ID in these two files
 4. √ drop for databases and files
 5. √ Tests for generating folders and files and drop
-   [ERROR] 2 tables but only one in the txt?
-   [ERROR] table cannot be deleted?
 6. USE methods in DATAreader
     1. √ USE->USE DATABASE,check if it is exists, set the globalstatus, generate a new hashmap based on the current files. generate new TXT based on the hashmap.
-    2. √ USE->USE table, check if it is exists on globalDATABASE, set the globalstatus.
+    2. √ INSERT INTO->USE table, check if it is exists on globalDATABASE, set the globalstatus.
+ 7. √ insert data in Tables and update in TXT
+ 8. delete data in Tables and update in TXT
+
+What BNF is DONE:
+1. CREATE DATABASE/CREATE TABLE
+2. DROP DATABASE/DROP TABLE
+3. USE database, refer to TABLE
+UPDATE, INSERT INTO, Alter, Delete refers to TABLE
+```JAVA
+Database:
+//insert into function
+updateTableLatestID(String tablename){
+    1. parts[1]:empty
+    ->if table-file line[0].equals("")->error:"Missing attributes"
+    ->if table.file lines[1].equals("")->update to 1
+    -> find the biggest index in table.datas.biggest Index
+    2. parts[1]: contains number->update to parts[1]+1
+}
+// //given a tablename, return the id
+// public int getTableID(String tablename){
+//     getTable.(tablename);
+
+//     //search for the table name in the txt:
+
+
+// }
+
+public void updateTableDeleteID( String tablename, int id){
+
+
+
+}
+public Table getTable(String tablename){
+    //given a tablename, return its table using the hashmap
+
+}
+```
+USE DATABASE->initialize anycurrent files in hashmap
+table->
+1. completely empty
+2. only contains attribute
+3. have contents
+
+
+
+
 
 * 12/3:
 deal with the ROW data
@@ -113,6 +156,7 @@ deal with the ROW data
 
 
 * 13/3:
+* keep dealing with the Row data, and trying to implements it to command line
 
 
 

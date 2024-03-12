@@ -1,10 +1,7 @@
 package edu.uob;
 //import javax.xml.crypto.Data;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.HashMap;
-import java.io.File;
-import java.io.IOException;
 
 
 public class Database {
@@ -53,15 +50,13 @@ public class Database {
     }
 
 
-
-
     //update tables in textfiles whenever creates a new table.
     public void addTableToFile() {
         String filepath=databaseFolderPath+ File.separator + name + ".txt";
         //File textFile = new File(filepath);
         String deletefilePath = databaseFolderPath+ File.separator + name + "deleted" + ".txt";
         //File deletedtextFile=new File(filepath);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filepath,true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filepath,false))) {
             for (String tableName : tables.keySet()) {
                 writer.write(tableName);
                 writer.newLine();
@@ -71,7 +66,7 @@ public class Database {
             System.err.println("Error adding table information to the file: " + e.getMessage());
             e.printStackTrace();
         }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(deletefilePath,true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(deletefilePath,false))) {
             for (String tableName : tables.keySet()) {
                 writer.write(tableName);
                 writer.newLine();
@@ -85,14 +80,45 @@ public class Database {
 
     //--------------------------------------if the current database exits-------------------------
 //--------------------------------------when INSERT DELETE tables-------------------------
-    public void updateTableLatestID(String storageFolderPath, String tablename, int id){
-        Table updatetable=getTable(tablename);
+    public int updateTableLatestID(String tablename) throws IOException{
+        Table updateTable = getTable(tablename);
+        String filePath = databaseFolderPath + File.separator + name + ".txt";
+        int currentNumber= -1;
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))){
+            String line;
+            while ((line = reader.readLine()) != null){
+                String[] parts = line.split("\t");
+                //find the tablename in TXT
+                if (parts.length > 0 && parts[0].equals(tablename)){
+                    if (parts.length>1 && !parts[1].isEmpty()){
+                        currentNumber = Integer.parseInt(parts[1]);
+                        currentNumber+=1;
+                        line = parts[0]+"\t"+currentNumber;
+                        return currentNumber;
+                    }else{
+                        if(updateTable.datas.size()==0){
+                            System.err.print("the table is not assigned with attributes");
+                        }else{
+                            currentNumber=1;
+                            line = parts[0]+"\t"+currentNumber;
+                        }
+                    }
+                }
 
+            }
+        }
+        return currentNumber;
     }
 
-    public void updateTableDeleteID(String storageFolderPath, String tablename, int id){
-        Table updatetable=getTable(tablename);
-    }
+//    public void updateTableDeleteID( String tablename, int id){
+//        Table updatetable=getTable(tablename);
+//        //find the TXT in the current database.
+//        String deletefilePath = databaseFolderPath+ File.separator + name + "deleted" + ".txt";
+//        //if there are nothing after the name, find filled with -1.
+//
+//        //if the INSERT INTO leads to this place, update the current number.
+//
+//    }
     //Be aware of this return null//which table is selected in the database's hashmap,(get name and return table)
     public Table getTable(String tablename){
         if(tables.containsKey(tablename)){

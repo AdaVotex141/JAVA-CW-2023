@@ -57,11 +57,21 @@ public class Table{
         }
     }
     //----------------------------INSERT UPDATE DELETE-------------------------------------
-    public void insertRow(String data){
-        //check for attruibute
-        String filePath = name + ".tab";
-
-
+    public void insertRow(String data) throws IOException {
+        //find the latestRow from txt
+        Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
+        int id=currentDatabase.updateTableLatestID(this.name);
+        File tableFile = new File(tableFilePath);
+        String newRow = id + "\t" + data;
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(tableFilePath, true))) {
+            // append the new row to the file
+            writer.write(newRow);
+            writer.newLine();
+            System.out.println("Row inserted successfully.");
+        } catch (IOException e) {
+            System.err.println("Error inserting row: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void updateRow(String data){
@@ -71,9 +81,10 @@ public class Table{
     public void deleteRow(int id){
 
     }
-
-
     //Alter
+    public void alterTable(){
+
+    }
 
     //=================================Drop===================================
     public void dropTable(Database database){
