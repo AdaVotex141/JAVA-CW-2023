@@ -58,7 +58,7 @@ class DataReader{
 
 ```
 ### HandleComments
-```JAVA
+```
 interface CommandHandler
 USE: switches the database against which the following queries will be run
 CREATE: constructs a new database or table (depending on the provided parameters)
@@ -111,7 +111,7 @@ What BNF is DONE:
 2. DROP DATABASE/DROP TABLE
 3. USE database, refer to TABLE
 UPDATE, INSERT INTO, Alter, Delete refers to TABLE
-```JAVA
+```
 Database:
 //insert into function
 updateTableLatestID(String tablename){
