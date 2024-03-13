@@ -1,27 +1,42 @@
 package edu.uob;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.io.File;
 
 public class CommandHandler {
     private final String storageFolderPath;
+    private int tokenIndex;
     public CommandHandler(String path){
         this.storageFolderPath=path;
+        //the first token is handled in DBserver.
+        this.tokenIndex=1;
     }
 
-//"USE " [DatabaseName]
+//TESTED:"USE " [DatabaseName]
     public StringBuilder use(ArrayList<String> tokens, StringBuilder returnBuilder) {
+        tokenIndex=1;
         //find the database in databases file and set the current to this database.
-        if (tokens.size()<2) {
-            returnBuilder.append("[ERROR]:Missing DATABASE NAME!");
-        } else {
-            String secondtoken = tokens.get(1).toLowerCase();
-            String databaseFolderPath = storageFolderPath + File.separator + secondtoken;
-            File databaseFolder = new File(databaseFolderPath);
-            if (databaseFolder.exists() && databaseFolder.isDirectory()) {
-                Globalstatus.getInstance().setCurrentDatabase(new Database(secondtoken));
+        if(!tokens.get(tokens.size() - 1).equals(";")){
+            returnBuilder.append("[ERROR] Missing ';' at the end of the sentence");
+            return returnBuilder;
+        }else{
+            if (tokens.size()<3) {
+                returnBuilder.append("[ERROR] Missing DATABASE NAME!");
+            } else {
+                DataReader reader=new DataReader();
+                String secondtoken = tokens.get(tokenIndex).toLowerCase();
+                String databaseFolderPath = storageFolderPath + File.separator + secondtoken;
+                File databaseFolder = new File(databaseFolderPath);
+                if (databaseFolder.exists() && databaseFolder.isDirectory()) {
+                    //set the currentDatabase to this database
+                    //read current files in the database and generate a hashmap for it
+                    reader.useDatabase(secondtoken,databaseFolderPath);
+                    returnBuilder.append("[OK]");
+                }else{
+                    returnBuilder.append("[ERROR]:This Database doesn't exist!");
+                }
             }
-            returnBuilder.append("[OK!]");
         }
         return returnBuilder;
     }
@@ -29,73 +44,144 @@ public class CommandHandler {
 /*<CreateDatabase>::=  "CREATE " "DATABASE " [DatabaseName]
 <CreateTable>::= "CREATE " "TABLE " [TableName] | "CREATE " "TABLE " [TableName] "(" <AttributeList> ")"*/
     public StringBuilder create(ArrayList<String> tokens,StringBuilder returnBuilder){
+        //return in if to avoid these nested if-else.
+        if(!tokens.get(tokens.size() - 1).equals(";")){
+            returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
+            return returnBuilder;
+        }
         if(tokens.size()<2){
-            //TODO:ERROR:missing DatabaseName.
             returnBuilder.append("[ERROR]:Missing DATABASE/TABLE!");
-        }else{
-            String secondtoken=tokens.get(1);
-            if (secondtoken.equals("DATABASE")){
-                String thirdtoken=tokens.get(2);
-                Database database=new Database(thirdtoken);
-                database.createDatabase(storageFolderPath);
-            }else if(secondtoken.equals("TABLE")){
-                String thirdtoken=tokens.get(2);
-                Table table=new Table();
-                Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
-                table.createTable(currentDatabase,storageFolderPath,thirdtoken);
-                //TODO： deal with attributelist.
-                if(tokens.size()>3 && tokens.get(3).equals("(")){
-
-                }
-
-
+            return returnBuilder;
             }
-            returnBuilder.append("[OK!]");
+        tokenIndex+=1;//second token
+        if (tokens.get(tokenIndex).equals("DATABASE")){
+            if (tokens.size()<3) {
+                returnBuilder.append("[ERROR] Missing Databasename!");
+            }else{
+                tokenIndex+=1;
+                //create database
+                Database database=new Database(tokens.get(tokenIndex));
+                database.createDatabase(storageFolderPath);
+            }
+        }else{
+            returnBuilder=createTableHelper(tokens,returnBuilder);
         }
         return returnBuilder;
     }
-//<Drop>  ::=  "DROP " "DATABASE " [DatabaseName] | "DROP " "TABLE " [TableName]
-    public void drop(ArrayList<String> tokens){
-        String secondtoken=tokens.get(1);
-        if(tokens.size()<2){
-        //TODO:ERROR:missing DatabaseName.
-        }else{
-            if (secondtoken.equals("DATABASE")){
 
-        //TODO:drop a database with name. move the drop methods to DataReader??
-
-
-            }else if(secondtoken.equals("TABLE")){
-
+    private StringBuilder createTableHelper(ArrayList<String> tokens,StringBuilder returnBuilder){
+        if (tokens.get(tokenIndex).equals("TABLE")){
+            if (tokens.size()<3) {
+                returnBuilder.append("[ERROR] Missing Tablename!");
+                return returnBuilder;
+            }else {
+                //Hasn't select a database
+                if(Globalstatus.getInstance().getCurrentDatabase()==null){
+                    returnBuilder.append("[ERROR] Hasn't select a database yet!");
+                    return returnBuilder;
+                }else{
+                    //can create a table.
+                    tokenIndex+=1;//third token
+                    Table table=new Table();
+                    Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
+                    table.createTable(currentDatabase,storageFolderPath,tokens.get(tokenIndex));
+                    tokenIndex+=1;//fourth token->CREATE TABLE tablename {;} or CREATE TABLE tablename {(}   );
+                    //table with attributes
+                    if(tokens.get(tokenIndex).equals("(")){
+                        //check for ( )
+                        if(!tokens.get(tokens.size()-2).equals(")")){
+                            returnBuilder.append("[ERROR] Missing ')'!");
+                            return returnBuilder;
+                        }
+                        tokenIndex+=1;
+                        StringBuilder attributes=new StringBuilder();
+                        while(!tokens.get(tokenIndex).equals(")")){
+                            if (!tokens.get(tokenIndex).equals(",")){
+                                //attribute: name \t value \t
+                                attributes.append(tokens.get(tokenIndex)+"\t");
+                            }tokenIndex+=1;
+                        }
+                        String attributeString=attributes.toString();
+                        table.addAttribute(attributeString);
+                        returnBuilder.append("[OK]");
+                        }
+                    }
+                }
             }
-        }
+        return returnBuilder;
     }
 
+
+//<Drop>  ::=  "DROP " "DATABASE " [DatabaseName] | "DROP " "TABLE " [TableName]
+public StringBuilder drop(ArrayList<String> tokens, StringBuilder returnBuilder) {
+    String secondtoken = tokens.get(tokenIndex);
+    tokenIndex += 1; // third token
+    if (tokens.size() < 2) {
+        returnBuilder.append("[ERROR]:Missing DATABASE/TABLE!");
+    } else {
+        if (tokens.size() < 3) {
+            if (secondtoken.equals("DATABASE")) {
+                tokenIndex += 1;
+                String DatabaseName = tokens.get(tokenIndex);
+                String DatabasePath=storageFolderPath+File.separator+DatabaseName;
+                File databaseTodelete=new File(DatabasePath);
+                Database database= new Database(DatabaseName);
+                Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
+                if(databaseTodelete.exists()&& databaseTodelete.isDirectory()){
+                    if(database.isSameFolder(currentDatabase)){
+                        Globalstatus.getInstance().setCurrentDatabase(null);
+                    }
+                    database.dropDatabase();
+                }
+            } else if (secondtoken.equals("TABLE")) {
+                tokenIndex += 1;
+                String TableName = tokens.get(tokenIndex);
+                Database currentDatabase = Globalstatus.getInstance().getCurrentDatabase();
+                if (currentDatabase == null) {
+                    returnBuilder.append("[ERROR] Hasn't selected a Database yet!");
+                    return returnBuilder;
+                }
+                Table table = currentDatabase.getTable(TableName);
+                if (table == null) {
+                    returnBuilder.append("[ERROR] Can't find this table in the current Database!");
+                } else {
+                    // Drop the table
+                    table.dropTable(currentDatabase);
+                    returnBuilder.append("[OK]");
+                }
+            }
+        } else {
+            returnBuilder.append("[ERROR]:Missing DatabaseName/TableName!");
+        }
+    }
+    return returnBuilder;
+}
+
+
+
+
 // <Insert> ::=  "INSERT " "INTO " [TableName] " VALUES" "(" <ValueList> ")"
-    public void insert(ArrayList<String> tokens){
-        String secondtoken=tokens.get(1);
-        String thirdtoken=tokens.get(2);
-        if(secondtoken.equals("INTO")){
-            String tablename=thirdtoken;
+    public StringBuilder insert(ArrayList<String> tokens,StringBuilder returnBuilder){
+        tokenIndex+=1;
+        if(tokens.get(tokenIndex).equals("INTO")){
+            tokenIndex+=1;
             Database currentdatabase=Globalstatus.getInstance().getCurrentDatabase();
-            Table table=currentdatabase.getTable(thirdtoken);
+            Table table=currentdatabase.getTable(tokens.get(tokenIndex));
+            Globalstatus.getInstance().setCurrentTable(table);
             //TODO:how to insert VALUES
         }else{
-            //TODO:ERROR handling:missing INTO
+            returnBuilder.append("[ERROR] Missing 'INTO'");
         }
-
+        return returnBuilder;
     }
 
 //<Select>::=  "SELECT " <WildAttribList> " FROM " [TableName] |\
 // "SELECT " <WildAttribList> " FROM " [TableName] " WHERE " <Condition>
     public void select(ArrayList<String> tokens){
         String secondtoken=tokens.get(1);
-        if(secondtoken.equals("*")){
-//TODO * means select everything
+        if(tokens.get(tokenIndex).equals("*")){
+                //TODO * means select everything
         }else{
-            //So the wild arrays
-            String token;
-            ArrayList<String> wild=new ArrayList<>();
                 //TODO ranging
 
         }

@@ -1,18 +1,22 @@
 package edu.uob;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 public class DataReader {
 
     /*
-    ReadTabFile
-    useDatabase
-    useTable
+    THIS CLASS is for dealing with changes between files\repo and Table\Database
+    1/ReadTabFile:Read in a Tab file and turn it into a Table
+    //TODO: skip the deleted row and get the latestID
+    2/useDatabase:Read in a repo ,set the current database and generate a hashmap <tableName,table>
+    3/useTable:Read in a table, set the current table and turn every file-data to ArrayList
+    4/writeTabFile:Given a table, write the current ArrayList to file
+    //TODO: (.txt:skipped deleted rows)
      */
+    public DataReader(){
+
+    }
 
     //read a tab file and generate it to a table.
-    public static void readTabFile(Database database,Table table, String path) {
+    public void readTabFile(Database database,Table table, String path) {
         //StringBuilder content = new StringBuilder();
         String filePath=path + File.separator + database.name + File.separator + table.name + ".tab";;
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
@@ -85,7 +89,31 @@ public class DataReader {
             System.err.println("Database folder '" + searchFile + "' does not exist in the specified path.");
         }
     }
-
+    //write the table back to file
+    // Write the contents of a table back to its corresponding tab file
+    public void writeTabFile(Table table, String tableFilePath) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(tableFilePath))) {
+            // Write the attribute line
+            writer.write(table.getAttribute());
+            writer.newLine();
+            // Write each row data
+            for (Rowdata rowdata : table.datas) {
+                if (rowdata.flag) {
+                    // If the row is not deleted, write id and data separated by a tab
+                    writer.write(rowdata.getid() + "\t" + rowdata.getData());
+                } else {
+                    //TODO: get the deleted row in txt file, but I don't think it is nessasary.
+//                    // If the row is deleted, write only the id
+//                    writer.write(rowdata.getid() + "");
+                }
+                writer.newLine();
+            }
+            System.out.println("Table '" + table.name + "' written back to file.");
+        } catch (IOException e) {
+            System.err.println("Error writing the tab file: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
     //print an entire table
 //    public static void printTabFile(Table table) {
 //        System.out.println(table.getAttribute());

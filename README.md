@@ -142,7 +142,7 @@ public Table getTable(String tablename){
 ```
 USE DATABASE->initialize anycurrent files in hashmap
 table->
-1. completely empty
+1. empty
 2. only contains attribute
 3. have contents
 
@@ -151,12 +151,22 @@ table->
 
 
 * 12/3:
-deal with the ROW data
-(INSERT, DELETE, UPDATE)
+Added CommandHandler.
+Developing Engineering's game.
 
 
 * 13/3:
-* keep dealing with the Row data, and trying to implements it to command line
+1. Dealing with Command line.
+    1. USE: done
+    2. CREATE:
+        '''create;''' will caused exit ERROR?
+        Hasn't debug yet?
+    3. DROP:Hasn't tested yet?
+2. Alter
+ADD: 
+DROP: delete 
+->DataReader->write a function to write current table back to file.
+
 
 
 

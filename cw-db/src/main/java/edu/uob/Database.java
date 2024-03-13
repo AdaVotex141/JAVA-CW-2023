@@ -3,7 +3,16 @@ package edu.uob;
 import java.io.*;
 import java.util.HashMap;
 
-
+/*
+* 1/createDatabase: if the database hasn't been created, mkdir and generate 2 txt files.
+* 2/addTableToFile: update tableName in txt whenever creates a new table
+* 3/updateTableLatestID: (related to insert)
+*   When insert a new number, get the latest ID and update it.
+* 4/getTable
+*   given a String tableName, return a Table table
+* 5/dropDatabase
+*   Recursively delete the whole repo
+* */
 public class Database {
     public String name;
     protected boolean flag;
@@ -161,4 +170,11 @@ public class Database {
             System.err.println("Folder does not exist: " + folder.getAbsolutePath());
         }
     }
+    public boolean isSameFolder(Database other) {
+        if (other == null || other.databaseFolderPath == null) {
+            return false;
+        }
+        return this.databaseFolderPath.equals(other.databaseFolderPath);
+    }
+
 }

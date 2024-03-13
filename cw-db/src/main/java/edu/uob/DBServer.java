@@ -56,7 +56,7 @@ public class DBServer {
         if (firstToken.equals("create")){
             returnBuilder=commandHandler.create(tokens,returnBuilder);
         }else if(firstToken.equals("insert")){
-            commandHandler.insert(tokens);
+            returnBuilder=commandHandler.insert(tokens,returnBuilder);
         }else if(firstToken.equals("select")){
             commandHandler.select(tokens);
         }else if(firstToken.equals("update")){
@@ -68,11 +68,11 @@ public class DBServer {
         }else if(firstToken.equals("join")){
             commandHandler.join(tokens);
         }else if(firstToken.equals("drop")){
-            commandHandler.drop(tokens);
+            commandHandler.drop(tokens, returnBuilder);
         }else if(firstToken.equals("use")){
             returnBuilder=commandHandler.use(tokens,returnBuilder);
         }else{
-
+            returnBuilder.append("[ERROR] Can't resolve command!");
         }
         String returnCommand=returnBuilder.toString();
         return returnCommand;
