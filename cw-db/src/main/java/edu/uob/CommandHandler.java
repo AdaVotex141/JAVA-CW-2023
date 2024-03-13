@@ -7,13 +7,15 @@ import java.io.File;
 public class CommandHandler {
     private final String storageFolderPath;
     private int tokenIndex;
+    private DataReader reader;
     public CommandHandler(String path){
         this.storageFolderPath=path;
         //the first token is handled in DBserver.
         this.tokenIndex=1;
+        this.reader=new DataReader();
     }
 
-//TESTED:"USE " [DatabaseName]
+//TESTED:"USE " [DatabaseName] ;
     public StringBuilder use(ArrayList<String> tokens, StringBuilder returnBuilder) {
         tokenIndex=1;
         //find the database in databases file and set the current to this database.
@@ -21,17 +23,16 @@ public class CommandHandler {
             returnBuilder.append("[ERROR] Missing ';' at the end of the sentence");
             return returnBuilder;
         }else{
-            if (tokens.size()<3) {
-                returnBuilder.append("[ERROR] Missing DATABASE NAME!");
+            if (tokens.size()!=3) {
+                returnBuilder.append("[ERROR] invalid sentence!");
             } else {
-                DataReader reader=new DataReader();
                 String secondtoken = tokens.get(tokenIndex).toLowerCase();
                 String databaseFolderPath = storageFolderPath + File.separator + secondtoken;
                 File databaseFolder = new File(databaseFolderPath);
                 if (databaseFolder.exists() && databaseFolder.isDirectory()) {
                     //set the currentDatabase to this database
                     //read current files in the database and generate a hashmap for it
-                    reader.useDatabase(secondtoken,databaseFolderPath);
+                    this.reader.useDatabase(secondtoken,storageFolderPath);
                     returnBuilder.append("[OK]");
                 }else{
                     returnBuilder.append("[ERROR]:This Database doesn't exist!");
@@ -44,6 +45,7 @@ public class CommandHandler {
 /*<CreateDatabase>::=  "CREATE " "DATABASE " [DatabaseName]
 <CreateTable>::= "CREATE " "TABLE " [TableName] | "CREATE " "TABLE " [TableName] "(" <AttributeList> ")"*/
     public StringBuilder create(ArrayList<String> tokens,StringBuilder returnBuilder){
+        tokenIndex=1;
         //return in if to avoid these nested if-else.
         if(!tokens.get(tokens.size() - 1).equals(";")){
             returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
@@ -114,48 +116,62 @@ public class CommandHandler {
 
 //<Drop>  ::=  "DROP " "DATABASE " [DatabaseName] | "DROP " "TABLE " [TableName]
 public StringBuilder drop(ArrayList<String> tokens, StringBuilder returnBuilder) {
-    String secondtoken = tokens.get(tokenIndex);
-    tokenIndex += 1; // third token
-    if (tokens.size() < 2) {
-        returnBuilder.append("[ERROR]:Missing DATABASE/TABLE!");
-    } else {
-        if (tokens.size() < 3) {
-            if (secondtoken.equals("DATABASE")) {
-                tokenIndex += 1;
-                String DatabaseName = tokens.get(tokenIndex);
-                String DatabasePath=storageFolderPath+File.separator+DatabaseName;
-                File databaseTodelete=new File(DatabasePath);
-                Database database= new Database(DatabaseName);
-                Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
-                if(databaseTodelete.exists()&& databaseTodelete.isDirectory()){
-                    if(database.isSameFolder(currentDatabase)){
-                        Globalstatus.getInstance().setCurrentDatabase(null);
-                    }
-                    database.dropDatabase();
+    tokenIndex=1;
+    if(!tokens.get(tokens.size() - 1).equals(";")){
+        returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
+        return returnBuilder;
+    }
+    if(tokens.size()!=4){
+        returnBuilder.append("[ERROR]:invalid sentence");
+        return returnBuilder;
+    }
+        //tokenIndex+=1;//check keyword DATABASE or TABLE
+    {
+        if (tokens.get(tokenIndex).equals("DATABASE")) {
+            //System.out.print("reach database！");
+            tokenIndex += 1;
+            String DatabaseName = tokens.get(tokenIndex);
+            String DatabasePath = storageFolderPath + File.separator + DatabaseName;
+            File databaseToDelete = new File(DatabasePath);
+            Database database = new Database(DatabaseName);
+            Database currentDatabase = Globalstatus.getInstance().getCurrentDatabase();
+            if (databaseToDelete.exists() && databaseToDelete.isDirectory()) {
+                if (currentDatabase != null && database.isSameFolder(currentDatabase)) {
+                    Globalstatus.getInstance().setCurrentDatabase(null);
                 }
-            } else if (secondtoken.equals("TABLE")) {
-                tokenIndex += 1;
-                String TableName = tokens.get(tokenIndex);
-                Database currentDatabase = Globalstatus.getInstance().getCurrentDatabase();
-                if (currentDatabase == null) {
-                    returnBuilder.append("[ERROR] Hasn't selected a Database yet!");
-                    return returnBuilder;
-                }
-                Table table = currentDatabase.getTable(TableName);
-                if (table == null) {
-                    returnBuilder.append("[ERROR] Can't find this table in the current Database!");
-                } else {
-                    // Drop the table
-                    table.dropTable(currentDatabase);
+                if (database.dropDatabase(databaseToDelete)) {
                     returnBuilder.append("[OK]");
+                } else {
+                    returnBuilder.append("[ERROR] Failed to drop database");
                 }
+            } else {
+                returnBuilder.append("[ERROR] Database does not exist or is not a directory");
             }
-        } else {
-            returnBuilder.append("[ERROR]:Missing DatabaseName/TableName!");
+        } else if (tokens.get(tokenIndex).equals("TABLE")) {
+            //System.out.print(" reach table！");
+            tokenIndex += 1;
+            String TableName = tokens.get(tokenIndex);
+            Database currentDatabase = Globalstatus.getInstance().getCurrentDatabase();
+            if (currentDatabase == null) {
+                //tests pass!
+                returnBuilder.append("[ERROR] Hasn't selected a Database yet!");
+                return returnBuilder;
+            }
+            Table table = currentDatabase.getTable(TableName);
+            if (table == null) {
+                returnBuilder.append("[ERROR] Can't find this table in the current Database!");
+            } else {
+                // Drop the table
+                table.dropTable(currentDatabase);
+                returnBuilder.append("[OK]");
+            }
+        }else{
+            //the second token is neither DATABASE nor TABLE
+            returnBuilder.append("[ERROR] Invalid sentence");
         }
     }
     return returnBuilder;
-}
+    }
 
 
 

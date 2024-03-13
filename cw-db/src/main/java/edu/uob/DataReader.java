@@ -42,6 +42,7 @@ public class DataReader {
     }
 //-----------------USE, I put use in this class because it is one folder/file to be search for.--------
 //USE DATABASE & TABLE
+    //
     public void useDatabase(String searchFolder,String path){
         //check whether the folder exists in the folderpath.
         String databaseFolderPath = path + File.separator + searchFolder;

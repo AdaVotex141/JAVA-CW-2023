@@ -64,6 +64,11 @@ public class Database {
         String filepath=databaseFolderPath+ File.separator + name + ".txt";
         //File textFile = new File(filepath);
         String deletefilePath = databaseFolderPath+ File.separator + name + "deleted" + ".txt";
+        if(databaseFolderPath==null){
+            filepath=Globalstatus.getInstance().getDatabasesPath()+File.separator+this.name
+                    +File.separator+ name + ".txt";
+            deletefilePath=Globalstatus.getInstance().getDatabasesPath()+File.separator+this.name+File.separator+ name + "deleted" + ".txt";
+        }
         //File deletedtextFile=new File(filepath);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filepath,false))) {
             for (String tableName : tables.keySet()) {
@@ -140,36 +145,42 @@ public class Database {
 
     //=================================Drop===================================
     //Recursively delete all the files in the database and the database itself
-    public void dropDatabase() {
-        File folder = new File(databaseFolderPath);
-        dropDatabaseHelper(folder);
+
+    public boolean dropDatabase(File folder) {
+        return dropDatabaseHelper(folder);
     }
-    private void dropDatabaseHelper(File folder) {
+    private boolean dropDatabaseHelper(File folder) {
         if (folder.exists()) {
             File[] files = folder.listFiles();
             if (files != null) {
                 for (File file : files) {
                     if (file.isDirectory()) {
-                        dropDatabaseHelper(file);
+                        if (!dropDatabaseHelper(file)) {
+                            return false;
+                        }
                     } else {
                         if (file.delete()) {
                             System.out.println("Deleted file: " + file.getAbsolutePath());
                         } else {
                             System.err.println("Failed to delete file: " + file.getAbsolutePath());
+                            return false;
                         }
                     }
                 }
             }
-            //delete the folder itself.
             if (folder.delete()) {
                 System.out.println("Deleted folder: " + folder.getAbsolutePath());
+                return true;
             } else {
                 System.err.println("Failed to delete folder: " + folder.getAbsolutePath());
+                return false;
             }
         } else {
             System.err.println("Folder does not exist: " + folder.getAbsolutePath());
+            return false;
         }
     }
+
     public boolean isSameFolder(Database other) {
         if (other == null || other.databaseFolderPath == null) {
             return false;

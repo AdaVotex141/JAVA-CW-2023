@@ -57,7 +57,7 @@ public class TestDataRead {
         Database databaseDelete = Globalstatus.getInstance().getCurrentDatabase();
         tableDelete.dropTable(databaseDelete);
         assertTabExists(server.getStorageFolderPath() + File.separator + "testdatabase", "testtable2");
-        databaseDelete.dropDatabase();
+        //databaseDelete.dropDatabase();
     }
 
 

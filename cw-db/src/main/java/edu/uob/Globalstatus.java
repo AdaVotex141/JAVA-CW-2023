@@ -1,6 +1,7 @@
 package edu.uob;
 
 import javax.xml.crypto.Data;
+import java.nio.file.Paths;
 
 /* Track current Table and Database the user is dealing with */
 public class Globalstatus {
@@ -8,10 +9,12 @@ public class Globalstatus {
     private static Globalstatus instance;
     private Table currentTable;
     private Database currentDatabase;
+    private String storageFolderPath;
 
     public Globalstatus(){
         this.currentTable = null;
         this.currentDatabase = null;
+        this.storageFolderPath= Paths.get("databases").toAbsolutePath().toString();
     }
 
     public static Globalstatus getInstance() {
@@ -33,5 +36,8 @@ public class Globalstatus {
     }
     public Database getCurrentDatabase(){
         return this.currentDatabase;
+    }
+    public String getDatabasesPath(){
+        return this.storageFolderPath;
     }
 }

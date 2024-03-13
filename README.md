@@ -85,10 +85,10 @@ generate a txt.file:```database_delete.txt```
 Hashmap<String>(table name): deleted id
 
 ## Progress
-* 10/3：
+### 10/3：
 1. √ Added the whole database-Table-Rowdata structures, use Datareader to read-in tab file and print them on the terminal
 
-* 11/3:
+### 11/3:
 1. √ Use the Tokenrise given to cope with commands.
 2. √ change all the methods dealing with file systems to DBserver
 3.  generate a txt.file and a delete.txt.file
@@ -150,12 +150,12 @@ table->
 
 
 
-* 12/3:
+### 12/3:
 Added CommandHandler.
 Developing Engineering's game.
 
 
-* 13/3:
+### 13/3:
 1. Dealing with Command line.
     1. USE: done
     2. CREATE:
@@ -166,6 +166,14 @@ Developing Engineering's game.
 ADD: 
 DROP: delete 
 ->DataReader->write a function to write current table back to file.
+3. Today sticked with CREATE and DROP debugs!!!!!!!!!!!!!!!!!
+Change the logic of dropDatabase->boolean->fixed!
+**USE**->can't select a existed folder: Database folder 'ghmyrqfeyg' does not exist in the specified path.
+    ->dataReader->useDatabase->>>Path ERROR
+                ->addTableToFile() the databasePath was not set.--->FIXED
+
+### 14/3:
+  ALTER, 
 
 
 
