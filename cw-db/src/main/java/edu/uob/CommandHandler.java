@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.io.File;
 
 public class CommandHandler {
-    private String storageFolderPath;
+    private final String storageFolderPath;
     public CommandHandler(String path){
         this.storageFolderPath=path;
     }
 
 //"USE " [DatabaseName]
-    public void use(ArrayList<String> tokens) {
+    public StringBuilder use(ArrayList<String> tokens, StringBuilder returnBuilder) {
         //find the database in databases file and set the current to this database.
         if (tokens.size()<2) {
-            //TODO:ERROR:missing DatabaseName.
+            returnBuilder.append("[ERROR]:Missing DATABASE NAME!");
         } else {
             String secondtoken = tokens.get(1).toLowerCase();
             String databaseFolderPath = storageFolderPath + File.separator + secondtoken;
@@ -21,15 +21,17 @@ public class CommandHandler {
             if (databaseFolder.exists() && databaseFolder.isDirectory()) {
                 Globalstatus.getInstance().setCurrentDatabase(new Database(secondtoken));
             }
-            //TODO: return [OK]
+            returnBuilder.append("[OK!]");
         }
+        return returnBuilder;
     }
 
 /*<CreateDatabase>::=  "CREATE " "DATABASE " [DatabaseName]
 <CreateTable>::= "CREATE " "TABLE " [TableName] | "CREATE " "TABLE " [TableName] "(" <AttributeList> ")"*/
-    public void create(ArrayList<String> tokens){
+    public StringBuilder create(ArrayList<String> tokens,StringBuilder returnBuilder){
         if(tokens.size()<2){
             //TODO:ERROR:missing DatabaseName.
+            returnBuilder.append("[ERROR]:Missing DATABASE/TABLE!");
         }else{
             String secondtoken=tokens.get(1);
             if (secondtoken.equals("DATABASE")){
@@ -42,11 +44,15 @@ public class CommandHandler {
                 Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
                 table.createTable(currentDatabase,storageFolderPath,thirdtoken);
                 //TODO： deal with attributelist.
+                if(tokens.size()>3 && tokens.get(3).equals("(")){
+
+                }
 
 
             }
-            //TODO: return [OK]
+            returnBuilder.append("[OK!]");
         }
+        return returnBuilder;
     }
 //<Drop>  ::=  "DROP " "DATABASE " [DatabaseName] | "DROP " "TABLE " [TableName]
     public void drop(ArrayList<String> tokens){
@@ -56,7 +62,7 @@ public class CommandHandler {
         }else{
             if (secondtoken.equals("DATABASE")){
 
-                //TODO:drop a database with name. move the drop methods to DataReader??
+        //TODO:drop a database with name. move the drop methods to DataReader??
 
 
             }else if(secondtoken.equals("TABLE")){
@@ -83,6 +89,18 @@ public class CommandHandler {
 //<Select>::=  "SELECT " <WildAttribList> " FROM " [TableName] |\
 // "SELECT " <WildAttribList> " FROM " [TableName] " WHERE " <Condition>
     public void select(ArrayList<String> tokens){
+        String secondtoken=tokens.get(1);
+        if(secondtoken.equals("*")){
+//TODO * means select everything
+        }else{
+            //So the wild arrays
+            String token;
+            ArrayList<String> wild=new ArrayList<>();
+                //TODO ranging
+
+        }
+
+        //TODO if there are WHERE condition
 
     }
 //<Update> ::=  "UPDATE " [TableName] " SET " <NameValueList> " WHERE " <Condition>
@@ -91,6 +109,7 @@ public class CommandHandler {
     }
 //<Alter>::=  "ALTER " "TABLE " [TableName] " " <AlterationType(ADD|DROP)> " " [AttributeName]
     public void alter(ArrayList<String> tokens){
+
 
     }
 //<Delete> ::=  "DELETE " "FROM " [TableName] " WHERE " <Condition>

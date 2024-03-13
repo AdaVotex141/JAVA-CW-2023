@@ -48,13 +48,13 @@ public class DBServer {
     */
     public String handleCommand(String command) {
         // TODO implement your server logic here
-        String returnCommand="";
+        StringBuilder returnBuilder=new StringBuilder("");
         Tokenrise tokenrise=new Tokenrise(command);
         CommandHandler commandHandler=new CommandHandler(storageFolderPath);
         ArrayList<String> tokens=tokenrise.getTokens();
         String firstToken = tokens.get(0).toLowerCase();
         if (firstToken.equals("create")){
-            commandHandler.create(tokens);
+            returnBuilder=commandHandler.create(tokens,returnBuilder);
         }else if(firstToken.equals("insert")){
             commandHandler.insert(tokens);
         }else if(firstToken.equals("select")){
@@ -70,10 +70,11 @@ public class DBServer {
         }else if(firstToken.equals("drop")){
             commandHandler.drop(tokens);
         }else if(firstToken.equals("use")){
-            commandHandler.use(tokens);
+            returnBuilder=commandHandler.use(tokens,returnBuilder);
         }else{
 
         }
+        String returnCommand=returnBuilder.toString();
         return returnCommand;
     }
 

@@ -45,7 +45,7 @@ public class Table{
             System.err.println("Table with name '" + name + "' already exists.");
         }
     }
-    //add the first line to the tab.
+    //add the first line to the table.
     public void addAttribute(String attribute){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(tableFilePath, true))){
             writer.write(attribute);
