@@ -147,7 +147,7 @@ public class Table{
         for (i = 0; i < attributes.length; i++) {
             if (attributes[i].equals(findAttribute)) {
                 return i-1;
-                break;
+                //break;
             }
             int attributeIndex = i - 1;
         }

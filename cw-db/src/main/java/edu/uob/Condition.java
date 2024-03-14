@@ -30,12 +30,13 @@ public class Condition {
         return true;
     }
 
-
-
-
     //Arrays.copyOfRange()
+    /*
+    / priority ( ) > AND OR > comparisonOperator
+     */
     public void conditionOperator(String[] conditionalCommand){
 
     }
+
 
 }
