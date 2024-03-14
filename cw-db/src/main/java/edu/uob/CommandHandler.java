@@ -1,8 +1,11 @@
 package edu.uob;
 
 import javax.xml.crypto.Data;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.io.File;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class CommandHandler {
     private final String storageFolderPath;
@@ -55,67 +58,74 @@ public class CommandHandler {
             returnBuilder.append("[ERROR]:invalid sentence");
             return returnBuilder;
             }
-        if (tokens.get(tokenIndex).equals("DATABASE")){
+        if (tokens.get(tokenIndex).equalsIgnoreCase("database")){
                 tokenIndex+=1;
                 //create database
                 Database database=new Database(tokens.get(tokenIndex));
                 boolean flag=database.createDatabase(storageFolderPath);
-                if (flag==true){
+                if (flag){
                     returnBuilder.append("[OK]");
                 }else{
                     returnBuilder.append("[ERROR]:Already exists");
                 }
                 //but if it already exists???
-            } else{
+            } else if(tokens.get(tokenIndex).equalsIgnoreCase("TABLE")){
             returnBuilder=createTableHelper(tokens,returnBuilder);
+        }else{
+            returnBuilder.append("[ERROR]:invalid sentence");
         }
         return returnBuilder;
     }
 
     private StringBuilder createTableHelper(ArrayList<String> tokens,StringBuilder returnBuilder){
         tokenIndex=2;
-        if (tokens.get(tokenIndex).equals("TABLE")) {
-            //Hasn't select a database
-            if (Globalstatus.getInstance().getCurrentDatabase() == null) {
-                returnBuilder.append("[ERROR] Hasn't select a database yet!");
+        //Hasn't select a database
+        if (Globalstatus.getInstance().getCurrentDatabase() == null) {
+            returnBuilder.append("[ERROR] Hasn't select a database yet!");
+            return returnBuilder;
+        } else {
+            //can create a table.
+            //tokenIndex += 1;//third token
+            Table table = new Table();
+            Database currentDatabase = Globalstatus.getInstance().getCurrentDatabase();
+            //search if the table exist.
+            if(currentDatabase.tables.containsKey(tokens.get(tokenIndex))){
+                returnBuilder.append("[ERROR] Already exists");
                 return returnBuilder;
-            } else {
-                //can create a table.
-                //tokenIndex += 1;//third token
-                Table table = new Table();
-                Database currentDatabase = Globalstatus.getInstance().getCurrentDatabase();
-                //search if the table exist.
-                if(currentDatabase.tables.containsKey(tokens.get(tokenIndex))){
-                    returnBuilder.append("[ERROR] Already exists");
+            }
+            //tokenIndex += 1;
+            boolean flag;
+            flag=table.createTable(currentDatabase, storageFolderPath, tokens.get(tokenIndex));
+            if(flag==false){
+                returnBuilder.append("[ERROR] Already exists");
+                return returnBuilder;
+            }
+            tokenIndex += 1;//fourth token->CREATE TABLE tablename {;} or CREATE TABLE tablename {(}   );
+
+            //table with attributes
+            if (tokens.get(tokenIndex).equals("(")) {
+                //check for ( ) in pairs
+                if (!tokens.get(tokens.size() - 2).equals(")")) {
+                    returnBuilder.append("[ERROR] invalid sentence");
                     return returnBuilder;
                 }
                 tokenIndex += 1;
-                table.createTable(currentDatabase, storageFolderPath, tokens.get(tokenIndex));
-                tokenIndex += 1;//fourth token->CREATE TABLE tablename {;} or CREATE TABLE tablename {(}   );
-
-                //table with attributes
-                if (tokens.get(tokenIndex).equals("(")) {
-                    //check for ( ) in pairs
-                    if (!tokens.get(tokens.size() - 2).equals(")")) {
-                        returnBuilder.append("[ERROR] invalid sentence");
-                        return returnBuilder;
+                StringBuilder attributes = new StringBuilder();
+                while (!tokens.get(tokenIndex).equals(")")) {
+                    if (!tokens.get(tokenIndex).equals(",")) {
+                        //attribute: name \t value \t
+                        attributes.append(tokens.get(tokenIndex));
                     }
+                    attributes.append("\t");
                     tokenIndex += 1;
-                    StringBuilder attributes = new StringBuilder();
-                    while (!tokens.get(tokenIndex).equals(")")) {
-                        if (!tokens.get(tokenIndex).equals(",")) {
-                            //attribute: name \t value \t
-                            attributes.append(tokens.get(tokenIndex) + "\t");
-                        }
-                        tokenIndex += 1;
-                    }
-                    String attributeString = attributes.toString();
-                    table.addAttribute(attributeString);
-                    returnBuilder.append("[OK]");
                 }
+                String attributeString = attributes.toString();
+                table.addAttribute(attributeString);
             }
-        }return returnBuilder;
-    }
+            returnBuilder.append("[OK]");
+        }
+    return returnBuilder;
+}
 
 
 //<Drop>  ::=  "DROP " "DATABASE " [DatabaseName] | "DROP " "TABLE " [TableName]
@@ -131,7 +141,7 @@ public StringBuilder drop(ArrayList<String> tokens, StringBuilder returnBuilder)
     }
         //tokenIndex+=1;//check keyword DATABASE or TABLE
     {
-        if (tokens.get(tokenIndex).equals("DATABASE")) {
+        if (tokens.get(tokenIndex).equalsIgnoreCase("DATABASE")) {
             //System.out.print("reach database！");
             tokenIndex += 1;
             String DatabaseName = tokens.get(tokenIndex);
@@ -151,7 +161,7 @@ public StringBuilder drop(ArrayList<String> tokens, StringBuilder returnBuilder)
             } else {
                 returnBuilder.append("[ERROR] Database does not exist or is not a directory");
             }
-        } else if (tokens.get(tokenIndex).equals("TABLE")) {
+        } else if (tokens.get(tokenIndex).equalsIgnoreCase("TABLE")) {
             //System.out.print(" reach table！");
             tokenIndex += 1;
             String TableName = tokens.get(tokenIndex);
@@ -177,55 +187,217 @@ public StringBuilder drop(ArrayList<String> tokens, StringBuilder returnBuilder)
     return returnBuilder;
     }
 
+    //<Alter>::=  "ALTER " "TABLE " [TableName] " " <AlterationType(ADD|DROP)> " " [AttributeName]
+    public StringBuilder alter(ArrayList<String> tokens, StringBuilder returnBuilder){
+        tokenIndex=1;
+        if(!tokens.get(tokens.size() - 1).equals(";")){
+            returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
+            return returnBuilder;
+        }
+        if(!tokens.get(tokenIndex).equalsIgnoreCase("TABLE")){
+            returnBuilder.append("[ERROR] Invalid sentence");
+            return returnBuilder;
+        }
+        tokenIndex+=1;
+        boolean flag=this.reader.useTable(tokens.get(tokenIndex),storageFolderPath);
+        if(!flag){
+            returnBuilder.append("[ERROR] Table doesn't exist");
+            return returnBuilder;
+        }
+        tokenIndex+=1;
+        if(tokens.get(tokenIndex).equalsIgnoreCase("ADD")){
+            tokenIndex+=1;
+            //TODO:dealing with ADD
 
+
+
+
+
+
+        }else if (tokens.get(tokenIndex).equalsIgnoreCase("DROP")){
+            tokenIndex+=1;
+            //TODO:dealing with DROP
+
+
+
+
+
+
+        }else{
+            returnBuilder.append("[ERROR] Invalid sentence");
+            return returnBuilder;
+        }
+        return returnBuilder;
+    }
 
 
 // <Insert> ::=  "INSERT " "INTO " [TableName] " VALUES" "(" <ValueList> ")"
-    public StringBuilder insert(ArrayList<String> tokens,StringBuilder returnBuilder){
-        tokenIndex+=1;
-        if(tokens.get(tokenIndex).equals("INTO")){
+    public StringBuilder insert(ArrayList<String> tokens,StringBuilder returnBuilder) throws IOException {
+        tokenIndex=1;
+        if(!tokens.get(tokens.size() - 1).equals(";")){
+            returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
+            return returnBuilder;
+        }
+        if(tokens.get(tokenIndex).equalsIgnoreCase("INTO")){
             tokenIndex+=1;
-            Database currentdatabase=Globalstatus.getInstance().getCurrentDatabase();
-            Table table=currentdatabase.getTable(tokens.get(tokenIndex));
-            Globalstatus.getInstance().setCurrentTable(table);
-            //TODO:how to insert VALUES
+            boolean flag=this.reader.useTable(tokens.get(tokenIndex),storageFolderPath);
+            if(!flag){
+                returnBuilder.append("[ERROR] Table doesn't exist");
+                return returnBuilder;
+            }
+            Table table=Globalstatus.getInstance().getCurrentTable();
+            tokenIndex+=1;
+            if(!tokens.get(tokenIndex).equalsIgnoreCase("VALUES")){
+                returnBuilder.append("[ERROR] invalid sentence");
+                return returnBuilder;
+            }
+            tokenIndex+=1;
+            //check "( )" in pairs
+            if(!tokens.get(tokenIndex).equals("(")|| !tokens.get(tokens.size()-1).equals(")")    ){
+                returnBuilder.append("[ERROR] invalid sentence");
+                return returnBuilder;
+            }
+            tokenIndex+=1;
+            StringBuilder valueList=new StringBuilder();
+            while(!tokens.get(tokenIndex).equals(")")){
+                if(!tokens.get(tokenIndex).equals(",")){
+                    valueList.append(tokens.get(tokenIndex)).append("\t");
+                }
+                tokenIndex+=1;
+            }
+            String valueData=valueList.toString();
+            //TODO:actual insert into
+
+
+
+
+
+
+            boolean insertflag=table.insertRow(valueData);
+            if(!insertflag){
+                returnBuilder.append("[ERROR] insert fail");
+                return returnBuilder;
+            }
+            returnBuilder.append("[OK]");
         }else{
-            returnBuilder.append("[ERROR] Missing 'INTO'");
+            returnBuilder.append("[ERROR] invalid sentence");
         }
         return returnBuilder;
     }
 
 //<Select>::=  "SELECT " <WildAttribList> " FROM " [TableName] |\
 // "SELECT " <WildAttribList> " FROM " [TableName] " WHERE " <Condition>
-    public void select(ArrayList<String> tokens){
-        String secondtoken=tokens.get(1);
-        if(tokens.get(tokenIndex).equals("*")){
-                //TODO * means select everything
-        }else{
-                //TODO ranging
-
+    public StringBuilder select(ArrayList<String> tokens, StringBuilder returnBuilder){
+        tokenIndex=1;
+        if(!tokens.get(tokens.size() - 1).equals(";")){
+            returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
+            return returnBuilder;
         }
+        //tokenIndex+=1;
+        if(tokens.get(tokenIndex).equals("*")){
+            //TODO: select all
 
-        //TODO if there are WHERE condition
 
+
+
+        }else{
+            //get the set of attributes
+            HashSet<String> attributeSet=new HashSet<>();
+            while(!tokens.get(tokenIndex).equalsIgnoreCase("FROM")){
+                attributeSet.add(tokens.get(tokenIndex));
+            }
+            tokenIndex+=1;
+            boolean flag=reader.useTable(tokens.get(tokenIndex),storageFolderPath);
+            if(!flag){
+                returnBuilder.append("[ERROR] Can't find Table");
+                return returnBuilder;
+            }
+            //TODO: Implement SELECT
+
+
+
+
+
+            //WHERE
+            if(tokens.get(tokens.size()-2).equalsIgnoreCase("WHERE")){
+                //TODO:DEAL with WHERE
+
+
+
+
+            }
+        }
+        return returnBuilder;
     }
 //<Update> ::=  "UPDATE " [TableName] " SET " <NameValueList> " WHERE " <Condition>
-    public void update(ArrayList<String> tokens){
+    public StringBuilder update(ArrayList<String> tokens, StringBuilder returnBuilder){
+        tokenIndex=1;
+        if(!tokens.get(tokens.size() - 1).equals(";")){
+            returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
+            return returnBuilder;
+        }
+        boolean flag=this.reader.useTable(tokens.get(tokenIndex),storageFolderPath);
+        if(!flag){
+            returnBuilder.append("[ERROR] Table doesn't exist");
+            return returnBuilder;
+        }
+        tokenIndex+=1;
+        if(!tokens.get(tokenIndex).equalsIgnoreCase("SET")){
+            returnBuilder.append("[ERROR] Invalid sentence");
+            return returnBuilder;
+        }
+        tokenIndex+=1;
+        while(!tokens.get(tokenIndex).equalsIgnoreCase("WHERE")){
+            //TODO: get <NameValueList>
 
-    }
-//<Alter>::=  "ALTER " "TABLE " [TableName] " " <AlterationType(ADD|DROP)> " " [AttributeName]
-    public void alter(ArrayList<String> tokens){
 
 
+            tokenIndex+=1;
+        }
+            tokenIndex+=1;
+        //TODO: <condition>
+
+
+
+       //TODO: Implement update
+
+
+
+            return returnBuilder;
     }
 //<Delete> ::=  "DELETE " "FROM " [TableName] " WHERE " <Condition>
-    public void delete(ArrayList<String> tokens){
+    public StringBuilder delete(ArrayList<String> tokens, StringBuilder returnBuilder){
+        tokenIndex=1;
+        if(!tokens.get(tokens.size() - 1).equals(";")){
+            returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
+            return returnBuilder;
+        }
+        if(!tokens.get(tokenIndex).equalsIgnoreCase("FROM")){
+            returnBuilder.append("[ERROR]:Invalid sentence");
+            return returnBuilder;
+        }
+        tokenIndex+=1;
+        boolean flag=this.reader.useTable(tokens.get(tokenIndex),storageFolderPath);
+        if(!flag){
+            returnBuilder.append("[ERROR]:Table doesn't exist");
+        }
+        tokenIndex+=1;
+        //TODO: CONDITION
 
+
+
+
+
+
+
+        return returnBuilder;
     }
 //<Join>::=  "JOIN " [TableName] " AND " [TableName] " ON " [AttributeName] " AND " [AttributeName]
-    public void join(ArrayList<String> tokens){
+    public StringBuilder join(ArrayList<String> tokens, StringBuilder returnBuilder){
+        //TODO
 
+
+
+        return returnBuilder;
     }
-
-
 }

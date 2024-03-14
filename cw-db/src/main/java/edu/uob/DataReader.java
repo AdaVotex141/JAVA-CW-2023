@@ -75,7 +75,7 @@ public class DataReader {
         }
     }
     //useTable->set currentTable to this table.
-    public void useTable(String searchFile,String path){
+    public boolean useTable(String searchFile,String path){
         String FilePath = path + File.separator + Globalstatus.getInstance().getCurrentDatabase()
                 + searchFile + ".tab";
         File searchTable = new File(FilePath);
@@ -88,7 +88,9 @@ public class DataReader {
             System.out.println("Table'" + searchFile + "' is now in use.");
         } else {
             System.err.println("Database folder '" + searchFile + "' does not exist in the specified path.");
+            return false;
         }
+        return true;
     }
     //write the table back to file
     // Write the contents of a table back to its corresponding tab file

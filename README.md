@@ -171,13 +171,19 @@ Change the logic of dropDatabase->boolean->fixed!
 **USE**->can't select a existed folder: Database folder 'ghmyrqfeyg' does not exist in the specified path.
     ->dataReader->useDatabase->>>Path ERROR
                 ->addTableToFile() the databasePath was not set.--->FIXED
-**DROP**--->Fixed
+**DROP**--->Fixed drop database
 **CREATED**->Add already exist flag->DATABASE OK
-            ->
+            -> create table->doesn't do anything->Fixed
+Mostly Done, small bugs
 
 ### 14/3:
   UPDATE, INSERT INTO, DELETE
+```
+<Insert>  ::=  "INSERT " "INTO " [TableName] " VALUES" "(" <ValueList> ")"
+```
 
 
 
-
+SELECT 
+JOIN
+ALTER

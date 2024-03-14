@@ -46,7 +46,7 @@ public class DBServer {
     *
     * <p>This method handles all incoming DB commands and carries out the required actions.
     */
-    public String handleCommand(String command) {
+    public String handleCommand(String command) throws IOException {
         // TODO implement your server logic here
         StringBuilder returnBuilder=new StringBuilder("");
         Tokenrise tokenrise=new Tokenrise(command);
@@ -58,15 +58,15 @@ public class DBServer {
         }else if(firstToken.equals("insert")){
             returnBuilder=commandHandler.insert(tokens,returnBuilder);
         }else if(firstToken.equals("select")){
-            commandHandler.select(tokens);
+            commandHandler.select(tokens,returnBuilder);
         }else if(firstToken.equals("update")){
-            commandHandler.update(tokens);
+            commandHandler.update(tokens,returnBuilder);
         }else if(firstToken.equals("alter")){
-            commandHandler.alter(tokens);
+            commandHandler.alter(tokens,returnBuilder);
         }else if(firstToken.equals("delete")){
-            commandHandler.delete(tokens);
+            commandHandler.delete(tokens,returnBuilder);
         }else if(firstToken.equals("join")){
-            commandHandler.join(tokens);
+            commandHandler.join(tokens,returnBuilder);
         }else if(firstToken.equals("drop")){
             commandHandler.drop(tokens, returnBuilder);
         }else if(firstToken.equals("use")){

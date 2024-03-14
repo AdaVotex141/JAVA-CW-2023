@@ -29,7 +29,7 @@ public class Table{
         //this.datas = new ArrayList<>();
     }
 
-    public void createTable(Database database,String storageFolderPath,String tablename) {
+    public boolean createTable(Database database,String storageFolderPath,String tablename) {
         this.name=tablename.toLowerCase();
         //check if the database has been created or not.
         Database currentdatabase=(Globalstatus.getInstance().getCurrentDatabase());
@@ -43,14 +43,18 @@ public class Table{
                     currentdatabase.addTableToFile();
                 } else {
                     System.err.println("Failed to create table file for '" +name+ "'. File already exists.");
+                    return false;
                 }
             } catch (IOException e) {
                 System.err.println("Failed to create table file for '" +name + "'.");
+                return false;
                 //e.printStackTrace();
             }
         }else {
             System.err.println("Table with name '" + name + "' already exists.");
+            return false;
         }
+        return true;
     }
     //add the first line to the table.
     public void addAttribute(String attribute){
@@ -72,7 +76,7 @@ public class Table{
         return this.attribute;
     }
     //----------------------------INSERT UPDATE DELETE-------------------------------------
-    public void insertRow(String data) throws IOException {
+    public boolean insertRow(String data) throws IOException {
         //find the latestRow from txt
         Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
         int id=currentDatabase.updateTableLatestID(this.name);
@@ -86,7 +90,9 @@ public class Table{
         } catch (IOException e) {
             System.err.println("Error inserting row: " + e.getMessage());
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     public void updateRow(String data){
