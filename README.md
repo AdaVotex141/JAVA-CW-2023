@@ -291,6 +291,10 @@ name	mark	pass
 ```
 small bugs
 5. **ALTER**
+Add->already DONE, hasn't tested yet
+Drop->a colmumn
+----------->hasn't test
+
 
 
 SELECT (WHERE)
