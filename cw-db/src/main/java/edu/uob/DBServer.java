@@ -10,6 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Paths;
 import java.nio.file.Files;
+import java.util.ArrayList;
 
 /** This class implements the DB server. */
 public class DBServer {
@@ -35,16 +36,46 @@ public class DBServer {
         }
     }
 
+    public String getStorageFolderPath(){
+        return storageFolderPath;
+    }
+
     /**
     * KEEP this signature (i.e. {@code edu.uob.DBServer.handleCommand(String)}) otherwise we won't be
     * able to mark your submission correctly.
     *
     * <p>This method handles all incoming DB commands and carries out the required actions.
     */
-    public String handleCommand(String command) {
+    public String handleCommand(String command) throws IOException {
         // TODO implement your server logic here
-
-        return "";
+        StringBuilder returnBuilder=new StringBuilder("");
+        Tokenrise tokenrise=new Tokenrise(command);
+        CommandHandler commandHandler=new CommandHandler(storageFolderPath);
+        ArrayList<String> tokens=tokenrise.getTokens();
+        String firstToken = tokens.get(0).toLowerCase();
+        if (firstToken.equals("create")){
+            returnBuilder=commandHandler.create(tokens,returnBuilder);
+        }else if(firstToken.equals("insert")){
+            returnBuilder=commandHandler.insert(tokens,returnBuilder);
+        }else if(firstToken.equals("select")){
+            commandHandler.select(tokens,returnBuilder);
+        }else if(firstToken.equals("update")){
+            commandHandler.update(tokens,returnBuilder);
+        }else if(firstToken.equals("alter")){
+            commandHandler.alter(tokens,returnBuilder);
+        }else if(firstToken.equals("delete")){
+            commandHandler.delete(tokens,returnBuilder);
+        }else if(firstToken.equals("join")){
+            commandHandler.join(tokens,returnBuilder);
+        }else if(firstToken.equals("drop")){
+            commandHandler.drop(tokens, returnBuilder);
+        }else if(firstToken.equals("use")){
+            returnBuilder=commandHandler.use(tokens,returnBuilder);
+        }else{
+            returnBuilder.append("[ERROR] Can't resolve command!");
+        }
+        String returnCommand=returnBuilder.toString();
+        return returnCommand;
     }
 
     //  === Methods below handle networking aspects of the project - you will not need to change these ! ===
