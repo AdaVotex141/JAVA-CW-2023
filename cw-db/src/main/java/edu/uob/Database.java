@@ -28,7 +28,7 @@ public class Database {
     //----------------------------CREATE Databases, CREATE Tables-------------------------
     //Assume the databases is not exist.But what if it exists????
     //CREATE:mkdir under databases repo.
-    public void createDatabase(String storageFolderPath) {
+    public boolean createDatabase(String storageFolderPath) {
         this.databaseFolderPath = storageFolderPath + File.separator + name;
         File databaseFolder = new File(databaseFolderPath);
         //check if this exists, if not, create a new one.
@@ -55,7 +55,9 @@ public class Database {
             }
         } else {
             System.err.println("Database '" + name + "' already exists.");
+            return false;
         }
+        return true;
     }
 
 
