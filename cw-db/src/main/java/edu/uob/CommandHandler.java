@@ -401,7 +401,41 @@ public StringBuilder drop(ArrayList<String> tokens, StringBuilder returnBuilder)
     }
 //<Join>::=  "JOIN " [TableName] " AND " [TableName] " ON " [AttributeName] " AND " [AttributeName]
     public StringBuilder join(ArrayList<String> tokens, StringBuilder returnBuilder){
-        //TODO
+        Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
+        tokenIndex=1;
+        if(!tokens.get(tokens.size() - 1).equals(";")){
+            returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
+            return returnBuilder;
+        }
+        String tableName1=tokens.get(tokenIndex);
+        if(!tokens.get(tokenIndex+1).equalsIgnoreCase("AND")){
+            returnBuilder.append("[ERROR] Invalid sentence");
+            return returnBuilder;
+        }
+        tokenIndex+=2;
+        String tableName2=tokens.get(tokenIndex);
+        Table table1=currentDatabase.getTable(tableName1);
+        Table table2=currentDatabase.getTable(tableName2);
+        tokenIndex+=1;//ON
+        if(!tokens.get(tokenIndex+1).equalsIgnoreCase("ON")){
+            returnBuilder.append("[ERROR] Invalid sentence");
+            return returnBuilder;
+        }
+        tokenIndex+=1;
+        String attribute1=tokens.get(tokenIndex);
+        tokenIndex+=1;//AND
+        if(!tokens.get(tokenIndex+1).equalsIgnoreCase("AND")){
+            returnBuilder.append("[ERROR] Invalid sentence");
+            return returnBuilder;
+        }
+        tokenIndex+=1;
+        String attribute2=tokens.get(tokenIndex);
+        //table1,table2,attribute1,attribute2
+        //TODO:print and join
+        int latestID=Math.max(table1.getLatestID(),table2.getLatestID());
+        ArrayList<String> printData=new ArrayList<>();
+
+
 
 
 

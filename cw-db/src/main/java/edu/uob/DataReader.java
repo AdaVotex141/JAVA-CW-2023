@@ -132,14 +132,12 @@ public class DataReader {
         }
     }
     //print an entire table
-//    public static void printTabFile(Table table) {
-//        System.out.println(table.getAttribute());
-//        for (Rowdata rowdata : table.datas) {
-//            if (rowdata.flag==true){
-//                System.out.println(rowdata.getid() + "\t" +rowdata.getData());
-//            }else{
-//                System.out.println(rowdata.getid()+"");
-//            }
-//        }
-//    }
+    public void printTabFile(Table table) {
+        System.out.println(table.getAttribute());
+        for (Rowdata rowdata : table.datas) {
+            if (rowdata.flag==true){
+                System.out.println(rowdata.getid() + "\t" +rowdata.getData());
+            }
+        }
+    }
 }

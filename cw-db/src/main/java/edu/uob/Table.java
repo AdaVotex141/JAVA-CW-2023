@@ -19,7 +19,7 @@ public class Table{
     protected boolean flag;
     private String attribute;
     protected static ArrayList<Rowdata> datas = new ArrayList<>();
-    int latestID;
+    private int latestID;
     public String tableFilePath;
     public String IDFilePath;
 
@@ -27,6 +27,7 @@ public class Table{
         this.name=null;
         this.flag=true;
         this.attribute="";
+        this.latestID=0;
         //this.datas = new ArrayList<>();
     }
 
@@ -47,6 +48,7 @@ public class Table{
                     fileID.createNewFile();
                     try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileIDPath))) {
                         writer.write("1");
+                        this.latestID=1;
                         System.out.println("1 has been written to the file.");
                     } catch (IOException e) {
                         System.err.println("Error writing to file: " + e.getMessage());
@@ -100,6 +102,7 @@ public class Table{
             if (line != null && !line.isEmpty()) {
                 id = Integer.parseInt(line.trim());
                 temp=id+1;
+                this.latestID=temp;
             }
         } catch (IOException | NumberFormatException e) {
             System.err.println("Error reading from ID file: " + e.getMessage());
@@ -134,6 +137,9 @@ public class Table{
 
     public void deleteRow(int id){
 
+    }
+    public int getLatestID(){
+        return latestID;
     }
     //=============================================Alter========================================
     public boolean alterDropTable(String dropAttribute){
