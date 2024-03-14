@@ -4,15 +4,6 @@
 # DB
 ## General design
 
-[] [] USE
-[] [] CREATE
-[] [] INSERT
-[] [] SELECT
-[] [] UPDATE
-[] [] ALTER
-[] [] DELETE
-[] [] DROP
-[] [] JOIN
 
 
 1. get the server and client connected:
@@ -249,21 +240,60 @@ Change the logic of dropDatabase->boolean->fixed!
     ->dataReader->useDatabase->>>Path ERROR
                 ->addTableToFile() the databasePath was not set.--->FIXED
 **DROP**--->Fixed drop database
+how about drop tables?????
 **CREATED**->Add already exist flag->DATABASE OK
             -> create table->doesn't do anything->Fixed
 Mostly Done, small bugs
+Parser Mostly Done!!!!!!
 
 ### 14/3:
   UPDATE, INSERT INTO, DELETE
 ```
 <Insert>  ::=  "INSERT " "INTO " [TableName] " VALUES" "(" <ValueList> ")"
 ```
-1. Deal with ignore, push to main branch
-2. Handle the 
-3. 开始写insert into的逻辑
+1. DONE----Deal with ignore, push to main branch
+2. FIXED-----Handle the attribute ERROR->there are 2 tabs between the tokens problem->
+3. FIXED----Handle the table drop ERROR->cases problem I think??
+```Table with name 'ADA' does not exist.``` but the table name is ada.tab, added tolowercase()
+4. **INSERT INTO** 
+find the txt-> 
+get and update the latest ID->
+id =latest ID, data=valueList, added to the ArrayList of the table->
+write the Arraylist back to file
+
+test: why??? marks should be a table
+this come out in useDatabase, so I think 
+```
+Database folder 'marks' does not exist in the specified path.
+Database folder 'marks' does not exist in the specified path.
+Database folder 'marks' does not exist in the specified path.
+Database folder 'marks' does not exist in the specified path.
+```
+```
+SQL:> INSERT INTO marks VALUES ('Simon', 65, TRUE);
+[ERROR] Table doesn't exist
+```
+```E:\1.EDUCATION\˶ʿ-����˹�д�ѧ\Term 2\JAVA-CW-2023\cw-db\databases\edu.uob.Database@2e5d6d97marks.tab```----->FIXED
+
+FIXED------[ERROR] invalid sentence, brackets not in pairs->
+tokens ERROR->
+
+```update current ID error```--------->updateTableLatestID ERROR
+
+instead of using TXT to track, use .id
+but what if the database already exist?
+
+FIXED->>>>>>INSERT DONE!!!!!!!!!!!!!!!!!!!!!!!
+```
+name	mark	pass	
+1	'Simon' 65  TRUE    
+2	'Sion'	55	TRUE	
+```
+small bugs
+5. **ALTER**
 
 
-
-SELECT 
-JOIN
-ALTER
+SELECT (WHERE)
+JOIN (WHERE)
+UPDATE(WHERE)
+**DELETE**(WHERE)

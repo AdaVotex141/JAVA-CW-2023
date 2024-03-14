@@ -22,6 +22,7 @@ public class Table{
     protected static ArrayList<Rowdata> datas = new ArrayList<>();
     int latestID;
     public String tableFilePath;
+    public String IDFilePath;
 
     public Table() {
         this.name=null;
@@ -38,10 +39,21 @@ public class Table{
             try {
                 String filePath = storageFolderPath + File.separator + database.name + File.separator + name + ".tab";
                 this.tableFilePath=filePath;
+                String fileIDPath = storageFolderPath + File.separator + database.name + File.separator + name + ".id";
+                this.IDFilePath=fileIDPath;
                 File tableFile = new File(tableFilePath);
                 if (tableFile.createNewFile()) {
                     currentdatabase.tables.put(name, this);
-                    currentdatabase.addTableToFile();
+                    File fileID=new File(fileIDPath);
+                    fileID.createNewFile();
+                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileIDPath))) {
+                        writer.write("1");
+                        System.out.println("1 has been written to the file.");
+                    } catch (IOException e) {
+                        System.err.println("Error writing to file: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                    //currentdatabase.addTableToFile();
                 } else {
                     System.err.println("Failed to create table file for '" +name+ "'. File already exists.");
                     return false;
@@ -80,7 +92,28 @@ public class Table{
     public boolean insertRow(String data) throws IOException {
         //find the latestRow from txt
         Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
-        int id=currentDatabase.updateTableLatestID(this.name);
+        String IDfilePath=this.IDFilePath;
+        File IDfile = new File(IDfilePath);
+        int id=0;
+        int temp=0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(IDfile))) {
+            String line = reader.readLine();
+            if (line != null && !line.isEmpty()) {
+                id = Integer.parseInt(line.trim());
+                temp=id+1;
+            }
+        } catch (IOException | NumberFormatException e) {
+            System.err.println("Error reading from ID file: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(IDfile))) {
+            writer.write(Integer.toString(temp));
+        } catch (IOException e) {
+            System.err.println("Error writing to ID file: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
         File tableFile = new File(tableFilePath);
         String newRow = id + "\t" + data;
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(tableFilePath, true))) {
@@ -156,11 +189,13 @@ public class Table{
         //update the hashmap in database
         if (database.tables.containsKey(name)){
             database.tables.remove(name);
-            database.addTableToFile();
+            //database.addTableToFile();
             //delete the file.
             File tableFile = new File(tableFilePath);
-            if (tableFile.exists()) {
-                if (tableFile.delete()) {
+            String IDfilePath=database.databaseFolderPath + File.separator + name + ".id";
+            File IDFile = new File(IDfilePath);
+            if (tableFile.exists() && IDFile.exists()) {
+                if (tableFile.delete() && IDFile.delete()) {
                     System.out.println("Table '" + name + "' deleted successfully.");
                 } else {
                     System.err.println("Failed to delete table file for '" + name + "'.");

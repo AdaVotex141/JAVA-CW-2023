@@ -2,6 +2,14 @@ package edu.uob;
 //import javax.xml.crypto.Data;
 import java.io.*;
 import java.util.HashMap;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /*
 * 1/createDatabase: if the database hasn't been created, mkdir and generate 2 txt files.
@@ -62,79 +70,84 @@ public class Database {
 
 
     //update tables in textfiles whenever creates a new table.
-    public void addTableToFile() {
-        String filepath=databaseFolderPath+ File.separator + name + ".txt";
-        //File textFile = new File(filepath);
-        String deletefilePath = databaseFolderPath+ File.separator + name + "deleted" + ".txt";
-        if(databaseFolderPath==null){
-            filepath=Globalstatus.getInstance().getDatabasesPath()+File.separator+this.name
-                    +File.separator+ name + ".txt";
-            deletefilePath=Globalstatus.getInstance().getDatabasesPath()+File.separator+this.name+File.separator+ name + "deleted" + ".txt";
-        }
-        //File deletedtextFile=new File(filepath);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filepath,false))) {
-            for (String tableName : tables.keySet()) {
-                writer.write(tableName);
-                writer.newLine();
-            }
-            System.out.println("Tables information added to the file.");
-        } catch (IOException e) {
-            System.err.println("Error adding table information to the file: " + e.getMessage());
-            e.printStackTrace();
-        }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(deletefilePath,false))) {
-            for (String tableName : tables.keySet()) {
-                writer.write(tableName);
-                writer.newLine();
-            }
-            System.out.println("Tables information added to the file.");
-        } catch (IOException e) {
-            System.err.println("Error adding table information to the file: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    //--------------------------------------if the current database exits-------------------------
-//--------------------------------------when INSERT DELETE tables-------------------------
-    public int updateTableLatestID(String tablename) throws IOException{
-        Table updateTable = getTable(tablename);
-        String filePath = databaseFolderPath + File.separator + name + ".txt";
-        int currentNumber= -1;
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))){
-            String line;
-            while ((line = reader.readLine()) != null){
-                String[] parts = line.split("\t");
-                //find the tablename in TXT
-                if (parts.length > 0 && parts[0].equals(tablename)){
-                    if (parts.length>1 && !parts[1].isEmpty()){
-                        currentNumber = Integer.parseInt(parts[1]);
-                        currentNumber+=1;
-                        line = parts[0]+"\t"+currentNumber;
-                        return currentNumber;
-                    }else{
-                        if(updateTable.datas.size()==0){
-                            System.err.print("the table is not assigned with attributes");
-                        }else{
-                            currentNumber=1;
-                            line = parts[0]+"\t"+currentNumber;
-                        }
-                    }
-                }
-
-            }
-        }
-        return currentNumber;
-    }
-
-//    public void updateTableDeleteID( String tablename, int id){
-//        Table updatetable=getTable(tablename);
-//        //find the TXT in the current database.
+//    public void addTableToFile() {
+//
+//        String filepath=databaseFolderPath+ File.separator + name + ".txt";
+//        //File textFile = new File(filepath);
 //        String deletefilePath = databaseFolderPath+ File.separator + name + "deleted" + ".txt";
-//        //if there are nothing after the name, find filled with -1.
-//
-//        //if the INSERT INTO leads to this place, update the current number.
-//
+//        if(databaseFolderPath==null){
+//            filepath=Globalstatus.getInstance().getDatabasesPath()+File.separator+this.name
+//                    +File.separator+ name + ".txt";
+//            deletefilePath=Globalstatus.getInstance().getDatabasesPath()+File.separator+this.name+File.separator+ name + "deleted" + ".txt";
+//        }
+//        //File deletedtextFile=new File(filepath);
+//        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filepath,false))) {
+//            for (String tableName : tables.keySet()) {
+//                writer.write(tableName);
+//                writer.newLine();
+//            }
+//            System.out.println("Tables information added to the file.");
+//        } catch (IOException e) {
+//            System.err.println("Error adding table information to the file: " + e.getMessage());
+//            e.printStackTrace();
+//        }
+//        try (BufferedWriter writer = new BufferedWriter(new FileWriter(deletefilePath,false))) {
+//            for (String tableName : tables.keySet()) {
+//                writer.write(tableName);
+//                writer.newLine();
+//            }
+//            System.out.println("Tables information added to the file.");
+//        } catch (IOException e) {
+//            System.err.println("Error adding table information to the file: " + e.getMessage());
+//            e.printStackTrace();
+//        }
 //    }
+//
+//    //--------------------------------------if the current database exits-------------------------
+////--------------------------------------when INSERT DELETE tables-------------------------
+//    public int updateTableLatestID(String tablename){
+//        //find table
+//        int newID=-1;
+//        //Table updateTable = getTable(tablename);
+//        String filePath = databaseFolderPath + File.separator + name + ".txt";
+//        String tempFilePath = filePath + ".temp";
+//        try (BufferedReader reader = new BufferedReader(new FileReader(filePath));
+//             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFilePath))){
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                //find the tablename line
+//                if(line.contains(tablename)){
+//                    String replacementLine = null;
+//                    Pattern pattern = Pattern.compile("(\\b" + tablename + "\\t\\d+\\b)");
+//                    Matcher matcherWithNumber = pattern.matcher(line);
+//                    //1.situation 1: there are numbers:
+//                    if(matcherWithNumber.find()){
+//                        String[] parts1 = line.split("\t");
+//                        int temp=Integer.parseInt(parts1[1]);
+//                        newID=temp;
+//                        temp+=1;
+//                        replacementLine=parts1[0]+"\t"+temp;
+//                    }else{
+//                        //2.situation 2: there are not numbers:
+//                        String[] parts2 = line.split("\t");
+//                        newID=1;
+//                        int temp=2;
+//                        replacementLine=parts2[0]+"\t"+temp;
+//                    }
+//                    writer.write(replacementLine);
+//                    writer.newLine();
+//                }else{
+//                    writer.write(line);
+//                    writer.newLine();
+//                }
+//            }
+//        }catch(IOException e){
+//            System.err.println("Error reading file: " + e.getMessage());
+//            e.printStackTrace();
+//        }
+//        return newID;
+//    }
+
     //Be aware of this return null//which table is selected in the database's hashmap,(get name and return table)
     public Table getTable(String tablename){
         if(tables.containsKey(tablename)){

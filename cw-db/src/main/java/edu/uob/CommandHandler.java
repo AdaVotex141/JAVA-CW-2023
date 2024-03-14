@@ -112,11 +112,11 @@ public class CommandHandler {
                 tokenIndex += 1;
                 StringBuilder attributes = new StringBuilder();
                 while (!tokens.get(tokenIndex).equals(")")) {
-                    if (!tokens.get(tokenIndex).equals(",")) {
+                    if (!tokens.get(tokenIndex).equals(",") && !tokens.get(tokenIndex).equals(" ")) {
                         //attribute: name \t value \t
-                        attributes.append(tokens.get(tokenIndex));
+                        attributes.append(tokens.get(tokenIndex)).append("\t");
                     }
-                    attributes.append("\t");
+                    //attributes.append("\t");
                     tokenIndex += 1;
                 }
                 String attributeString = attributes.toString();
@@ -204,10 +204,12 @@ public StringBuilder drop(ArrayList<String> tokens, StringBuilder returnBuilder)
             returnBuilder.append("[ERROR] Table doesn't exist");
             return returnBuilder;
         }
+        Table table=Globalstatus.getInstance().getCurrentTable();
         tokenIndex+=1;
         if(tokens.get(tokenIndex).equalsIgnoreCase("ADD")){
-            tokenIndex+=1;
+            tokenIndex+=1;//attribute name
             //TODO:dealing with ADD
+            String attributeName=tokens.get(tokenIndex);
 
 
 
@@ -217,6 +219,7 @@ public StringBuilder drop(ArrayList<String> tokens, StringBuilder returnBuilder)
         }else if (tokens.get(tokenIndex).equalsIgnoreCase("DROP")){
             tokenIndex+=1;
             //TODO:dealing with DROP
+            String attributeName=tokens.get(tokenIndex);
 
 
 
@@ -240,39 +243,39 @@ public StringBuilder drop(ArrayList<String> tokens, StringBuilder returnBuilder)
         }
         if(tokens.get(tokenIndex).equalsIgnoreCase("INTO")){
             tokenIndex+=1;
+            //TODO: reader.useTable->this table doesn't exist????
+            //useTable(String searchFile,String path);
+            //String FilePath = path + File.separator + Globalstatus.getInstance().getCurrentDatabase()
+            //                + searchFile + ".tab";
             boolean flag=this.reader.useTable(tokens.get(tokenIndex),storageFolderPath);
             if(!flag){
                 returnBuilder.append("[ERROR] Table doesn't exist");
                 return returnBuilder;
             }
+
             Table table=Globalstatus.getInstance().getCurrentTable();
+            System.out.print(table.name);
             tokenIndex+=1;
             if(!tokens.get(tokenIndex).equalsIgnoreCase("VALUES")){
-                returnBuilder.append("[ERROR] invalid sentence");
+                returnBuilder.append("[ERROR] invalid sentence, doesn't have VALUES");
                 return returnBuilder;
             }
             tokenIndex+=1;
             //check "( )" in pairs
-            if(!tokens.get(tokenIndex).equals("(")|| !tokens.get(tokens.size()-1).equals(")")    ){
-                returnBuilder.append("[ERROR] invalid sentence");
+            if(!tokens.get(tokenIndex).equals("(")|| !tokens.get(tokens.size()-2).equals(")")){
+                returnBuilder.append("[ERROR] invalid sentence, brackets not in pairs");
                 return returnBuilder;
             }
             tokenIndex+=1;
             StringBuilder valueList=new StringBuilder();
             while(!tokens.get(tokenIndex).equals(")")){
-                if(!tokens.get(tokenIndex).equals(",")){
+                if(!tokens.get(tokenIndex).equals(",") && !tokens.get(tokenIndex).equals(" ")){
                     valueList.append(tokens.get(tokenIndex)).append("\t");
                 }
                 tokenIndex+=1;
             }
             String valueData=valueList.toString();
             //TODO:actual insert into
-
-
-
-
-
-
             boolean insertflag=table.insertRow(valueData);
             if(!insertflag){
                 returnBuilder.append("[ERROR] insert fail");
@@ -280,7 +283,7 @@ public StringBuilder drop(ArrayList<String> tokens, StringBuilder returnBuilder)
             }
             returnBuilder.append("[OK]");
         }else{
-            returnBuilder.append("[ERROR] invalid sentence");
+            returnBuilder.append("[ERROR] invalid sentence??????????");
         }
         return returnBuilder;
     }

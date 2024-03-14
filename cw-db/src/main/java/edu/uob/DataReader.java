@@ -80,9 +80,9 @@ public class DataReader {
                         newTable.name = tableName;
                         newTable.tableFilePath = file.getAbsolutePath();
                         readTabFile(Globalstatus.getInstance().getCurrentDatabase(),newTable,path);
-                        Globalstatus.getInstance().getCurrentDatabase().tables.put(tableName, newTable);
+                        //lobalstatus.getInstance().getCurrentDatabase().tables.put(tableName, newTable);
                         //use the hashmap to generate two TXT files.
-                        Globalstatus.getInstance().getCurrentDatabase().addTableToFile();
+                        //Globalstatus.getInstance().getCurrentDatabase().addTableToFile();
                         //update the newest if exists to these Two TXT files.
                     }
                 }
@@ -94,8 +94,8 @@ public class DataReader {
     }
     //useTable->set currentTable to this table.
     public boolean useTable(String searchFile,String path){
-        String FilePath = path + File.separator + Globalstatus.getInstance().getCurrentDatabase()
-                + searchFile + ".tab";
+        String FilePath = path + File.separator + Globalstatus.getInstance().getCurrentDatabase().name + File.separator  + searchFile + ".tab";
+        System.out.println(FilePath);
         File searchTable = new File(FilePath);
         if (searchTable.exists() && searchTable.isFile()) {
             //if exists, set the globalstatus to this database.
@@ -105,7 +105,7 @@ public class DataReader {
             Globalstatus.getInstance().setCurrentTable(currentTable);
             System.out.println("Table'" + searchFile + "' is now in use.");
         } else {
-            System.err.println("Database folder '" + searchFile + "' does not exist in the specified path.");
+            System.err.println("Table" + searchFile + "' does not exist in the specified path.");
             return false;
         }
         return true;
