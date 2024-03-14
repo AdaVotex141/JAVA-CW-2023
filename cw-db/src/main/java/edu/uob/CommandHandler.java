@@ -344,7 +344,6 @@ public StringBuilder drop(ArrayList<String> tokens, StringBuilder returnBuilder)
         tokenIndex+=1;
         if(!tokens.get(tokenIndex).equalsIgnoreCase("SET")){
             returnBuilder.append("[ERROR] Invalid sentence");
-            returnBuilder.append("[ERROR] Invalid sentence");
             return returnBuilder;
         }
         tokenIndex+=1;
