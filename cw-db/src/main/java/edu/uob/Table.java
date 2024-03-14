@@ -141,6 +141,18 @@ public class Table{
     public int getLatestID(){
         return latestID;
     }
+    public int AttributeIndexWithoutID(String findAttribute) {
+        String[] attributes = this.attribute.split("\t");
+        int i;
+        for (i = 0; i < attributes.length; i++) {
+            if (attributes[i].equals(findAttribute)) {
+                return i-1;
+                break;
+            }
+            int attributeIndex = i - 1;
+        }
+        return -1;
+    }
     //=============================================Alter========================================
     public boolean alterDropTable(String dropAttribute){
         // get the index of dropAttribute in the attribute list

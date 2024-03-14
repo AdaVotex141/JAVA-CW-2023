@@ -11,6 +11,7 @@ public class CommandHandler {
     private final String storageFolderPath;
     private int tokenIndex;
     private DataReader reader;
+    private Condition condition;
     public CommandHandler(String path){
         this.storageFolderPath=path;
         //the first token is handled in DBserver.
@@ -61,9 +62,15 @@ public class CommandHandler {
             return returnBuilder;
             }
         if (tokens.get(tokenIndex).equalsIgnoreCase("database")){
-                tokenIndex+=1;
+            tokenIndex+=1;
                 //create database
-                Database database=new Database(tokens.get(tokenIndex));
+
+            //valid name
+            boolean validName=condition.correctName(tokens.get(tokenIndex));
+            if (!validName){
+                returnBuilder.append("[ERROR]:Invalid name");
+            }
+            Database database=new Database(tokens.get(tokenIndex));
                 boolean flag=database.createDatabase(storageFolderPath);
                 if (flag){
                     returnBuilder.append("[OK]");
@@ -96,6 +103,12 @@ public class CommandHandler {
                 return returnBuilder;
             }
             //tokenIndex += 1;
+            //valid name
+            boolean validName=condition.correctName(tokens.get(tokenIndex));
+            if (!validName){
+                returnBuilder.append("[ERROR]:Invalid name");
+            }
+
             boolean flag;
             flag=table.createTable(currentDatabase, storageFolderPath, tokens.get(tokenIndex));
             if(flag==false){
@@ -210,6 +223,12 @@ public StringBuilder drop(ArrayList<String> tokens, StringBuilder returnBuilder)
         tokenIndex+=1;
         if(tokens.get(tokenIndex).equalsIgnoreCase("ADD")){
             tokenIndex+=1;//attribute name
+            //valid name
+            boolean validName=condition.correctName(tokens.get(tokenIndex));
+            if (!validName){
+                returnBuilder.append("[ERROR]:Invalid name");
+            }
+
             String attributeName=tokens.get(tokenIndex);
             table.alterAddTable(attributeName);
             boolean flagAdd=table.alterAddTable(attributeName);;
@@ -221,6 +240,12 @@ public StringBuilder drop(ArrayList<String> tokens, StringBuilder returnBuilder)
         }else if (tokens.get(tokenIndex).equalsIgnoreCase("DROP")){
             tokenIndex+=1;
             //TODO:dealing with DROP
+            //valid name
+            boolean validName=condition.correctName(tokens.get(tokenIndex));
+            if (!validName){
+                returnBuilder.append("[ERROR]:Invalid name");
+            }
+
             String attributeName=tokens.get(tokenIndex);
             boolean flagDrop=table.alterDropTable(attributeName);
             if(!flagDrop){
@@ -433,9 +458,25 @@ public StringBuilder drop(ArrayList<String> tokens, StringBuilder returnBuilder)
         //table1,table2,attribute1,attribute2
         //TODO:print and join
         int latestID=Math.max(table1.getLatestID(),table2.getLatestID());
+        boolean table1IDsmaller;
+        if(table1.getLatestID()<=table2.getLatestID()){
+            table1IDsmaller=true;
+        }else{
+            table1IDsmaller=false;
+        }
+
+        //TODO:print and join: don't understand
         ArrayList<String> printData=new ArrayList<>();
+        int colmunIndex1=table1.AttributeIndexWithoutID(attribute1);
+        int colmunIndex2=table2.AttributeIndexWithoutID(attribute2);
 
-
+        for(int i=0;i<=latestID;i++){
+            String []wholedata1=table1.datas.get(i).getData().split("\t");
+            String []wholedata2=table2.datas.get(i).getData().split("\t");
+            String exactData1=wholedata1[colmunIndex1];
+            String exactData2=wholedata2[colmunIndex2];
+            //returnBuilder
+        }
 
 
 
