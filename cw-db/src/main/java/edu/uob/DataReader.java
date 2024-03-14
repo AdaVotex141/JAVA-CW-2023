@@ -122,10 +122,6 @@ public class DataReader {
                 if (rowdata.flag) {
                     // If the row is not deleted, write id and data separated by a tab
                     writer.write(rowdata.getid() + "\t" + rowdata.getData());
-                } else {
-                    //TODO: get the deleted row in txt file, but I don't think it is nessasary.
-//                    // If the row is deleted, write only the id
-//                    writer.write(rowdata.getid() + "");
                 }
                 writer.newLine();
             }

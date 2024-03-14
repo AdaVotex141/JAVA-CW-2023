@@ -2,9 +2,8 @@ package edu.uob;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
+
 /*
 * 1/createTable: create a .tab, add the table name to Database's hashmap
 *      and update the name in repo's txt
@@ -137,24 +136,54 @@ public class Table{
 
     }
     //=============================================Alter========================================
-    public void alterDropTable(String dropAttribute){
-        //get the first row in the file->find the index of dropAttribute
-//        ArrayList<String> attributeList=new ArrayList<>();
-//        attributeList=attribute.split("\t");
-
-
-        //Go through every line, delete the data and write the whole table back to file
-
-
-
+    public boolean alterDropTable(String dropAttribute){
+        // get the index of dropAttribute in the attribute list
+        String[] attributeList = this.attribute.split("\t");
+        int indexInAttribute = -1;
+        for (int i = 0; i < attributeList.length; i++) {
+            if (attributeList[i].equals(dropAttribute)) {
+                indexInAttribute = i;
+                break;
+            }
+        }
+        if (indexInAttribute != -1) {
+            StringBuilder updatedAttribute = new StringBuilder();
+            for (int i = 0; i < attributeList.length; i++) {
+                if (i != indexInAttribute) {
+                    updatedAttribute.append(attributeList[i]).append("\t");
+                }
+            }
+            this.attribute = updatedAttribute.toString().trim();
+            int fileIndex = indexInAttribute - 1;
+            for (Rowdata data : this.datas) {
+                String dataString = data.getData();
+                String[] dataBox = dataString.split("\t");
+                if (fileIndex >= 0 && fileIndex < dataBox.length) {
+                    dataBox[fileIndex] = null;
+                }
+                StringBuilder updateData = new StringBuilder();
+                for (String box : dataBox) {
+                    if (box != null) {
+                        updateData.append(box).append("\t");
+                    }
+                }
+                data.setData(updateData.toString().trim());
+            }
+            return true;
+        } else {
+            System.err.println("Column '" + dropAttribute + "' not found.");
+            return false;
+        }
     }
-    public void alterAddTable(String addAttribute){
+
+    public boolean alterAddTable(String addAttribute){
         //Alter the add Attribute to the end of the current attribute
         this.attribute=this.attribute+addAttribute;
         //modify first line in file system.
-        this.modifyFirstAttribute(this.attribute);
+        boolean flag=this.modifyFirstAttribute(this.attribute);
+        return flag;
     }
-    public void modifyFirstAttribute(String newAttribute) {
+    private boolean modifyFirstAttribute(String newAttribute) {
         List<String> attributes = readAttributes();
         if (!attributes.isEmpty()) {
             attributes.set(0, newAttribute);  // Modify the first attribute
@@ -168,8 +197,11 @@ public class Table{
         } catch (IOException e) {
             System.err.println("Error modifying first attribute in the file: " + e.getMessage());
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
+
     private List<String> readAttributes() {
         List<String> attributes = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(tableFilePath))) {

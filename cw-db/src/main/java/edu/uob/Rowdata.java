@@ -16,6 +16,8 @@ public class Rowdata{
     public String getData(){
         return this.data;
     }
-
+    public void setData(String data){
+        this.data=data;
+    }
 
 }

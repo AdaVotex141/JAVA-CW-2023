@@ -17,6 +17,8 @@ public class CommandHandler {
         this.tokenIndex=1;
         this.reader=new DataReader();
     }
+    //TODO: invalid NAME: keywords\etc.
+    //TODO: set some private variables.
 
 //TESTED:"USE " [DatabaseName] ;
     public StringBuilder use(ArrayList<String> tokens, StringBuilder returnBuilder) {
@@ -208,24 +210,26 @@ public StringBuilder drop(ArrayList<String> tokens, StringBuilder returnBuilder)
         tokenIndex+=1;
         if(tokens.get(tokenIndex).equalsIgnoreCase("ADD")){
             tokenIndex+=1;//attribute name
-            //TODO:dealing with ADD
             String attributeName=tokens.get(tokenIndex);
-
-
-
-
-
-
+            table.alterAddTable(attributeName);
+            boolean flagAdd=table.alterAddTable(attributeName);;
+            if(!flagAdd){
+                returnBuilder.append("[ERROR] Fail add attribute"+attributeName);
+                return returnBuilder;
+            }
+            returnBuilder.append("[OK]");
         }else if (tokens.get(tokenIndex).equalsIgnoreCase("DROP")){
             tokenIndex+=1;
             //TODO:dealing with DROP
             String attributeName=tokens.get(tokenIndex);
-
-
-
-
-
-
+            boolean flagDrop=table.alterDropTable(attributeName);
+            if(!flagDrop){
+                returnBuilder.append("[ERROR] Fail drop attribute"+attributeName);
+                return returnBuilder;
+            }
+            //writeTabFile(Table table, String tableFilePath)
+            reader.writeTabFile(table,table.tableFilePath);
+            returnBuilder.append("[OK]");
         }else{
             returnBuilder.append("[ERROR] Invalid sentence");
             return returnBuilder;
