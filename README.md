@@ -181,6 +181,9 @@ Mostly Done, small bugs
 ```
 <Insert>  ::=  "INSERT " "INTO " [TableName] " VALUES" "(" <ValueList> ")"
 ```
+1. Deal with ignore, push to main branch
+2. Handle the 
+3. 开始写insert into的逻辑
 
 
 
