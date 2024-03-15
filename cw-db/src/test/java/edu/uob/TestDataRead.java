@@ -134,13 +134,17 @@ public class TestDataRead {
     }
 
     @Test
-    public void TestInsertAlterTable(){
-
-
-
+    public void TestuseTable(){
+        Database testDatabase= new Database("TestDatabase");
+        testDatabase.createDatabase(server.getStorageFolderPath());
+        Globalstatus.getInstance().setCurrentDatabase(testDatabase);
+        Table testTable = new Table();
+        testTable.createTable(Globalstatus.getInstance().getCurrentDatabase(),server.getStorageFolderPath(),"TestTable1");
+        Table testTable2 = new Table();
+        testTable.createTable(Globalstatus.getInstance().getCurrentDatabase(),server.getStorageFolderPath(),"TestTable2");
+        reader.useTable(testTable2.name, server.getStorageFolderPath());
+        assertNotNull(testTable2);
     }
-
-
 
 
 //Test the txt files are updated.

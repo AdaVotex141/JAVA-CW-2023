@@ -114,7 +114,7 @@ public class DataReader {
     // Write the contents of a table back to its corresponding tab file
     public void writeTabFile(Table table, String tableFilePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(tableFilePath))) {
-            // Write the attribute line
+            // Write the attribute lineu
             writer.write(table.getAttribute());
             writer.newLine();
             // Write each row data

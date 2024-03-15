@@ -50,27 +50,40 @@ public class DBServer {
         // TODO implement your server logic here
         StringBuilder returnBuilder=new StringBuilder("");
         Tokenrise tokenrise=new Tokenrise(command);
-        CommandHandler commandHandler=new CommandHandler(storageFolderPath);
+        //CommandHandler commandHandler=new CommandHandler(storageFolderPath);
         ArrayList<String> tokens=tokenrise.getTokens();
         String firstToken = tokens.get(0).toLowerCase();
         if (firstToken.equals("create")){
-            returnBuilder=commandHandler.create(tokens,returnBuilder);
+            CreateHandler createHandler=new CreateHandler(storageFolderPath);
+            returnBuilder=createHandler.create(tokens,returnBuilder);
         }else if(firstToken.equals("insert")){
-            returnBuilder=commandHandler.insert(tokens,returnBuilder);
+            InsertHandler insertHandler=new InsertHandler(storageFolderPath);
+            returnBuilder=insertHandler.insert(tokens,returnBuilder);
         }else if(firstToken.equals("select")){
-            commandHandler.select(tokens,returnBuilder);
+            SelectHandler selectHandler=new SelectHandler(storageFolderPath);
+            returnBuilder=selectHandler.select(tokens,returnBuilder);
+            //commandHandler.select(tokens,returnBuilder);
         }else if(firstToken.equals("update")){
-            commandHandler.update(tokens,returnBuilder);
+            UpdateHandler updateHandler=new UpdateHandler(storageFolderPath);
+            returnBuilder=updateHandler.update(tokens,returnBuilder);
+            //commandHandler.update(tokens,returnBuilder);
         }else if(firstToken.equals("alter")){
-            commandHandler.alter(tokens,returnBuilder);
+            AlterHandler alterHandler=new AlterHandler(storageFolderPath);
+            returnBuilder=alterHandler.alter(tokens,returnBuilder);
         }else if(firstToken.equals("delete")){
-            commandHandler.delete(tokens,returnBuilder);
+            DeleteHandler deleteHandler=new DeleteHandler(storageFolderPath);
+            returnBuilder=deleteHandler.delete(tokens,returnBuilder);
+            //commandHandler.delete(tokens,returnBuilder);
         }else if(firstToken.equals("join")){
-            commandHandler.join(tokens,returnBuilder);
+            JoinHandler joinHandler=new JoinHandler(storageFolderPath);
+            returnBuilder=joinHandler.join(tokens,returnBuilder);
         }else if(firstToken.equals("drop")){
-            commandHandler.drop(tokens, returnBuilder);
+            DropHandler dropHandler=new DropHandler(storageFolderPath);
+            returnBuilder=dropHandler.drop(tokens,returnBuilder);
+            //commandHandler.drop(tokens, returnBuilder);
         }else if(firstToken.equals("use")){
-            returnBuilder=commandHandler.use(tokens,returnBuilder);
+            UseHandler useHandler=new UseHandler(storageFolderPath);
+            returnBuilder=useHandler.use(tokens,returnBuilder);
         }else{
             returnBuilder.append("[ERROR] Can't resolve command!");
         }
