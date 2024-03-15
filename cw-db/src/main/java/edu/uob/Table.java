@@ -54,6 +54,7 @@ public class Table{
                         System.err.println("Error writing to file: " + e.getMessage());
                         e.printStackTrace();
                     }
+
                     //currentdatabase.addTableToFile();
                 } else {
                     System.err.println("Failed to create table file for '" +name+ "'. File already exists.");

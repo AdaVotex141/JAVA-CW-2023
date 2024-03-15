@@ -118,6 +118,10 @@ public class CommandHandler {
                 returnBuilder.append("[ERROR] Already exists");
                 return returnBuilder;
             }
+            //TODO:test the default
+            table.setAttribute("id"+"\t");
+            table.addAttribute(table.getAttribute());
+
             tokenIndex += 1;//fourth token->CREATE TABLE tablename {;} or CREATE TABLE tablename {(}   );
 
             //table with attributes
@@ -129,7 +133,7 @@ public class CommandHandler {
                 }
                 tokenIndex += 1;
                 StringBuilder attributes = new StringBuilder();
-                attributes.append("id").append("\t");
+                //attributes.append("id").append("\t");
                 while (!tokens.get(tokenIndex).equals(")")) {
                     if (!tokens.get(tokenIndex).equals(",") && !tokens.get(tokenIndex).equals(" ")) {
                         //attribute: name \t value \t
@@ -209,20 +213,25 @@ public StringBuilder drop(ArrayList<String> tokens, StringBuilder returnBuilder)
     //<Alter>::=  "ALTER " "TABLE " [TableName] " " <AlterationType(ADD|DROP)> " " [AttributeName]
     public StringBuilder alter(ArrayList<String> tokens, StringBuilder returnBuilder){
         tokenIndex=1;
+        //check last ;
         if(!tokens.get(tokens.size() - 1).equals(";")){
             returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
             return returnBuilder;
         }
+        //check the second command->table
         if(!tokens.get(tokenIndex).equalsIgnoreCase("TABLE")){
             returnBuilder.append("[ERROR] Invalid sentence");
             return returnBuilder;
         }
+        //check if current database is set.
         Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
         if(currentDatabase==null){
-            returnBuilder.append("[ERROR]");
+            returnBuilder.append("[ERROR] Hasn't select a database yet!");
             return returnBuilder;
         }
-        tokenIndex+=1;
+
+        tokenIndex+=1;//get Tablename
+        //
         boolean flag=this.reader.useTable(tokens.get(tokenIndex),storageFolderPath);
         if(!flag){
             returnBuilder.append("[ERROR] Table doesn't exist");
