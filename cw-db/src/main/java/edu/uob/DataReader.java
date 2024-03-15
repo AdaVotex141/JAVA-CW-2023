@@ -39,6 +39,7 @@ public class DataReader {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             table.setAttribute(reader.readLine());
+
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split("\t");
                 if (parts.length > 0 && !parts[0].isBlank()) {
@@ -48,10 +49,10 @@ public class DataReader {
                         Rowdata rowData = new Rowdata(id, data);
                         table.datas.add(rowData);
                     } catch (NumberFormatException e) {
-                        System.err.println("Error parsing ID: " + e.getMessage());
+                        System.err.println("Error parsing ID on line " + line + ": " + e.getMessage());
                     }
                 } else {
-                    System.err.println("Invalid or empty ID encountered in the .tab file.");
+                    System.err.println("Invalid or empty ID encountered in the .tab file on line " + line);
                 }
             }
         } catch (IOException e) {

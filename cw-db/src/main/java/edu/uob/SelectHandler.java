@@ -37,6 +37,7 @@ public class SelectHandler extends CommandHandler implements Cloneable {
 
         //copy currentTable to tempTable
         Table currentTable=Globalstatus.getInstance().getCurrentTable();
+        tempTable.name=String.copyValueOf(currentTable.name.toCharArray());
         Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
         reader.readTabFile(currentDatabase,tempTable,storageFolderPath);
 
@@ -45,6 +46,7 @@ public class SelectHandler extends CommandHandler implements Cloneable {
             HashSet<String> attributeSet=new HashSet<>();
             while(!tokens.get(tokenIndex).equalsIgnoreCase("FROM")){
                 attributeSet.add(tokens.get(tokenIndex));
+                tokenIndex+=1;
             }
             //delete not selected attributes.
             //if the attribute is not in the set, then added it to notSelectedAttribute

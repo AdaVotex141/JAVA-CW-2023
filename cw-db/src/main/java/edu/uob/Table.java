@@ -88,6 +88,18 @@ public class Table{
         //this.attribute=attribute;
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(tableFilePath, true))){
             writer.write(attribute);
+            writer.newLine();
+            System.out.println("Attribute '" + attribute + "' added to the file.");
+        }catch (IOException e) {
+            System.err.println("Error adding attribute to the file: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void addAttributeID(String attribute){
+        //this.attribute=attribute;
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(tableFilePath, true))){
+            writer.write(attribute);
             //writer.newLine();
             System.out.println("Attribute '" + attribute + "' added to the file.");
         }catch (IOException e) {
