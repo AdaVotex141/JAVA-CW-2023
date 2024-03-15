@@ -9,7 +9,7 @@ public class Globalstatus {
     private static Globalstatus instance;
     private Table currentTable;
     private Database currentDatabase;
-    private String storageFolderPath;
+    private final String storageFolderPath;
 
     public Globalstatus(){
         this.currentTable = null;

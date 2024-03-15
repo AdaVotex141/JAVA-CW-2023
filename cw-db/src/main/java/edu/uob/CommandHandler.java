@@ -1,16 +1,16 @@
 package edu.uob;
 
-import javax.xml.crypto.Data;
+//import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.io.File;
-import java.util.HashMap;
+//import java.util.HashMap;
 import java.util.HashSet;
 
 public class CommandHandler {
     private final String storageFolderPath;
     private int tokenIndex;
-    private DataReader reader;
+    private final DataReader reader;
     private Condition condition;
     public CommandHandler(String path){
         this.storageFolderPath=path;
@@ -79,7 +79,7 @@ public class CommandHandler {
                 }
                 //but if it already exists???
             } else if(tokens.get(tokenIndex).equalsIgnoreCase("TABLE")){
-            returnBuilder=createTableHelper(tokens,returnBuilder);
+            createTableHelper(tokens, returnBuilder);
         }else{
             returnBuilder.append("[ERROR]:invalid sentence");
         }
@@ -111,7 +111,7 @@ public class CommandHandler {
 
             boolean flag;
             flag=table.createTable(currentDatabase, storageFolderPath, tokens.get(tokenIndex));
-            if(flag==false){
+            if(!flag){
                 returnBuilder.append("[ERROR] Already exists");
                 return returnBuilder;
             }

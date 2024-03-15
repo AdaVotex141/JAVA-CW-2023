@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class Rowdata{
     private int id;
     private String data;
-    private ArrayList<Data> dataList;
+    //private ArrayList<Data> dataList;
     protected boolean flag;
     public Rowdata(int id,String data){
         this.id=id;

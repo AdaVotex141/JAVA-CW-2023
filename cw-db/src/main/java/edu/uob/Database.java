@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 public class Database {
     public String name;
     protected boolean flag;
-    protected static HashMap<String, Table> tables = new HashMap<>();
+    protected HashMap<String, Table> tables = new HashMap<>();
     String databaseFolderPath;
 
     public Database(String name) {

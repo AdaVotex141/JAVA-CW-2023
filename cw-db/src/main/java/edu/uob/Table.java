@@ -18,7 +18,7 @@ public class Table{
     public String name;
     protected boolean flag;
     private String attribute;
-    protected static ArrayList<Rowdata> datas = new ArrayList<>();
+    protected ArrayList<Rowdata> datas = new ArrayList<>();
     private int latestID;
     public String tableFilePath;
     public String IDFilePath;

@@ -38,11 +38,14 @@ public class Tokenrise {
         while (input.contains("  "))
             input = input.replaceAll("  ", " ");
         input = input.trim();
+//        input = input.replaceAll(">=", " >= ")
+//                .replaceAll("<=", " <= ")
+//                .replaceAll("==", " == ");
         return input.split(" ");
     }
 
     public static void main(String[] args) {
-        String query = "  CREATE TABLE marks (name, mark, pass);     ";
+        String query = "  CREATE TABLE marks (Value ==12   );     ";
         Tokenrise tokenizer = new Tokenrise(query);
         ArrayList<String> tokens = tokenizer.getTokens();
         for (String token : tokens) {
