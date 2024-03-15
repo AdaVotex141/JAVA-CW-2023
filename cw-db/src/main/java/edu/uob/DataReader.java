@@ -103,7 +103,7 @@ public class DataReader {
             Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
             Table currentTable=currentDatabase.tables.get(searchFile);
             Globalstatus.getInstance().setCurrentTable(currentTable);
-            System.out.println("Table'" + searchFile + "' is now in use.");
+            System.out.println("Table '" + searchFile + "' is now in use.");
         } else {
             System.err.println("Table" + searchFile + "' does not exist in the specified path.");
             return false;

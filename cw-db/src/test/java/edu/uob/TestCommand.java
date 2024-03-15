@@ -29,6 +29,7 @@ public class TestCommand {
         sendCommandToServer("USE useDatabase" + ";");
         sendCommandToServer("CREATE TABLE " + "testTab" + ";");
         sendCommandToServer("CREATE TABLE " + "dropTab" + ";");
+        sendCommandToServer("ALTER TABLE ");
         //sendCommandToServer("DROP TABLE " + "dropTab" + ";");
         //sendCommandToServer("DROP DATABASE " + "useDatabase" + ";");
 
