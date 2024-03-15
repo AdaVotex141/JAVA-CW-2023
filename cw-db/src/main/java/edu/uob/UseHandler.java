@@ -26,6 +26,9 @@ public class UseHandler extends CommandHandler{
                     //set the currentDatabase to this database
                     //read current files in the database and generate a hashmap for it
                     this.reader.useDatabase(secondtoken,storageFolderPath);
+                    //Database currentDatabase=new Database(secondtoken);
+                    //set the currentDatabase
+                    //Globalstatus.getInstance().setCurrentDatabase(currentDatabase);
                     returnBuilder.append("[OK]");
                 }else{
                     returnBuilder.append("[ERROR]:This Database doesn't exist!");

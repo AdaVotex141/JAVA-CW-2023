@@ -34,30 +34,32 @@ public class DataReader {
     }
 
     //read a tab file and generate it to a table.
-    public void readTabFile(Database database,Table table, String path) {
-        //StringBuilder content = new StringBuilder();
-        String filePath=path + File.separator + database.name + File.separator + table.name + ".tab";;
+    public void readTabFile(Database database, Table table, String path) {
+        String filePath = path + File.separator + database.name + File.separator + table.name + ".tab";
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             table.setAttribute(reader.readLine());
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split("\t");
-                int id = Integer.parseInt(parts[0]);
-                String data;
-                if (parts.length > 1) {
-                    data = parts[1];
+                if (parts.length > 0 && !parts[0].isBlank()) {
+                    try {
+                        int id = Integer.parseInt(parts[0]);
+                        String data = (parts.length > 1) ? parts[1] : "";
+                        Rowdata rowData = new Rowdata(id, data);
+                        table.datas.add(rowData);
+                    } catch (NumberFormatException e) {
+                        System.err.println("Error parsing ID: " + e.getMessage());
+                    }
                 } else {
-                    data = "";
+                    System.err.println("Invalid or empty ID encountered in the .tab file.");
                 }
-                //add the data to the
-                Rowdata rowData = new Rowdata(id,data);
-                table.datas.add(rowData);
             }
         } catch (IOException e) {
             System.err.println("Error reading the tab file: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
 //-----------------USE, I put use in this class because it is one folder/file to be search for.--------
 //USE DATABASE & TABLE
     //

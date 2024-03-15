@@ -54,6 +54,10 @@ public class InsertHandler extends CommandHandler{
                 tokenIndex+=1;
             }
             String valueData=valueList.toString();
+            if(table==null){
+                returnBuilder.append("[ERROR] hasn't assigned attribute yet!");
+                return returnBuilder;
+            }
             //TODO:actual insert into
             boolean insertflag=table.insertRow(valueData);
             if(!insertflag){
