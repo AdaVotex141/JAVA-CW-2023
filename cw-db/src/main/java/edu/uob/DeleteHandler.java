@@ -13,6 +13,10 @@ public class DeleteHandler extends CommandHandler{
             returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
             return returnBuilder;
         }
+        if(tokens.size()<6){
+            returnBuilder.append("[ERROR]");
+            return returnBuilder;
+        }
         if(!tokens.get(tokenIndex).equalsIgnoreCase("FROM")){
             returnBuilder.append("[ERROR]:Invalid sentence");
             return returnBuilder;

@@ -14,6 +14,10 @@ public class AlterHandler extends CommandHandler {
             returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
             return returnBuilder;
         }
+        if(tokens.size()<6){
+            returnBuilder.append("[ERROR]");
+            return returnBuilder;
+        }
         //check the second command->table
         if(!tokens.get(tokenIndex).equalsIgnoreCase("TABLE")){
             returnBuilder.append("[ERROR] Invalid sentence");

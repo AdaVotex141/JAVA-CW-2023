@@ -14,6 +14,10 @@ public class InsertHandler extends CommandHandler{
             returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
             return returnBuilder;
         }
+        if(tokens.size()<8){
+            returnBuilder.append("[ERROR]");
+            return returnBuilder;
+        }
         Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
         if(currentDatabase==null){
             returnBuilder.append("[ERROR]");

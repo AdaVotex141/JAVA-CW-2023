@@ -39,6 +39,7 @@ public class Table{
             try {
                 String filePath = storageFolderPath + File.separator + database.name + File.separator + name + ".tab";
                 this.tableFilePath=filePath;
+
                 String fileIDPath = storageFolderPath + File.separator + database.name + File.separator + name + ".id";
                 this.IDFilePath=fileIDPath;
                 File tableFile = new File(tableFilePath);
@@ -54,6 +55,17 @@ public class Table{
                         System.err.println("Error writing to file: " + e.getMessage());
                         e.printStackTrace();
                     }
+
+                    //write the first id
+//                    this.attribute="id"+"\t";
+//                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(tableFilePath, true))){
+//                        writer.write(attribute);
+//                        writer.newLine();
+//                        System.out.println("Attribute '" + attribute + "' added to the file.");
+//                    }catch (IOException e) {
+//                        System.err.println("Error adding attribute to the file: " + e.getMessage());
+//                        e.printStackTrace();
+//                    }
 
                     //currentdatabase.addTableToFile();
                 } else {
@@ -76,13 +88,14 @@ public class Table{
         //this.attribute=attribute;
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(tableFilePath, true))){
             writer.write(attribute);
-            writer.newLine();
+            //writer.newLine();
             System.out.println("Attribute '" + attribute + "' added to the file.");
         }catch (IOException e) {
             System.err.println("Error adding attribute to the file: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
     public void setAttribute(String setAttribute){
         this.attribute=setAttribute;
     }
@@ -236,23 +249,34 @@ public class Table{
     }
 
     //=================================Drop===================================
-    public void dropTable(Database database){
-        //update the hashmap in database
-        if (database.tables.containsKey(name)){
+    public void dropTable(Database database) {
+        String name = this.name;
+
+        if (database.tables.containsKey(name)) {
             database.tables.remove(name);
-            //database.addTableToFile();
-            //delete the file.
             File tableFile = new File(tableFilePath);
-            String IDfilePath=database.databaseFolderPath + File.separator + name + ".id";
-            File IDFile = new File(IDfilePath);
-            if (tableFile.exists() && IDFile.exists()) {
-                if (tableFile.delete() && IDFile.delete()) {
+            String idFilePath=tableFilePath.replace(".tab",".id");
+
+            File idFile = new File(idFilePath);
+
+            if (tableFile.exists()) {
+                if (tableFile.delete()) {
                     System.out.println("Table '" + name + "' deleted successfully.");
                 } else {
                     System.err.println("Failed to delete table file for '" + name + "'.");
                 }
             } else {
                 System.err.println("Table file for '" + name + "' does not exist.");
+            }
+
+            if (idFile.exists()) {
+                if (idFile.delete()) {
+                    System.out.println("ID file for '" + name + "' deleted successfully.");
+                } else {
+                    System.err.println("Failed to delete ID file for '" + name + "'.");
+                }
+            } else {
+                System.err.println("ID file for '" + name + "' does not exist.");
             }
         } else {
             System.err.println("Table with name '" + name + "' not found in the database.");

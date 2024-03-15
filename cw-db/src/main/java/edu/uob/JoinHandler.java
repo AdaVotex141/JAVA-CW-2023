@@ -14,6 +14,10 @@ public class JoinHandler extends CommandHandler{
             returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
             return returnBuilder;
         }
+        if(tokens.size()<9){
+            returnBuilder.append("[ERROR]");
+            return returnBuilder;
+        }
         String tableName1=tokens.get(tokenIndex);
         if(!tokens.get(tokenIndex+1).equalsIgnoreCase("AND")){
             returnBuilder.append("[ERROR] Invalid sentence");

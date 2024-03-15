@@ -13,6 +13,10 @@ public class UpdateHandler extends CommandHandler{
             returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
             return returnBuilder;
         }
+        if(tokens.size()<7){
+            returnBuilder.append("[ERROR]");
+            return returnBuilder;
+        }
         boolean flag=this.reader.useTable(tokens.get(tokenIndex),storageFolderPath);
         if(!flag){
             returnBuilder.append("[ERROR] Table doesn't exist");

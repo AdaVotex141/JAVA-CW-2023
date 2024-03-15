@@ -30,10 +30,29 @@ public class TestCommand {
         sendCommandToServer("CREATE TABLE " + "testTab" + ";");
         sendCommandToServer("CREATE TABLE " + "dropTab" + ";");
         sendCommandToServer("ALTER TABLE ");
-        //sendCommandToServer("DROP TABLE " + "dropTab" + ";");
-        //sendCommandToServer("DROP DATABASE " + "useDatabase" + ";");
+        sendCommandToServer("DROP TABLE " + "testTab" + ";");
+        sendCommandToServer("DROP DATABASE " + "useDatabase" + ";");
+        sendCommandToServer("DROP DATABASE " + "testDatabase" + ";");
+    }
+    @Test
+    public void workFlowTest1(){
+        sendCommandToServer("CREATE DATABASE " + "testDatabase" + ";");
+        sendCommandToServer("USE testDatabase" + ";");
+        sendCommandToServer("CREATE TABLE " + "test1" + ";");
+        sendCommandToServer("CREATE TABLE test2 (name,pass);");
+        sendCommandToServer("Alter TABLE test2 mark;");
+        //sendCommandToServer("INSERT INTO test1 VALUES ('Simon', 65, TRUE)");
+        //sendCommandToServer("INSERT INTO test2 VALUES ('Simon', 65, TRUE)");
+        //sendCommandToServer("drop database testDatabase;");
 
 
 
+
+
+    }
+    @Test
+    public void workFlowTest2(){
+        sendCommandToServer("CREATE DATABASE " + "testDatabase" + ";");
+        sendCommandToServer("USE testDatabase" + ";");
     }
 }

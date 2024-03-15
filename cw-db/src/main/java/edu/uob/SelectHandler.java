@@ -8,18 +8,16 @@ public class SelectHandler extends CommandHandler implements Cloneable {
     public SelectHandler(String path) {
         super(path);
     }
-//
-//    @Override
-//    public Object clone() throws CloneNotSupportedException {
-//        return super.clone();
-//    }
-
     //<Select>::=  "SELECT " <WildAttribList> " FROM " [TableName] |\
 // "SELECT " <WildAttribList> " FROM " [TableName] " WHERE " <Condition>
     public StringBuilder select(ArrayList<String> tokens, StringBuilder returnBuilder){
         tokenIndex=1;
         if(!tokens.get(tokens.size() - 1).equals(";")){
             returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
+            return returnBuilder;
+        }
+        if(tokens.size()<4){
+            returnBuilder.append("[ERROR]");
             return returnBuilder;
         }
 

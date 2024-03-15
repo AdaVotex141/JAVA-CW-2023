@@ -11,6 +11,10 @@ public class UseHandler extends CommandHandler{
     //TESTED:"USE " [DatabaseName] ;
     public StringBuilder use(ArrayList<String> tokens, StringBuilder returnBuilder) {
         tokenIndex=1;
+        if(tokens.size()<3){
+            returnBuilder.append("[ERROR]");
+            return returnBuilder;
+        }
         //find the database in databases file and set the current to this database.
         if(!tokens.get(tokens.size() - 1).equals(";")){
             returnBuilder.append("[ERROR] Missing ';' at the end of the sentence");
