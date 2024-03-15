@@ -17,6 +17,7 @@ public class CommandHandler {
         //the first token is handled in DBserver.
         this.tokenIndex=1;
         this.reader=new DataReader();
+        this.condition=new Condition();
     }
     //TODO: invalid NAME: keywords\etc.
     //TODO: set some private variables.
@@ -65,10 +66,11 @@ public class CommandHandler {
             tokenIndex+=1;
                 //create database
 
-            //valid name
+//            //valid name
             boolean validName=condition.correctName(tokens.get(tokenIndex));
             if (!validName){
                 returnBuilder.append("[ERROR]:Invalid name");
+                return returnBuilder;
             }
             Database database=new Database(tokens.get(tokenIndex));
                 boolean flag=database.createDatabase(storageFolderPath);
@@ -107,6 +109,7 @@ public class CommandHandler {
             boolean validName=condition.correctName(tokens.get(tokenIndex));
             if (!validName){
                 returnBuilder.append("[ERROR]:Invalid name");
+                return returnBuilder;
             }
 
             boolean flag;
@@ -227,6 +230,7 @@ public StringBuilder drop(ArrayList<String> tokens, StringBuilder returnBuilder)
             boolean validName=condition.correctName(tokens.get(tokenIndex));
             if (!validName){
                 returnBuilder.append("[ERROR]:Invalid name");
+                return returnBuilder;
             }
 
             String attributeName=tokens.get(tokenIndex);
@@ -244,6 +248,7 @@ public StringBuilder drop(ArrayList<String> tokens, StringBuilder returnBuilder)
             boolean validName=condition.correctName(tokens.get(tokenIndex));
             if (!validName){
                 returnBuilder.append("[ERROR]:Invalid name");
+                return returnBuilder;
             }
 
             String attributeName=tokens.get(tokenIndex);

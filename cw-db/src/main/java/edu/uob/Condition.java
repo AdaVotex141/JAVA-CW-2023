@@ -19,14 +19,15 @@ public class Condition {
         //create SET of operators
         Collections.addAll(comparisonOperators, ">", "<", ">=", "<=", "==", "!=", "LIKE");
         //create SET of keyowords
-        Collections.addAll(keywords, "Use", "Create", "Drop", "Alter",
-                "Insert", "Select", "Update", "Delete", "Join");
-        Collections.addAll(boolOperator, "AND", "OR");
+        Collections.addAll(keywords, "use", "create", "drop", "alter",
+                "insert", "select", "update", "delete", "join");
+        Collections.addAll(boolOperator, "and", "or");
         Collections.addAll(bracketsSet, "(", ")");
     }
 
     //correct name
     public boolean correctName(String name) {
+        name=name.toLowerCase();
         if (keywords.contains(name) || boolOperator.contains(name) || comparisonOperators.contains(name)) {
             return false;
         }
@@ -37,19 +38,55 @@ public class Condition {
     /*
     / priority ( ) > AND OR > comparisonOperator
      */
-    public void conditionOperator(String[] conditionalCommand) {
-        for (String command : conditionalCommand){
-            if (bracketsSet.contains(command)){
+    public void conditionSelector(ArrayList<String> conditionalCommand) {
+        for (String command : conditionalCommand) {
+
+            if (bracketsSet.contains(command)) {
                 //Complex->brackets
-            }else if(boolOperator.contains(command)){
+            } else if (boolOperator.contains(command)) {
                 //contains boolOperator
-            }else if(comparisonOperators.contains(command)){
+            } else if (comparisonOperators.contains(command)) {
                 //Simple one
-            }else{
+                simpleParser(conditionalCommand);
+            } else {
                 System.err.print("invalid");
             }
         }
     }
+
+    private boolean simpleParser(ArrayList<String> conditionalCommand) {
+        int tokenIndex = 0;
+        if(conditionalCommand.size()!=4){
+            System.out.print("invalid");
+            return false;
+        }
+        String data=conditionalCommand.get(0);
+        String oper=conditionalCommand.get(1);
+        String value=conditionalCommand.get(2);
+        boolean condition=comparisonOperator(oper,data,value);
+        return condition;
+    }
+
+    private boolean boolParser(ArrayList<String> conditionalCommand) {
+        int tokenIndex = 0;
+        ArrayList<String> condition1=new ArrayList<>();
+        ArrayList<String> condition2=new ArrayList<>();
+        while(!conditionalCommand.get(tokenIndex).equals("AND")||
+                !conditionalCommand.get(tokenIndex).equals("OR")){
+            condition1.add(conditionalCommand.get(tokenIndex));
+            tokenIndex+=1;
+        }
+        boolean con1Flag=simpleParser(condition1);
+        String boolOper=conditionalCommand.get(tokenIndex);
+        while(!conditionalCommand.get(tokenIndex).equals(";")){
+            condition2.add(conditionalCommand.get(tokenIndex));
+            tokenIndex+=1;
+        }
+        boolean con2Flag=simpleParser(condition2);
+        //String bitOperator, boolean con1, boolean con2
+        return comparisonOperator(boolOper,con1Flag,con2Flag);
+    }
+
 
     private boolean comparisonOperator(String comOpr, String data, String value) {
         if (isNumeric(data) && isNumeric(value)) {
