@@ -68,6 +68,7 @@ public class InsertHandler extends CommandHandler{
                 returnBuilder.append("[ERROR] insert fail");
                 return returnBuilder;
             }
+            currentDatabase.updateTable(table);
             returnBuilder.append("[OK]");
         }else{
             returnBuilder.append("[ERROR] invalid sentence??????????");

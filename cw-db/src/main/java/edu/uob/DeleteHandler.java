@@ -34,8 +34,10 @@ public class DeleteHandler extends CommandHandler{
             return returnBuilder;
         }
         tokenIndex+=1;
+        //TODO: add this here and it actually works if regenerate a DBserver?
+        reader.writeTabFile(table,table.tableFilePath);
+        currentDatabase.updateTable(table);
 
-        //TODO: CONDITION
         ArrayList<String> subList = new ArrayList<>(tokens.subList(tokenIndex, tokens.size()));
         Condition.ConditionSelector selectorflag=condition.conditionSelection(subList);
         //simplist definition
@@ -47,9 +49,15 @@ public class DeleteHandler extends CommandHandler{
             for(int i=0;i<table.datas.size();i++){
                 String[] rowData=table.datas.get(i).getDataSplit();
                 if(condition.comparisonOperator(rowData[attributeIndex],oper,value)){
-                    table.datas.get(i).flag=true;
+                    table.datas.get(i).flag=false;
                 }
             }
+
+
+
+
+
+
             //write back to file
             reader.writeTabFile(table,table.tableFilePath);
             //reintisualised the database:
@@ -66,9 +74,6 @@ public class DeleteHandler extends CommandHandler{
 
 
 
-        reader.writeTabFile(table,table.tableFilePath);
-        //reintisualised the database:
-        currentDatabase.updateTable(table);
         return returnBuilder;
     }
 }

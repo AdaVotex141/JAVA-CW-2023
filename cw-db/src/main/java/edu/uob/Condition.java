@@ -160,7 +160,7 @@ public class Condition {
     public static void main(String[] args) {
         boolean flag;
         Condition condition=new Condition();
-        flag= condition.comparisonOperator("likewise","like","like");
+        flag= condition.comparisonOperator("55",">","55");
         System.out.print(flag+"\n");
         ArrayList<String> conditionalCommand=new ArrayList<>();
         conditionalCommand.add("3name");

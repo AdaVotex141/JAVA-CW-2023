@@ -20,7 +20,13 @@ public class Rowdata{
         return this.data;
     }
     public String[] getDataSplit(){
-        return this.data.split("\t");
+        System.out.print(data+"\n");
+        String[] dataBox=this.data.split("\t");
+        for(String data:dataBox){
+            System.out.print(data+"\t");
+        }
+        System.out.print("\n");
+        return dataBox;
     }
     public void setData(String data){
         this.data=data;
