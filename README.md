@@ -317,13 +317,13 @@ added valid name check in Condition
     ->if the table already exist->alter->can't find table!?????
     ->insert into also has this question->
     **useTable** ERROR!！！！！！！！！
-    √ ->write a useTable test    
+    √ ->write a useTable test
     √ **useDatabase** ERROR!!!!!!!
     create->use->OK
     use->ERROR!!!!!!!!!!!!!!!!!!!!!
 2. √ **EXTENDS** commandHandler->multiple classes
 3. **SELECT**:data reader printout -method
-
+ select * 
 4. **workFlow ERROR**
    1. √ drop table ERROR, drop database OK->change the filePath
    2. √ attribute added in a new line->delete the added new line in addAttribute
@@ -331,14 +331,55 @@ added valid name check in Condition
 
 5. attributes can't duplicate
 
+### 16/3:
+√ workflow problems solved->didn't added the tables to current database's hashmap
+PASS 3 TESTS  ToT!!!!!!
+
+**WHERE**
+->add selected flag in row Data
+selected the whole row
+
+SELECT (WHERE)->selected flag->true
+DELETE (WHERE)->flag->false
+
+select->alterdrop in the end
+delete->
+
+1. []>[]
+2. AND OR
+3. have brackets
+condition selector->tested
 
 
+```
+use testDatabase2;
+INSERT INTO marks VALUES ('Simon', 65, TRUE);
+```
+ERROR
+```select * from marks```only print name and * why?
+1. √ select->alterdrop move to the end(after where condition)
+   -> currently debug on select * from [] only print out the first two lines error
+   -> readTabFile error???
+   -> rewrite readTabFile, fixed
+2. delete-> can select conditon, and can role
+    -> after delete it delete it all
+    ->public int AttributeIndexWithoutID ERROR
+    -> if I generate a new DBdriver,
+    it actually works before every changes????
+    ->didn't update in insert into= =
+3. √ insert into break down->breakdown IDFilePath null
+
+simplist delete done!!!!!
+simplist select->
+    ->reset select colmun
+
+4. UPDATE(WHERE)
+   -> select colmun, select line
 
 
-
-
------
+---
 SELECT (WHERE)
-JOIN (WHERE)
-UPDATE(WHERE)
 DELETE (WHERE)
+UPDATE(WHERE)
+
+JOIN (WHERE)

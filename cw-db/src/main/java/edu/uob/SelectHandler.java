@@ -56,10 +56,10 @@ public class SelectHandler extends CommandHandler {
                 tokenIndex+=1;
             }
         }
-
+        tokenIndex=tempTokenIndex+1;
         //TODO very complicated->move to delete instead
         //WHERE
-        if(tokens.get(tokenIndex+1).equalsIgnoreCase("WHERE")){
+        if(tokens.get(tokenIndex).equalsIgnoreCase("WHERE")){
             //TODO:DEAL with WHERE
             ArrayList<String> subList = new ArrayList<>(tokens.subList(tokenIndex, tokens.size()));
             Condition.ConditionSelector selectorflag=condition.conditionSelection(subList);

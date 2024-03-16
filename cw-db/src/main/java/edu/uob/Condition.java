@@ -58,7 +58,7 @@ public class Condition {
         boolean hasBoolOper = false;
         //
         System.out.print("get in where");
-        for(int i=0;i<conditionalCommand.size();i++){
+        for(int i=0;i<conditionalCommand.size()-1;i++){
             String command=conditionalCommand.get(i).toLowerCase();
             if(comparisonOperators.contains(conditionalCommand.get(i+1))){
                 dataIndex.add(i);

@@ -28,7 +28,7 @@ public class CommandHandler {
             return false;
         }
         if(Globalstatus.getInstance().getCurrentDatabase()==null){
-            returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
+            returnBuilder.append("[ERROR]:Hasn't use a database yet!");
             return false;
         }
         return true;

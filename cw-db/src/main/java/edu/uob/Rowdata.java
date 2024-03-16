@@ -7,11 +7,13 @@ public class Rowdata{
     //private ArrayList<Data> dataList;
     protected boolean flag;
     protected boolean selected;
+    protected boolean updated;
     public Rowdata(int id,String data){
         this.id=id;
         this.data=data;
         this.flag=true;
         this.selected=false;
+        this.updated=true;
     }
     public int getid(){
         return this.id;
