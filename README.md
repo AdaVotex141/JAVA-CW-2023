@@ -225,7 +225,7 @@ Developing Engineering's game.
 
 ### 13/3:
 1. Dealing with Command line.
-    1. USE: done
+    1. **USE**: done
     2. CREATE:
         '''create;''' will caused exit ERROR?
         Hasn't debug yet?
@@ -293,11 +293,52 @@ small bugs
 5. **ALTER**
 Add->already DONE, hasn't tested yet
 Drop->a colmumn
------------>hasn't test
+
+DONE!!!!----------->hasn't test
+   * can't find attribute name?
+    *the Table attribute has been set but 
+
+new issues??
+table can be null? why???? insert into works fine
+added valid name check in Condition
+
+
+### 15/3:
+1. √ fix bugs:
+   1. FIXED!!! create table with attribute: id-attribute being ignored
+      1. no! create table wtih id-attribute
+      2. test in CommandHandler?????
+   2. alter->server breakdown, table->null?
+      1. √ test without command?->Alter ADD PASS!!!!!
+      2. √ test without command?->drop PASS!!!!!
+      3. √ So the ERROR occurs in CommandHandler!!!!!!!!!
+    **workFlow ERROR**
+    ->create->alter->OK
+    ->if the table already exist->alter->can't find table!?????
+    ->insert into also has this question->
+    **useTable** ERROR!！！！！！！！！
+    √ ->write a useTable test    
+    √ **useDatabase** ERROR!!!!!!!
+    create->use->OK
+    use->ERROR!!!!!!!!!!!!!!!!!!!!!
+2. √ **EXTENDS** commandHandler->multiple classes
+3. **SELECT**:data reader printout -method
+
+4. **workFlow ERROR**
+   1. √ drop table ERROR, drop database OK->change the filePath
+   2. √ attribute added in a new line->delete the added new line in addAttribute
+   3. insert into->stays in the same line
+
+5. attributes can't duplicate
 
 
 
+
+
+
+
+-----
 SELECT (WHERE)
 JOIN (WHERE)
 UPDATE(WHERE)
-**DELETE**(WHERE)
+DELETE (WHERE)

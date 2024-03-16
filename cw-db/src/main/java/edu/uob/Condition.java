@@ -28,10 +28,15 @@ public class Condition {
     //correct name
     public boolean correctName(String name) {
         name=name.toLowerCase();
-        if (keywords.contains(name) || boolOperator.contains(name) || comparisonOperators.contains(name)) {
-            return false;
+        if (!keywords.contains(name) || !boolOperator.contains(name) || !comparisonOperators.contains(name)) {
+            for (int i = 0; i < name.length(); i++) {
+                char ch = name.charAt(i);
+                if(Character.isLetter(ch) || Character.isDigit(ch)){
+                    return true;
+                }
+            }
         }
-        return true;
+        return false;
     }
 
     //Arrays.copyOfRange()
@@ -40,7 +45,6 @@ public class Condition {
      */
     public void conditionSelector(ArrayList<String> conditionalCommand) {
         for (String command : conditionalCommand) {
-
             if (bracketsSet.contains(command)) {
                 //Complex->brackets
             } else if (boolOperator.contains(command)) {

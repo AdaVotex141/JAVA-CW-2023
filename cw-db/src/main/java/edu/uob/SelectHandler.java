@@ -36,7 +36,10 @@ public class SelectHandler extends CommandHandler implements Cloneable {
         }
 
         //copy currentTable to tempTable
-        Table currentTable=Globalstatus.getInstance().getCurrentTable();
+        //Table currentTable=Globalstatus.getInstance().getCurrentTable();
+        boolean flagUseTable;
+        Table currentTable= reader.useTableByDatabase((tokens.get(tempTokenIndex)));
+        reader.printTabFile(currentTable);
         tempTable.name=String.copyValueOf(currentTable.name.toCharArray());
         Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
         reader.readTabFile(currentDatabase,tempTable,storageFolderPath);
@@ -77,7 +80,7 @@ public class SelectHandler extends CommandHandler implements Cloneable {
         for(Rowdata data:tempTable.datas){
             returnBuilder.append(data.getid()+"\t"+data.getData()+"\n");
         }
-        reader.printTabFile(tempTable);
+        //reader.printTabFile(tempTable);
         returnBuilder.append("[OK]");
         return returnBuilder;
     }
