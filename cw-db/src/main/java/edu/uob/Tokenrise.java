@@ -45,7 +45,7 @@ public class Tokenrise {
     }
 
     public static void main(String[] args) {
-        String query = "  CREATE TABLE marks (Value ==12   );     ";
+        String query = "  DELETE FROM marks WHERE name =='Simon';     ";
         Tokenrise tokenizer = new Tokenrise(query);
         ArrayList<String> tokens = tokenizer.getTokens();
         for (String token : tokens) {

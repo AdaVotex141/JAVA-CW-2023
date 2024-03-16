@@ -40,19 +40,30 @@ public class TestCommand {
         sendCommandToServer("USE testDatabase" + ";");
         sendCommandToServer("CREATE TABLE " + "test1" + ";");
         sendCommandToServer("CREATE TABLE test2 (name,pass);");
-        sendCommandToServer("Alter TABLE test2 mark;");
+        sendCommandToServer("Alter TABLE test2 add mark;");
+        sendCommandToServer("Alter TABLE test2 add mark;");
+        sendCommandToServer("Alter TABLE test2 add mark;");
+        sendCommandToServer("Alter TABLE test2 drop mark;");
+        sendCommandToServer("Alter TABLE test2 drop id;");
         //sendCommandToServer("INSERT INTO test1 VALUES ('Simon', 65, TRUE)");
         //sendCommandToServer("INSERT INTO test2 VALUES ('Simon', 65, TRUE)");
-        //sendCommandToServer("drop database testDatabase;");
-
-
-
-
+        sendCommandToServer("drop database testDatabase;");
 
     }
     @Test
-    public void workFlowTest2(){
-        sendCommandToServer("CREATE DATABASE " + "testDatabase" + ";");
-        sendCommandToServer("USE testDatabase" + ";");
+    public void testDelete(){
+        sendCommandToServer("CREATE DATABASE " + "testDatabase2" + ";");
+        sendCommandToServer("USE testDatabase2" + ";");
+        sendCommandToServer("CREATE TABLE marks (name, mark, pass);");
+        sendCommandToServer("INSERT INTO marks VALUES ('Simon', 65, TRUE);");
+        sendCommandToServer("INSERT INTO marks VALUES ('Sion', 55, TRUE);");
+        sendCommandToServer("INSERT INTO marks VALUES ('Rob', 35, FALSE);");
+        sendCommandToServer("INSERT INTO marks VALUES ('Chris', 20, FALSE);");
+
+        //delete
+        //sendCommandToServer("DELETE FROM marks WHERE name =='Simon';");
+
+
+        //sendCommandToServer("drop database testDatabase2;");
     }
 }

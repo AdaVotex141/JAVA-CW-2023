@@ -157,7 +157,13 @@ public class Database {
             return null;
         }
     }
-
+    public void updateTable(Table table) {
+        if (tables.containsKey(table.name)) {
+            tables.put(table.name, table);
+        } else {
+            System.err.println("Table '" + table.name + "' not found in the database.");
+        }
+    }
     //=================================Drop===================================
     //Recursively delete all the files in the database and the database itself
 

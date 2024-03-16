@@ -30,13 +30,13 @@ public class InsertHandler extends CommandHandler{
             //String FilePath = path + File.separator + Globalstatus.getInstance().getCurrentDatabase()
             //                + searchFile + ".tab";
 
-            boolean flag=this.reader.useTable(tokens.get(tokenIndex),storageFolderPath);
-            if(!flag){
-                returnBuilder.append("[ERROR] Table doesn't exist");
-                return returnBuilder;
-            }
+            Table table=this.reader.useTableByDatabase(tokens.get(tokenIndex));
+//            if(!flag){
+//                returnBuilder.append("[ERROR] Table doesn't exist");
+//                return returnBuilder;
+//            }
 
-            Table table=Globalstatus.getInstance().getCurrentTable();
+            //Table table=Globalstatus.getInstance().getCurrentTable();
             //System.out.print(table.name);
             tokenIndex+=1;
             if(!tokens.get(tokenIndex).equalsIgnoreCase("VALUES")){

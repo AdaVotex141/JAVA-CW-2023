@@ -7,6 +7,7 @@ public class UpdateHandler extends CommandHandler{
         super(path);
     }
     //<Update> ::=  "UPDATE " [TableName] " SET " <NameValueList> " WHERE " <Condition>
+    //UPDATE marks SET age = 35 WHERE name == 'Simon';
     public StringBuilder update(ArrayList<String> tokens, StringBuilder returnBuilder){
         tokenIndex=1;
         if(!tokens.get(tokens.size() - 1).equals(";")){

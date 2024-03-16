@@ -48,11 +48,21 @@ public class AlterHandler extends CommandHandler {
             //valid name
             boolean validName=condition.correctName(tokens.get(tokenIndex));
             if (!validName){
+                System.err.print("invalid name");
                 returnBuilder.append("[ERROR]:Invalid name");
                 return returnBuilder;
             }
-
+            //attribute name can't be duplicate
             String attributeName=tokens.get(tokenIndex);
+            String[] attributeList=tableget.getAttribute().split("\t");
+            for (String s : attributeList) {
+                if (s.equals(attributeName)) {
+                    returnBuilder.append("[ERROR]:Invalid name");
+                    return returnBuilder;
+                }
+            }
+
+
             boolean flagAdd=tableget.alterAddTable(attributeName+"\t");
             if(!flagAdd){
                 returnBuilder.append("[ERROR] Fail add attribute"+attributeName);
@@ -61,7 +71,6 @@ public class AlterHandler extends CommandHandler {
             returnBuilder.append("[OK]");
         }else if (tokens.get(tokenIndex).equalsIgnoreCase("DROP")){
             tokenIndex+=1;
-            //TODO:dealing with DROP
             //valid name
             boolean validName=condition.correctName(tokens.get(tokenIndex));
             if (!validName){
@@ -70,6 +79,10 @@ public class AlterHandler extends CommandHandler {
             }
 
             String attributeName=tokens.get(tokenIndex);
+            if(attributeName.equals("id")){
+                returnBuilder.append("[ERROR] can't drop id!");
+                return returnBuilder;
+            }
             boolean flagDrop=tableget.alterDropTable(attributeName);
             if(!flagDrop){
                 returnBuilder.append("[ERROR] Fail drop attribute"+attributeName);

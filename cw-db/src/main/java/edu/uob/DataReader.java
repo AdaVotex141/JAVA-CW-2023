@@ -38,14 +38,23 @@ public class DataReader {
         String filePath = path + File.separator + database.name + File.separator + table.name + ".tab";
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
-            table.setAttribute(reader.readLine());
+            String attributeLine = reader.readLine();
+            if (attributeLine != null) {
+                table.setAttribute(attributeLine);
+            } else {
+                System.err.println("Attribute line is empty in the .tab file");
+                return;
+            }
 
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split("\t");
-                if (parts.length > 0 && !parts[0].isBlank()) {
+                if (parts.length >= 2 && !parts[0].isEmpty()) {
                     try {
                         int id = Integer.parseInt(parts[0]);
-                        String data = (parts.length > 1) ? parts[1] : "";
+                        String data = parts[1];
+                        for (int i = 2; i < parts.length; i++) {
+                            data += "\t" + parts[i];
+                        }
                         Rowdata rowData = new Rowdata(id, data);
                         table.datas.add(rowData);
                     } catch (NumberFormatException e) {

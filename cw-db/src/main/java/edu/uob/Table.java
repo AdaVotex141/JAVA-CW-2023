@@ -295,4 +295,10 @@ public class Table{
         }
     }
 
+    public void printAll(){
+        for(Rowdata data:this.datas){
+            System.out.print(data.getData()+"\t");
+        }
+    }
+
 }

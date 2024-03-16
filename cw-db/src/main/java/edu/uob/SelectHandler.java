@@ -3,7 +3,7 @@ package edu.uob;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class SelectHandler extends CommandHandler implements Cloneable {
+public class SelectHandler extends CommandHandler {
 
     public SelectHandler(String path) {
         super(path);
@@ -22,7 +22,6 @@ public class SelectHandler extends CommandHandler implements Cloneable {
         }
 
         Table tempTable=new Table();
-
         //advanced set table:
         int tempTokenIndex=tokenIndex;
         while(!tokens.get(tempTokenIndex).equalsIgnoreCase("FROM")){
@@ -39,7 +38,8 @@ public class SelectHandler extends CommandHandler implements Cloneable {
         //Table currentTable=Globalstatus.getInstance().getCurrentTable();
         boolean flagUseTable;
         Table currentTable= reader.useTableByDatabase((tokens.get(tempTokenIndex)));
-        reader.printTabFile(currentTable);
+        //reader.printTabFile(currentTable);
+
         tempTable.name=String.copyValueOf(currentTable.name.toCharArray());
         Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
         reader.readTabFile(currentDatabase,tempTable,storageFolderPath);
@@ -60,27 +60,53 @@ public class SelectHandler extends CommandHandler implements Cloneable {
                     notSelectedAttribute=notSelectedAttribute+attribute;
                 }
             }
-            boolean dropColmnFlag=tempTable.alterDropTable(notSelectedAttribute);
-            if(dropColmnFlag==false){
-                returnBuilder.append("[ERROR]");
-                return returnBuilder;
+//            boolean dropColmnFlag=tempTable.alterDropTable(notSelectedAttribute);
+//            if(!dropColmnFlag){
+//                returnBuilder.append("[ERROR]");
+//                return returnBuilder;
+//            }
+
+            //if select * : set all the selected flag -> true
+        }else{
+            for(Rowdata data:tempTable.datas){
+                data.selected=true;
             }
-            //what's left is in is in the
         }
 
-
+        //TODO very complicated->move to delete instead
         //WHERE
         if(tokens.get(tokens.size()-2).equalsIgnoreCase("WHERE")){
             //TODO:DEAL with WHERE
+            ArrayList<String> subList = new ArrayList<>(tokens.subList(tokenIndex, tokens.size()));
+            Condition.ConditionSelector selectorflag=condition.conditionSelection(subList);
+            if(selectorflag == Condition.ConditionSelector.simpleComparison){
+                String attribute=subList.get(0);
+                int attributeIndex=tempTable.AttributeIndexWithoutID(attribute);
+                String oper=subList.get(1);
+                String value=subList.get(2);
 
 
+            }else if(selectorflag== Condition.ConditionSelector.withBool){
+
+            } else if (selectorflag== Condition.ConditionSelector.withbrackets) {
+
+            }else{
+                returnBuilder.append("[ERROR] Can't resolve condition");
+                return returnBuilder;
+            }
         }
+
+
+
         //print out to terminal
-        returnBuilder.append("attribute"+"\n");
+        //tempTable.printAll();
+        returnBuilder.append(tempTable.getAttribute()+"\n");
         for(Rowdata data:tempTable.datas){
-            returnBuilder.append(data.getid()+"\t"+data.getData()+"\n");
+            //TODO:flag detection
+            if(data.selected==true){
+                returnBuilder.append(data.getid()+"\t"+data.getData()+"\n");
+            }
         }
-        //reader.printTabFile(tempTable);
         returnBuilder.append("[OK]");
         return returnBuilder;
     }
