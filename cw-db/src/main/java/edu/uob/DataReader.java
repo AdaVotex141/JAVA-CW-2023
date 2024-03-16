@@ -61,7 +61,7 @@ public class DataReader {
                         System.err.println("Error parsing ID on line " + line + ": " + e.getMessage());
                     }
                 } else {
-                    System.err.println("Invalid or empty ID encountered in the .tab file on line " + line);
+                    //System.err.println("Invalid or empty ID encountered in the .tab file on line " + line);
                 }
             }
         } catch (IOException e) {

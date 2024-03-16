@@ -52,20 +52,44 @@ public class DeleteHandler extends CommandHandler{
                     table.datas.get(i).flag=false;
                 }
             }
-
-
-
-
-
-
+            returnBuilder.append("[OK]");
             //write back to file
             reader.writeTabFile(table,table.tableFilePath);
             //reintisualised the database:
             currentDatabase.updateTable(table);
 
         }else if(selectorflag== Condition.ConditionSelector.withBool){
+            //this is the index in the command that should be replaced
+            ArrayList<Integer> dataIndex=condition.dataIndex;
+            ArrayList<String> attributeSelected=condition.attributeSelected;
+            ArrayList<Integer> attributeIndex=new ArrayList<>();
+            //this is the index of every attribute selected, can be iterated by Math.max
+            for(String attribute:attributeSelected){
+                attributeIndex.add(table.AttributeIndexWithoutID(attribute));
+            }
 
+            for(Rowdata data: table.datas) {
+                String[] rowData = data.getDataSplit();
+                //do the replacement
+                ArrayList <String> toReplace=new ArrayList<>();
+                //ArrayList <String> replaceCommand=new ArrayList<>();
+                for(int attributeindex:attributeIndex){
+                    toReplace.add(rowData[attributeindex]);
+                }
+                for(int i=0; i<toReplace.size();i++){
+                    int index=dataIndex.get(i);
+                    subList.set(index,toReplace.get(i));
+                }
+                //the whole command
+                //TODO:give up for now.
+                if(condition.evaluateCondition(subList)){
+                    data.flag=false;
+                }
+            }
         } else if (selectorflag== Condition.ConditionSelector.withbrackets) {
+
+
+
 
         }else{
             returnBuilder.append("[ERROR] Can't resolve condition");

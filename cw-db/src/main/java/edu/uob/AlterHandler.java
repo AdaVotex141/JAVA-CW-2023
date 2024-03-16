@@ -68,6 +68,7 @@ public class AlterHandler extends CommandHandler {
                 returnBuilder.append("[ERROR] Fail add attribute"+attributeName);
                 return returnBuilder;
             }
+            currentDatabase.updateTable(tableget);
             returnBuilder.append("[OK]");
         }else if (tokens.get(tokenIndex).equalsIgnoreCase("DROP")){
             tokenIndex+=1;

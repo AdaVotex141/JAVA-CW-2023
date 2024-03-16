@@ -20,6 +20,11 @@ public class SelectHandler extends CommandHandler {
             returnBuilder.append("[ERROR]");
             return returnBuilder;
         }
+        if(Globalstatus.getInstance().getCurrentDatabase()==null){
+            returnBuilder.append("[ERROR] hasn't select a database yet!");
+            return returnBuilder;
+        }
+
 
         Table tempTable=new Table();
         //advanced set table:
@@ -75,7 +80,7 @@ public class SelectHandler extends CommandHandler {
 
         //TODO very complicated->move to delete instead
         //WHERE
-        if(tokens.get(tokens.size()-2).equalsIgnoreCase("WHERE")){
+        if(tokens.get(tokenIndex+1).equalsIgnoreCase("WHERE")){
             //TODO:DEAL with WHERE
             ArrayList<String> subList = new ArrayList<>(tokens.subList(tokenIndex, tokens.size()));
             Condition.ConditionSelector selectorflag=condition.conditionSelection(subList);
@@ -84,9 +89,21 @@ public class SelectHandler extends CommandHandler {
                 int attributeIndex=tempTable.AttributeIndexWithoutID(attribute);
                 String oper=subList.get(1);
                 String value=subList.get(2);
-
-
+                for(int i=0;i<tempTable.datas.size();i++){
+                    String[] rowData=tempTable.datas.get(i).getDataSplit();
+                    if(condition.comparisonOperator(rowData[attributeIndex],oper,value)){
+                        tempTable.datas.get(i).selected=true;
+                    }
+                }
             }else if(selectorflag== Condition.ConditionSelector.withBool){
+                //this is the index in the command that should be replaced
+                ArrayList<Integer> dataIndex=condition.dataIndex;
+                for(Rowdata data: tempTable.datas){
+                    String[] rowData=data.getDataSplit();
+
+
+
+                }
 
             } else if (selectorflag== Condition.ConditionSelector.withbrackets) {
 
@@ -96,10 +113,16 @@ public class SelectHandler extends CommandHandler {
             }
         }
 
-
+        //drop notselected colmn:
+        //            boolean dropColmnFlag=tempTable.alterDropTable(notSelectedAttribute);
+//            if(!dropColmnFlag){
+//                returnBuilder.append("[ERROR]");
+//                return returnBuilder;
+//            }
 
         //print out to terminal
         //tempTable.printAll();
+        returnBuilder.append("[OK]"+"\n");
         returnBuilder.append(tempTable.getAttribute()+"\n");
         for(Rowdata data:tempTable.datas){
             //TODO:flag detection
@@ -107,7 +130,6 @@ public class SelectHandler extends CommandHandler {
                 returnBuilder.append(data.getid()+"\t"+data.getData()+"\n");
             }
         }
-        returnBuilder.append("[OK]");
         return returnBuilder;
     }
 
