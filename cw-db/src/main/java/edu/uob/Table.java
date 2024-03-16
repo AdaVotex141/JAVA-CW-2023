@@ -120,6 +120,11 @@ public class Table{
         //find the latestRow from txt
         Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
         String IDfilePath=this.IDFilePath;
+        if(IDfilePath==null){
+            System.out.print("IDfilePath is null");
+            IDfilePath=this.tableFilePath.replace(".tab",".id");
+            System.out.print(IDfilePath);
+        }
         File IDfile = new File(IDfilePath);
         int id=0;
         int temp=0;
@@ -168,17 +173,19 @@ public class Table{
         return latestID;
     }
     public int AttributeIndexWithoutID(String findAttribute) {
+        System.out.print(this.attribute+"\n");
         String[] attributes = this.attribute.split("\t");
-        int i;
-        for (i = 0; i < attributes.length; i++) {
+        int attributeIndex = -1;
+        for (int i = 0; i < attributes.length; i++) {
             if (attributes[i].equals(findAttribute)) {
-                return i-1;
-                //break;
+                attributeIndex = i-1;
+                break;
             }
-            int attributeIndex = i - 1;
         }
-        return -1;
+        System.out.print("attribute index without id is :" + attributeIndex + "\n");
+        return attributeIndex;
     }
+
     //=============================================Alter========================================
     public boolean alterDropTable(String dropAttribute){
         // get the index of dropAttribute in the attribute list

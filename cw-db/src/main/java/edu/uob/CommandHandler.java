@@ -2,6 +2,7 @@ package edu.uob;
 
 //import javax.xml.crypto.Data;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.io.File;
 //import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.HashSet;
 
 public class CommandHandler {
     protected final String storageFolderPath;
+    String path = Paths.get("databases").toAbsolutePath().toString();
     protected int tokenIndex;
     protected final DataReader reader;
     protected Condition condition;

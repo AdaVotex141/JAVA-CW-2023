@@ -44,7 +44,9 @@ public class UpdateHandler extends CommandHandler{
         //TODO: Implement update
 
 
-
+//        reader.writeTabFile(table,table.tableFilePath);
+//        //reintisualised the database:
+//        currentDatabase.updateTable(table);
         return returnBuilder;
     }
 }

@@ -68,6 +68,10 @@ public class InsertHandler extends CommandHandler{
                 returnBuilder.append("[ERROR] insert fail");
                 return returnBuilder;
             }
+            //write back to file
+            reader.writeTabFile(table,table.tableFilePath);
+            //reintisualised the database:
+            currentDatabase.updateTable(table);
             returnBuilder.append("[OK]");
         }else{
             returnBuilder.append("[ERROR] invalid sentence??????????");

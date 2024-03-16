@@ -89,6 +89,8 @@ public class AlterHandler extends CommandHandler {
                 return returnBuilder;
             }
             //writeTabFile(Table table, String tableFilePath)
+            //write back to file
+            currentDatabase.updateTable(tableget);
             reader.writeTabFile(tableget,tableget.tableFilePath);
             returnBuilder.append("[OK]");
         }else{

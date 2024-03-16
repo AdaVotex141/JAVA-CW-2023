@@ -47,7 +47,7 @@ public class DeleteHandler extends CommandHandler{
             for(int i=0;i<table.datas.size();i++){
                 String[] rowData=table.datas.get(i).getDataSplit();
                 if(condition.comparisonOperator(rowData[attributeIndex],oper,value)){
-                    table.datas.get(i).flag=false;
+                    table.datas.get(i).flag=true;
                 }
             }
             //write back to file
@@ -64,6 +64,11 @@ public class DeleteHandler extends CommandHandler{
             return returnBuilder;
         }
 
+
+
+        reader.writeTabFile(table,table.tableFilePath);
+        //reintisualised the database:
+        currentDatabase.updateTable(table);
         return returnBuilder;
     }
 }

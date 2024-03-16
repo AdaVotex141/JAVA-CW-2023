@@ -91,6 +91,7 @@ public class DataReader {
                         Table newTable = new Table();
                         newTable.name = tableName;
                         newTable.tableFilePath = file.getAbsolutePath();
+                        //newTable.IDFilePath = file.getAbsolutePath().replace(".tab",".id");
                         readTabFile(Globalstatus.getInstance().getCurrentDatabase(),newTable,path);
                         Globalstatus.getInstance().getCurrentDatabase().tables.put(newTable.name,newTable);
                     }

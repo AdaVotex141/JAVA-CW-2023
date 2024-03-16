@@ -61,7 +61,8 @@ public class TestCommand {
         sendCommandToServer("INSERT INTO marks VALUES ('Chris', 20, FALSE);");
 
         //delete
-        //sendCommandToServer("DELETE FROM marks WHERE name =='Simon';");
+        //sendCommandToServer("DELETE FROM marks WHERE mark = 55;");
+        //select * from test;
 
 
         //sendCommandToServer("drop database testDatabase2;");
