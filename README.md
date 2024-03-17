@@ -385,9 +385,13 @@ create tables error again???
 ### 17/3:
 Fundamental tests:
 go through every work flow:
-* create with attribute doesn't work
-* index error->delete error(where)
-* select 
+* √ create with attribute doesn't work
+* index error -> delete error(where)
+
+
+
+
+
 
 
 

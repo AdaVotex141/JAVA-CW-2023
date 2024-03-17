@@ -187,7 +187,7 @@ public class Table{
             }
         }
         System.out.print("Attribute index without id is: " + attributeIndex + "\n");
-        return attributeIndex;
+        return attributeIndex-1;
     }
 
     //=============================================Alter========================================
