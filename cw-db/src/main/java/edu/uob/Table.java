@@ -2,6 +2,7 @@ package edu.uob;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /*
@@ -311,6 +312,15 @@ public class Table{
         for(Rowdata data:this.datas){
             System.out.print(data.getData()+"\t");
         }
+    }
+    public HashMap<Integer,String> generateMap(){
+        HashMap<Integer,String> mapData=new HashMap<>();
+        for(Rowdata data:this.datas){
+            int id=data.getid();
+            String dataString=data.getData();
+            mapData.put(id,dataString);
+        }
+        return mapData;
     }
 
     public static void main(String[] args) {

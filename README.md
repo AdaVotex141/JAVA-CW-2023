@@ -387,7 +387,7 @@ go through every work flow:
 * index error -> delete error(where)-> Table attributeID thing
 ->done
 
-
+UPDATE(WHERE)->finish but hasn't tested yet
 
 ### 17/3:
 
@@ -399,6 +399,6 @@ go through every work flow:
 ---
 SELECT (WHERE)->can select colmun
 DELETE (WHERE)
-UPDATE(WHERE)
+UPDATE(WHERE)->finish
 
 JOIN (WHERE)

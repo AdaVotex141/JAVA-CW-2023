@@ -1,5 +1,7 @@
 package edu.uob;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class Rowdata{
     private int id;
@@ -15,6 +17,8 @@ public class Rowdata{
         this.selected=false;
         this.updated=true;
     }
+
+
     public int getid(){
         return this.id;
     }
@@ -33,5 +37,6 @@ public class Rowdata{
     public void setData(String data){
         this.data=data;
     }
+
 
 }

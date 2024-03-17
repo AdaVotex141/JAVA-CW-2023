@@ -1,6 +1,10 @@
 package edu.uob;
 
+import javax.annotation.processing.SupportedOptions;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class UpdateHandler extends CommandHandler{
     public UpdateHandler(String path) {
@@ -15,10 +19,6 @@ public class UpdateHandler extends CommandHandler{
         if(!preCheckFlag){
             return returnBuilder;
         }
-//        if(!tokens.get(tokens.size() - 1).equals(";")){
-//            returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
-//            return returnBuilder;
-//        }
         if(tokens.size()<7){
             returnBuilder.append("[ERROR]");
             return returnBuilder;
@@ -28,27 +28,65 @@ public class UpdateHandler extends CommandHandler{
             returnBuilder.append("[ERROR] Table doesn't exist");
             return returnBuilder;
         }
-        tokenIndex+=1;
+        Table table=Globalstatus.getInstance().getCurrentTable();
+        tokenIndex+=1;//set
         if(!tokens.get(tokenIndex).equalsIgnoreCase("SET")){
             returnBuilder.append("[ERROR] Invalid sentence");
             return returnBuilder;
         }
-        tokenIndex+=1;
+        tokenIndex+=1;//name value list
+        //use hashmap to store pair data
+        HashMap<Integer,String> updateList=new HashMap<>();
+
+        String[] getAttributes=table.getAttribute().split("\t");
+        HashSet<String> allAttributes=new HashSet<>();
+        allAttributes.addAll(Arrays.asList(getAttributes));
         while(!tokens.get(tokenIndex).equalsIgnoreCase("WHERE")){
             //TODO: get <NameValueList>
-
-
-
+            if(allAttributes.contains(tokens.get(tokenIndex))){
+                int attributeID=table.AttributeIndexWithoutID(tokens.get(tokenIndex));
+                String dataString=tokens.get(tokenIndex+2);
+                updateList.put(attributeID,dataString);
+            }
             tokenIndex+=1;
         }
-        tokenIndex+=1;
+        tokenIndex+=2;//where+1
         //TODO: <condition>
+        Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
+        ArrayList<String> subList = new ArrayList<>(tokens.subList(tokenIndex, tokens.size()));
+        Condition.ConditionSelector selectorflag=condition.conditionSelection(subList);
+        //simplist definition
+        if(selectorflag == Condition.ConditionSelector.simpleComparison){
+            String attribute=subList.get(0);
+            int attributeIndex=table.AttributeIndexWithoutID(attribute);
+            String oper=subList.get(1);
+            String value=subList.get(2);
+            for(int i=0;i<table.datas.size();i++){
+                String[] rowData=table.datas.get(i).getDataSplit();
+                if(condition.comparisonOperator(rowData[attributeIndex],oper,value)){
+                    for (Integer key : updateList.keySet()){
+                        rowData[key]=updateList.get(key);
+                    }
+                }
+                table.datas.set(i, new Rowdata(table.datas.get(i).getid(), String.join("\t", rowData)));
+            }
+            returnBuilder.append("[OK]");
+            //write back to file
+            reader.writeTabFile(table,table.tableFilePath);
+            //reintisualised the database:
+            currentDatabase.updateTable(table);
+
+        }else if(selectorflag== Condition.ConditionSelector.withBool){
+
+        } else if (selectorflag== Condition.ConditionSelector.withbrackets) {
 
 
 
-        //TODO: Implement update
 
-
+        }else{
+            returnBuilder.append("[ERROR] Can't resolve condition");
+            return returnBuilder;
+        }
 //        reader.writeTabFile(table,table.tableFilePath);
 //        //reintisualised the database:
 //        currentDatabase.updateTable(table);
