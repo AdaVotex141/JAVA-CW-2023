@@ -1,6 +1,7 @@
 package edu.uob;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 
 public class SelectHandler extends CommandHandler {
@@ -12,16 +13,14 @@ public class SelectHandler extends CommandHandler {
 // "SELECT " <WildAttribList> " FROM " [TableName] " WHERE " <Condition>
     public StringBuilder select(ArrayList<String> tokens, StringBuilder returnBuilder){
         tokenIndex=1;
-        if(!tokens.get(tokens.size() - 1).equals(";")){
-            returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
+
+        //precheck
+        boolean preCheckFlag=preCheck(tokens,returnBuilder);
+        if(!preCheckFlag){
             return returnBuilder;
         }
         if(tokens.size()<4){
             returnBuilder.append("[ERROR]");
-            return returnBuilder;
-        }
-        if(Globalstatus.getInstance().getCurrentDatabase()==null){
-            returnBuilder.append("[ERROR] hasn't select a database yet!");
             return returnBuilder;
         }
 
@@ -39,42 +38,22 @@ public class SelectHandler extends CommandHandler {
             return returnBuilder;
         }
 
-        //copy currentTable to tempTable
-        //Table currentTable=Globalstatus.getInstance().getCurrentTable();
         boolean flagUseTable;
         Table currentTable= reader.useTableByDatabase((tokens.get(tempTokenIndex)));
-        //reader.printTabFile(currentTable);
 
         tempTable.name=String.copyValueOf(currentTable.name.toCharArray());
         Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
         reader.readTabFile(currentDatabase,tempTable,storageFolderPath);
 
+        HashSet<String> attributeSet=new HashSet<>();
+        for(Rowdata data:tempTable.datas){
+            data.selected=true;
+        }
         //select attribute
         if(!tokens.get(tokenIndex).equals("*")){
-            HashSet<String> attributeSet=new HashSet<>();
             while(!tokens.get(tokenIndex).equalsIgnoreCase("FROM")){
                 attributeSet.add(tokens.get(tokenIndex));
                 tokenIndex+=1;
-            }
-            //delete not selected attributes.
-            //if the attribute is not in the set, then added it to notSelectedAttribute
-            String notSelectedAttribute="";
-            String[] wholeAttribute=currentTable.getAttribute().split("\t");
-            for(String attribute:wholeAttribute){
-                if(!attributeSet.contains(attribute)){
-                    notSelectedAttribute=notSelectedAttribute+attribute;
-                }
-            }
-//            boolean dropColmnFlag=tempTable.alterDropTable(notSelectedAttribute);
-//            if(!dropColmnFlag){
-//                returnBuilder.append("[ERROR]");
-//                return returnBuilder;
-//            }
-
-            //if select * : set all the selected flag -> true
-        }else{
-            for(Rowdata data:tempTable.datas){
-                data.selected=true;
             }
         }
 
@@ -84,6 +63,7 @@ public class SelectHandler extends CommandHandler {
             //TODO:DEAL with WHERE
             ArrayList<String> subList = new ArrayList<>(tokens.subList(tokenIndex, tokens.size()));
             Condition.ConditionSelector selectorflag=condition.conditionSelection(subList);
+
             if(selectorflag == Condition.ConditionSelector.simpleComparison){
                 String attribute=subList.get(0);
                 int attributeIndex=tempTable.AttributeIndexWithoutID(attribute);
@@ -114,14 +94,23 @@ public class SelectHandler extends CommandHandler {
         }
 
         //drop notselected colmn:
-        //            boolean dropColmnFlag=tempTable.alterDropTable(notSelectedAttribute);
-//            if(!dropColmnFlag){
-//                returnBuilder.append("[ERROR]");
-//                return returnBuilder;
-//            }
+        //all attributes, select attributes->common retainAll attributeSet
+        String[] getAttributes=tempTable.getAttribute().split("\t");
+        HashSet<String> allAttributes=new HashSet<>();
+        allAttributes.addAll(Arrays.asList(getAttributes));
+        allAttributes.removeAll(attributeSet);
+
+        if(!attributeSet.isEmpty()){
+            for (String element : allAttributes){
+                boolean dropColmnFlag=tempTable.alterDropTable(element);
+                if(!dropColmnFlag){
+                    returnBuilder.append("[ERROR]");
+                    return returnBuilder;
+                }
+            }
+        }
 
         //print out to terminal
-        //tempTable.printAll();
         returnBuilder.append("[OK]"+"\n");
         returnBuilder.append(tempTable.getAttribute()+"\n");
         for(Rowdata data:tempTable.datas){
@@ -132,6 +121,4 @@ public class SelectHandler extends CommandHandler {
         }
         return returnBuilder;
     }
-
-
 }

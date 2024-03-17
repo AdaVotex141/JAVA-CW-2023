@@ -12,10 +12,15 @@ public class DeleteHandler extends CommandHandler{
     //flag->false writeTabFile(!data.flag)->write back to the file with flags
     public StringBuilder delete(ArrayList<String> tokens, StringBuilder returnBuilder){
         tokenIndex=1;
-        if(!tokens.get(tokens.size() - 1).equals(";")){
-            returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
+        boolean preCheckFlag=preCheck(tokens,returnBuilder);
+        if(!preCheckFlag){
             return returnBuilder;
         }
+
+//        if(!tokens.get(tokens.size() - 1).equals(";")){
+//            returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
+//            return returnBuilder;
+//        }
         if(tokens.size()<6){
             returnBuilder.append("[ERROR]");
             return returnBuilder;

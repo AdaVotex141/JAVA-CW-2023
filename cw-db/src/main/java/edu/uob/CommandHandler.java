@@ -21,6 +21,18 @@ public class CommandHandler {
         this.reader=new DataReader();
         this.condition=new Condition();
     }
+
+    public boolean preCheck(ArrayList<String> tokens, StringBuilder returnBuilder){
+        if(!tokens.get(tokens.size() - 1).equals(";")){
+            returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
+            return false;
+        }
+        if(Globalstatus.getInstance().getCurrentDatabase()==null){
+            returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
+            return false;
+        }
+        return true;
+    }
     //TODO: invalid NAME: keywords\etc.
     //TODO: set some private variables.
 

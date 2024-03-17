@@ -43,6 +43,15 @@ public class DropHandler extends CommandHandler {
             } else if (tokens.get(tokenIndex).equalsIgnoreCase("TABLE")) {
                 //System.out.print(" reach table！");
                 tokenIndex += 1;
+
+                //precheck
+                boolean preCheckFlag=preCheck(tokens,returnBuilder);
+                if(!preCheckFlag){
+                    return returnBuilder;
+                }
+
+
+
                 String TableName = tokens.get(tokenIndex).toLowerCase();
                 Database currentDatabase = Globalstatus.getInstance().getCurrentDatabase();
                 if (currentDatabase == null) {

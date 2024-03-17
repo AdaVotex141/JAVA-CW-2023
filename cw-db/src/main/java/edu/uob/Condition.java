@@ -57,6 +57,7 @@ public class Condition {
         boolean hasBrackets = false;
         boolean hasBoolOper = false;
         //
+        System.out.print("get in where");
         for(int i=0;i<conditionalCommand.size();i++){
             String command=conditionalCommand.get(i).toLowerCase();
             if(comparisonOperators.contains(conditionalCommand.get(i+1))){

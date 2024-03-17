@@ -10,19 +10,25 @@ public class InsertHandler extends CommandHandler{
     // <Insert> ::=  "INSERT " "INTO " [TableName] " VALUES" "(" <ValueList> ")"
     public StringBuilder insert(ArrayList<String> tokens, StringBuilder returnBuilder) throws IOException {
         tokenIndex=1;
-        if(!tokens.get(tokens.size() - 1).equals(";")){
-            returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
+        //precheck
+        boolean preCheckFlag=preCheck(tokens,returnBuilder);
+        if(!preCheckFlag){
             return returnBuilder;
         }
+
+//        if(!tokens.get(tokens.size() - 1).equals(";")){
+//            returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
+//            return returnBuilder;
+//        }
         if(tokens.size()<8){
             returnBuilder.append("[ERROR]");
             return returnBuilder;
         }
         Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
-        if(currentDatabase==null){
-            returnBuilder.append("[ERROR]");
-            return returnBuilder;
-        }
+//        if(currentDatabase==null){
+//            returnBuilder.append("[ERROR]");
+//            return returnBuilder;
+//        }
         if(tokens.get(tokenIndex).equalsIgnoreCase("INTO")){
             tokenIndex+=1;
             //TODO: reader.useTable->this table doesn't exist????

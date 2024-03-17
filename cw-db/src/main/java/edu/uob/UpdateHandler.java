@@ -10,10 +10,15 @@ public class UpdateHandler extends CommandHandler{
     //UPDATE marks SET age = 35 WHERE name == 'Simon';
     public StringBuilder update(ArrayList<String> tokens, StringBuilder returnBuilder){
         tokenIndex=1;
-        if(!tokens.get(tokens.size() - 1).equals(";")){
-            returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
+        //precheck
+        boolean preCheckFlag=preCheck(tokens,returnBuilder);
+        if(!preCheckFlag){
             return returnBuilder;
         }
+//        if(!tokens.get(tokens.size() - 1).equals(";")){
+//            returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
+//            return returnBuilder;
+//        }
         if(tokens.size()<7){
             returnBuilder.append("[ERROR]");
             return returnBuilder;
