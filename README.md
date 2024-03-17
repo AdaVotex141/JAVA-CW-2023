@@ -373,12 +373,26 @@ simplist delete done!!!!!
 simplist select->
     ->reset select colmun
 
-4. UPDATE(WHERE)
-   -> select colmun, select line
+why? create attribute can't added???
+
+still outbound problem???
+change the create with attribute be with alter ADD
+
+
+---------> I mean...why it fixed?
+create tables error again???
+
+### 17/3:
+Fundamental tests:
+go through every work flow:
+* create with attribute doesn't work
+* index error->delete error(where)
+* select 
+
 
 
 ---
-SELECT (WHERE)
+SELECT (WHERE)->can select colmun
 DELETE (WHERE)
 UPDATE(WHERE)
 
