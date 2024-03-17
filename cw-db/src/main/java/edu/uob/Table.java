@@ -174,16 +174,19 @@ public class Table{
         return latestID;
     }
     public int AttributeIndexWithoutID(String findAttribute) {
-        System.out.print(this.attribute+"\n");
+        System.out.print(this.attribute + "\n");
         String[] attributes = this.attribute.split("\t");
         int attributeIndex = -1;
         for (int i = 0; i < attributes.length; i++) {
+            if (attributes[i].equals("id")) {
+                continue;
+            }
             if (attributes[i].equals(findAttribute)) {
-                attributeIndex = i-1;
+                attributeIndex = i - 1;
                 break;
             }
         }
-        System.out.print("attribute index without id is :" + attributeIndex + "\n");
+        System.out.print("Attribute index without id is: " + attributeIndex + "\n");
         return attributeIndex;
     }
 
@@ -230,7 +233,7 @@ public class Table{
 
     public boolean alterAddTable(String addAttribute){
         //Alter the add Attribute to the end of the current attribute
-        this.attribute=this.attribute+addAttribute+"\t";
+        this.attribute=this.attribute+addAttribute;
         //modify first line in file system.
         boolean flag=this.modifyFirstAttribute(this.attribute);
         return flag;
@@ -243,7 +246,7 @@ public class Table{
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(tableFilePath, false))) {
             for (String attr : attributes) {
                 writer.write(attr);
-                writer.write("\t");
+                //writer.write("\t");
                 writer.newLine();
             }
             System.out.println("First attribute modified to '" + newAttribute + "' in the file.");

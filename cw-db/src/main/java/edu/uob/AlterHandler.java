@@ -63,7 +63,7 @@ public class AlterHandler extends CommandHandler {
             }
 
 
-            boolean flagAdd=tableget.alterAddTable(attributeName+"\t");
+            boolean flagAdd=tableget.alterAddTable(attributeName);
             if(!flagAdd){
                 returnBuilder.append("[ERROR] Fail add attribute"+attributeName);
                 return returnBuilder;
