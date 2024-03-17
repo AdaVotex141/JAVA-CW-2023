@@ -57,6 +57,7 @@ public class CreateHandler extends CommandHandler{
             //tokenIndex += 1;//third token
             Table table = new Table();
             Database currentDatabase = Globalstatus.getInstance().getCurrentDatabase();
+
             //search if the table exist.
             if(currentDatabase.tables.containsKey(tokens.get(tokenIndex))){
                 returnBuilder.append("[ERROR] Already exists");
@@ -73,12 +74,16 @@ public class CreateHandler extends CommandHandler{
             boolean flag;
             flag=table.createTable(currentDatabase, storageFolderPath, tokens.get(tokenIndex));
             if(!flag){
-                returnBuilder.append("[ERROR] Already exists");
+                returnBuilder.append("[ERROR] invalid");
                 return returnBuilder;
             }
             //TODO:test the default
             table.setAttribute("id");
             table.addAttributeID(table.getAttribute());
+
+
+            currentDatabase.updateTable(table);
+            reader.writeTabFile(table, table.tableFilePath);
 
             tokenIndex += 1;//fourth token->CREATE TABLE tablename {;} or CREATE TABLE tablename {(}   );
 
@@ -110,6 +115,8 @@ public class CreateHandler extends CommandHandler{
             reader.writeTabFile(table, table.tableFilePath);
             returnBuilder.append("[OK]");
         }
+        //Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
+        //currentDatabase.updateTable(table);
         return returnBuilder;
     }
 }

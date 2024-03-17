@@ -30,6 +30,7 @@ public class DropHandler extends CommandHandler {
                 Database currentDatabase = Globalstatus.getInstance().getCurrentDatabase();
                 if (databaseToDelete.exists() && databaseToDelete.isDirectory()) {
                     if (currentDatabase != null && database.isSameFolder(currentDatabase)) {
+                        currentDatabase.tables=null;
                         Globalstatus.getInstance().setCurrentDatabase(null);
                     }
                     if (database.dropDatabase(databaseToDelete)) {
@@ -45,10 +46,10 @@ public class DropHandler extends CommandHandler {
                 tokenIndex += 1;
 
                 //precheck
-                boolean preCheckFlag=preCheck(tokens,returnBuilder);
-                if(!preCheckFlag){
-                    return returnBuilder;
-                }
+//                boolean preCheckFlag=preCheck(tokens,returnBuilder);
+//                if(!preCheckFlag){
+//                    return returnBuilder;
+//                }
 
 
 
