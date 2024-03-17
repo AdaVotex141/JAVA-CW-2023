@@ -95,14 +95,19 @@ public class CreateHandler extends CommandHandler{
                 while (!tokens.get(tokenIndex).equals(")")) {
                     if (!tokens.get(tokenIndex).equals(",") && !tokens.get(tokenIndex).equals(" ")) {
                         //attribute: name \t value \t
-                        attributes.append(tokens.get(tokenIndex)).append("\t");
+                        table.alterAddTable(tokens.get(tokenIndex));
+                        //attributes.append(tokens.get(tokenIndex)).append("\t");
                     }
                     //attributes.append("\t");
                     tokenIndex += 1;
                 }
-                String attributeString = attributes.toString();
-                table.addAttribute(attributeString);
+//                String attributeString = attributes.toString();
+//                table.addAttribute(attributeString);
+//                table.setAttribute(attributeString);
+                //table.addAttributeID(table.getAttribute());
             }
+            currentDatabase.updateTable(table);
+            reader.writeTabFile(table, table.tableFilePath);
             returnBuilder.append("[OK]");
         }
         return returnBuilder;

@@ -159,6 +159,7 @@ public class Table{
             e.printStackTrace();
             return false;
         }
+        datas.add(new Rowdata(id,data));
         return true;
     }
 
@@ -229,7 +230,7 @@ public class Table{
 
     public boolean alterAddTable(String addAttribute){
         //Alter the add Attribute to the end of the current attribute
-        this.attribute=this.attribute+addAttribute;
+        this.attribute=this.attribute+addAttribute+"\t";
         //modify first line in file system.
         boolean flag=this.modifyFirstAttribute(this.attribute);
         return flag;
@@ -242,6 +243,7 @@ public class Table{
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(tableFilePath, false))) {
             for (String attr : attributes) {
                 writer.write(attr);
+                writer.write("\t");
                 writer.newLine();
             }
             System.out.println("First attribute modified to '" + newAttribute + "' in the file.");

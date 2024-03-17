@@ -69,6 +69,7 @@ public class AlterHandler extends CommandHandler {
                 return returnBuilder;
             }
             currentDatabase.updateTable(tableget);
+            reader.writeTabFile(tableget,tableget.tableFilePath);
             returnBuilder.append("[OK]");
         }else if (tokens.get(tokenIndex).equalsIgnoreCase("DROP")){
             tokenIndex+=1;

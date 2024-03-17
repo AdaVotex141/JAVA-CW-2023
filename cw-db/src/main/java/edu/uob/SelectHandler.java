@@ -40,7 +40,7 @@ public class SelectHandler extends CommandHandler {
 
         boolean flagUseTable;
         Table currentTable= reader.useTableByDatabase((tokens.get(tempTokenIndex)));
-
+        //tempTable=reader.useTableByDatabase((tokens.get(tempTokenIndex)));
         tempTable.name=String.copyValueOf(currentTable.name.toCharArray());
         Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
         reader.readTabFile(currentDatabase,tempTable,storageFolderPath);
@@ -61,6 +61,10 @@ public class SelectHandler extends CommandHandler {
         //WHERE
         if(tokens.get(tokenIndex).equalsIgnoreCase("WHERE")){
             //TODO:DEAL with WHERE
+            if(tokens.size()<9){
+                returnBuilder.append("[ERROR]");
+                return returnBuilder;
+            }
             ArrayList<String> subList = new ArrayList<>(tokens.subList(tokenIndex, tokens.size()));
             Condition.ConditionSelector selectorflag=condition.conditionSelection(subList);
 
@@ -99,7 +103,7 @@ public class SelectHandler extends CommandHandler {
         HashSet<String> allAttributes=new HashSet<>();
         allAttributes.addAll(Arrays.asList(getAttributes));
         allAttributes.removeAll(attributeSet);
-
+        allAttributes.remove("id");
         if(!attributeSet.isEmpty()){
             for (String element : allAttributes){
                 boolean dropColmnFlag=tempTable.alterDropTable(element);
