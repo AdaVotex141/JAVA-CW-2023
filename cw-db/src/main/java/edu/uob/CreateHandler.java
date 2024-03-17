@@ -77,7 +77,7 @@ public class CreateHandler extends CommandHandler{
                 return returnBuilder;
             }
             //TODO:test the default
-            table.setAttribute("id"+"\t");
+            table.setAttribute("id");
             table.addAttributeID(table.getAttribute());
 
             tokenIndex += 1;//fourth token->CREATE TABLE tablename {;} or CREATE TABLE tablename {(}   );

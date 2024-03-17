@@ -187,7 +187,7 @@ public class Table{
             }
         }
         System.out.print("Attribute index without id is: " + attributeIndex + "\n");
-        return attributeIndex-1;
+        return attributeIndex;
     }
 
     //=============================================Alter========================================
@@ -311,6 +311,13 @@ public class Table{
         for(Rowdata data:this.datas){
             System.out.print(data.getData()+"\t");
         }
+    }
+
+    public static void main(String[] args) {
+        Table table=new Table();
+        table.setAttribute("id"+"\t"+"name"+"\t"+"get");
+        int ID=table.AttributeIndexWithoutID("name");
+        System.out.print(ID);
     }
 
 }

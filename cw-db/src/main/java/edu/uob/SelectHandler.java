@@ -60,19 +60,28 @@ public class SelectHandler extends CommandHandler {
         //TODO very complicated->move to delete instead
         //WHERE
         if(tokens.get(tokenIndex).equalsIgnoreCase("WHERE")){
+            for(Rowdata rowdata:tempTable.datas){
+                rowdata.selected=false;
+            }
             //TODO:DEAL with WHERE
             if(tokens.size()<9){
                 returnBuilder.append("[ERROR]");
                 return returnBuilder;
             }
+            tokenIndex+=1;
             ArrayList<String> subList = new ArrayList<>(tokens.subList(tokenIndex, tokens.size()));
             Condition.ConditionSelector selectorflag=condition.conditionSelection(subList);
-
+            returnBuilder.append(subList);
             if(selectorflag == Condition.ConditionSelector.simpleComparison){
                 String attribute=subList.get(0);
+                if(attribute==null){
+                    returnBuilder.append("[ERROR]");
+                    return returnBuilder;
+                }
                 int attributeIndex=tempTable.AttributeIndexWithoutID(attribute);
                 String oper=subList.get(1);
                 String value=subList.get(2);
+
                 for(int i=0;i<tempTable.datas.size();i++){
                     String[] rowData=tempTable.datas.get(i).getDataSplit();
                     if(condition.comparisonOperator(rowData[attributeIndex],oper,value)){
