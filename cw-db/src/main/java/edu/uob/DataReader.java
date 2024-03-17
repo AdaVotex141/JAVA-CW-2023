@@ -35,8 +35,8 @@ public class DataReader {
 
     //read a tab file and generate it to a table.
     public void readTabFile(Database database, Table table, String path) {
-        String filePath = path + File.separator + database.name + File.separator + table.name + ".tab";
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        String filePath=path + File.separator + database.name + File.separator + table.name + ".tab";
+        try (BufferedReader reader=new BufferedReader(new FileReader(filePath))) {
             String line;
             String attributeLine = reader.readLine();
             if (attributeLine != null) {
@@ -46,16 +46,16 @@ public class DataReader {
                 return;
             }
 
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split("\t");
-                if (parts.length >= 2 && !parts[0].isEmpty()) {
+            while ((line=reader.readLine()) != null) {
+                String[] parts=line.split("\t");
+                if (parts.length>=2 && !parts[0].isEmpty()) {
                     try {
-                        int id = Integer.parseInt(parts[0]);
-                        String data = parts[1];
-                        for (int i = 2; i < parts.length; i++) {
-                            data += "\t" + parts[i];
+                        int id=Integer.parseInt(parts[0]);
+                        String data =parts[1];
+                        for (int i=2; i<parts.length; i++) {
+                            data+="\t"+parts[i];
                         }
-                        Rowdata rowData = new Rowdata(id, data);
+                        Rowdata rowData=new Rowdata(id, data);
                         table.datas.add(rowData);
                     } catch (NumberFormatException e) {
                         System.err.println("Error parsing ID on line " + line + ": " + e.getMessage());

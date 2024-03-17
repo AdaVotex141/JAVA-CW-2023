@@ -10,18 +10,18 @@ public class Tokenrise {
     private ArrayList<String> tokens;
 
     public Tokenrise(String query) {
-        this.query = query.trim();
-        this.tokens = new ArrayList<>();
+        this.query=query.trim();
+        this.tokens=new ArrayList<>();
         tokenizeQuery();
     }
 
     private void tokenizeQuery() {
-        String[] fragments = query.split("'");
-        for (int i = 0; i < fragments.length; i++) {
-            if (i % 2 != 0)
+        String[] fragments=query.split("'");
+        for (int i=0; i<fragments.length; i++) {
+            if (i%2!=0)
                 tokens.add("'" + fragments[i] + "'");
             else {
-                String[] nextBatchOfTokens = tokenise(fragments[i]);
+                String[] nextBatchOfTokens=tokenise(fragments[i]);
                 tokens.addAll(Arrays.asList(nextBatchOfTokens));
             }
         }
@@ -32,24 +32,24 @@ public class Tokenrise {
     }
 
     private String[] tokenise(String input) {
-        for (int i = 0; i < specialCharacters.length; i++) {
-            input = input.replace(specialCharacters[i], " " + specialCharacters[i] + " ");
+        for (int i=0; i<specialCharacters.length; i++) {
+            input=input.replace(specialCharacters[i], " " + specialCharacters[i] + " ");
         }
         while (input.contains("  "))
-            input = input.replaceAll("  ", " ");
-        input = input.trim();
+            input=input.replaceAll("  ", " ");
+        input=input.trim();
 //        input = input.replaceAll(">=", " >= ")
 //                .replaceAll("<=", " <= ")
 //                .replaceAll("==", " == ");
         return input.split(" ");
     }
 
-    public static void main(String[] args) {
-        String query = "  DELETE FROM marks WHERE name =='Simon';     ";
-        Tokenrise tokenizer = new Tokenrise(query);
-        ArrayList<String> tokens = tokenizer.getTokens();
-        for (String token : tokens) {
-            System.out.println(token);
-        }
-    }
+//    public static void main(String[] args) {
+//        String query = "  DELETE FROM marks WHERE name =='Simon';     ";
+//        Tokenrise tokenizer = new Tokenrise(query);
+//        ArrayList<String> tokens = tokenizer.getTokens();
+//        for (String token : tokens) {
+//            System.out.println(token);
+//        }
+//    }
 }

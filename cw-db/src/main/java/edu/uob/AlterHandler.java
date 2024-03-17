@@ -39,7 +39,7 @@ public class AlterHandler extends CommandHandler {
         }
         Table tableget=currentDatabase.getTable(tokens.get(tokenIndex));
         if(tableget==null){
-            returnBuilder.append("ERROR");
+            returnBuilder.append("[ERROR]");
             return returnBuilder;
         }
         tokenIndex+=1;
@@ -56,8 +56,8 @@ public class AlterHandler extends CommandHandler {
             String attributeName=tokens.get(tokenIndex);
             String[] attributeList=tableget.getAttribute().split("\t");
             for (String s : attributeList) {
-                if (s.equals(attributeName)) {
-                    returnBuilder.append("[ERROR]:Invalid name");
+                if (s.equals(attributeName)|| attributeName.equals("id")) {
+                    returnBuilder.append("[ERROR]:Invalid attribute");
                     return returnBuilder;
                 }
             }

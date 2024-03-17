@@ -235,7 +235,7 @@ public class Table{
     public boolean alterAddTable(String addAttribute){
         //Alter the add Attribute to the end of the current attribute
         this.attribute=this.attribute+"\t"+addAttribute;
-        System.err.print(this.attribute+"yest");
+        //System.err.print(this.attribute+"yest");
         //modify first line in file system.
         boolean flag=this.modifyFirstAttribute(this.attribute);
         return flag;
@@ -323,11 +323,11 @@ public class Table{
         return mapData;
     }
 
-    public static void main(String[] args) {
-        Table table=new Table();
-        table.setAttribute("id"+"\t"+"name"+"\t"+"get");
-        int ID=table.AttributeIndexWithoutID("name");
-        System.out.print(ID);
-    }
+//    public static void main(String[] args) {
+//        Table table=new Table();
+//        table.setAttribute("id"+"\t"+"name"+"\t"+"get");
+//        int ID=table.AttributeIndexWithoutID("name");
+//        System.out.print(ID);
+//    }
 
 }

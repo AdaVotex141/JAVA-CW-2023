@@ -28,7 +28,9 @@ public class UpdateHandler extends CommandHandler{
             returnBuilder.append("[ERROR] Table doesn't exist");
             return returnBuilder;
         }
-        Table table=Globalstatus.getInstance().getCurrentTable();
+        //Table table=Globalstatus.getInstance().getCurrentTable();
+        //Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
+        Table table =reader.useTableByDatabase(tokens.get(tokenIndex));
         tokenIndex+=1;//set
         if(!tokens.get(tokenIndex).equalsIgnoreCase("SET")){
             returnBuilder.append("[ERROR] Invalid sentence");
@@ -50,7 +52,7 @@ public class UpdateHandler extends CommandHandler{
             }
             tokenIndex+=1;
         }
-        tokenIndex+=2;//where+1
+        tokenIndex+=1;//where+1
         //TODO: <condition>
         Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
         ArrayList<String> subList = new ArrayList<>(tokens.subList(tokenIndex, tokens.size()));
@@ -61,6 +63,15 @@ public class UpdateHandler extends CommandHandler{
             int attributeIndex=table.AttributeIndexWithoutID(attribute);
             String oper=subList.get(1);
             String value=subList.get(2);
+
+            if(attributeIndex==-1){
+
+                returnBuilder.append(attribute+oper+value);
+                returnBuilder.append("[ERROR]");
+                return returnBuilder;
+            }
+
+
             for(int i=0;i<table.datas.size();i++){
                 String[] rowData=table.datas.get(i).getDataSplit();
                 if(condition.comparisonOperator(rowData[attributeIndex],oper,value)){

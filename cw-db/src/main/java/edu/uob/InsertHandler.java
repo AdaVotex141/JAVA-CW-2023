@@ -56,14 +56,23 @@ public class InsertHandler extends CommandHandler{
                 return returnBuilder;
             }
             tokenIndex+=1;
+            int countValue=0;
             StringBuilder valueList=new StringBuilder();
             while(!tokens.get(tokenIndex).equals(")")){
                 if(!tokens.get(tokenIndex).equals(",") && !tokens.get(tokenIndex).equals(" ")){
                     valueList.append(tokens.get(tokenIndex)).append("\t");
+                    countValue+=1;
                 }
                 tokenIndex+=1;
             }
+            String[] attributeCount=table.getAttribute().split("\t");
+            //returnBuilder.append(table.getAttribute());
+            if (attributeCount.length!=countValue+1){
+                returnBuilder.append("[ERROR] too many or too few values");
+                return returnBuilder;
+            }
             String valueData=valueList.toString();
+
             if(table==null){
                 returnBuilder.append("[ERROR] hasn't assigned attribute yet!");
                 return returnBuilder;

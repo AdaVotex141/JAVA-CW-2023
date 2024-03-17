@@ -172,8 +172,8 @@ public class Database {
     }
     private boolean dropDatabaseHelper(File folder) {
         if (folder.exists()) {
-            File[] files = folder.listFiles();
-            if (files != null) {
+            File[] files=folder.listFiles();
+            if (files!=null) {
                 for (File file : files) {
                     if (file.isDirectory()) {
                         if (!dropDatabaseHelper(file)) {
@@ -203,7 +203,7 @@ public class Database {
     }
 
     public boolean isSameFolder(Database other) {
-        if (other == null || other.databaseFolderPath == null) {
+        if (other==null || other.databaseFolderPath==null) {
             return false;
         }
         return this.databaseFolderPath.equals(other.databaseFolderPath);

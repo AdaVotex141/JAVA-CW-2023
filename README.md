@@ -391,8 +391,20 @@ UPDATE(WHERE)->finish but hasn't tested yet
 
 ### 17/3:
 
+√ trying to insert too many (or too few) values into a table entry
+√ attempting to create a database or table using a name that already exists
+√ creating a table with duplicate column names (or trying to add a column with an existing name)
+attempting to remove the ID column from a table
+changing (updating) the ID of a record
+queries on non-existent databases, tables and columns
+queries which use invalid element names (e.g. reserved SQL keywords)
+Errors should NOT be returned in situations where the user performs:
 
+a valid query that has no matches: just return the column names and no data rows
+a query to delete columns/tables/rows/database that contain data: the user should be free to perform destructive actions
+a comparison of two different data types: attempt a sensible comparison if possible, return blank results if not
 
+test update
 
 
 

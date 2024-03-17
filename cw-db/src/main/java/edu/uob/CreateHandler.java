@@ -1,6 +1,7 @@
 package edu.uob;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class CreateHandler extends CommandHandler{
 
@@ -100,6 +101,15 @@ public class CreateHandler extends CommandHandler{
                 while (!tokens.get(tokenIndex).equals(")")) {
                     if (!tokens.get(tokenIndex).equals(",") && !tokens.get(tokenIndex).equals(" ")) {
                         //attribute: name \t value \t
+                        //check if duplicate:
+                        String[] attributeAll=table.getAttribute().split("\t");
+                        for(String attribute:attributeAll){
+                            if(attribute.equals(tokens.get(tokenIndex))){
+                                returnBuilder.append("[ERROR] this attribute already exists");
+                                return returnBuilder;
+                            }
+                        }
+
                         table.alterAddTable(tokens.get(tokenIndex));
                         //attributes.append(tokens.get(tokenIndex)).append("\t");
                     }
