@@ -60,31 +60,18 @@ public class JoinHandler extends CommandHandler{
         returnBuilder=PrintFirstLine(table1, table2, attribute1, attribute2, returnBuilder);
 
         //start to search through the whole
-        int index1=table1.AttributeIndexWithoutID(tableName1);
-        int index2=table2.AttributeIndexWithoutID(tableName2);
+        //why this two are -1???
+        int index1=table1.AttributeIndexWithID(attribute1);
+        int index2=table2.AttributeIndexWithID(attribute2);
+
         //Table table1, int index1, Table table2, int index2,StringBuilder returnBuilder)
         returnBuilder=printTheSelected(table1,index1,table2,index2,returnBuilder);
-
-
-        //TODO:print and join: don't understand
-//        ArrayList<String> printData=new ArrayList<>();
-//        int colmunIndex1=table1.AttributeIndexWithoutID(attribute1);
-//        int colmunIndex2=table2.AttributeIndexWithoutID(attribute2);
-//
-//        for(int i=0;i<=latestID;i++){
-//            String []wholedata1=table1.datas.get(i).getData().split("\t");
-//            String []wholedata2=table2.datas.get(i).getData().split("\t");
-//            String exactData1=wholedata1[colmunIndex1];
-//            String exactData2=whole-data2[colmunIndex2];
-//            //returnBuilder
-//        }
-
-
 
         return returnBuilder;
     }
 
     private StringBuilder PrintFirstLine(Table table1, Table table2, String attribute1, String attribute2, StringBuilder returnBuilder){
+
         String[] table1Attribute=table1.getAttribute().split("\t");
         String[] table2Attribute=table2.getAttribute().split("\t");
         returnBuilder.append("id"+"\t");
@@ -107,7 +94,7 @@ public class JoinHandler extends CommandHandler{
         for(int i=0;i<table1.datas.size();i++){
             returnBuilder.append(id+"\t");
             //set Row data -> OXO 3
-            String[] dataTable1=table1.datas.get(i).getDataSplit();
+            String[] dataTable1=table1.datas.get(i).getDataSplitWithID();
             for(int j=0;j< dataTable1.length;j++){
                 if(j!=index1){
                     returnBuilder.append(dataTable1[j]+"\t");
@@ -116,7 +103,7 @@ public class JoinHandler extends CommandHandler{
                     String findDataTable1=dataTable1[j];
                     //into table 2, find if data in table 2 matches
                     for(int z=0;z<table2.datas.size();z++){
-                        String[] dataTable2=table2.datas.get(z).getDataSplit();
+                        String[] dataTable2=table2.datas.get(z).getDataSplitWithID();
                         if(dataTable2[index2].equals(findDataTable1)){
                             for(int a=0;a< dataTable2.length;a++){
                                 if(a!=index2){

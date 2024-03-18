@@ -191,6 +191,20 @@ public class Table{
         return attributeIndex;
     }
 
+    public int AttributeIndexWithID(String findAttribute) {
+        System.out.print(this.attribute + "\n");
+        String[] attributes = this.attribute.split("\t");
+        int attributeIndex = -1;
+        for (int i = 0; i < attributes.length; i++) {
+            if (attributes[i].equals(findAttribute)) {
+                attributeIndex = i;
+                break;
+            }
+        }
+        System.out.print("Attribute index with id is: " + attributeIndex + "\n");
+        return attributeIndex;
+    }
+
     //=============================================Alter========================================
     public boolean alterDropTable(String dropAttribute){
         // get the index of dropAttribute in the attribute list

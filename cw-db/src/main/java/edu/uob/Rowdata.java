@@ -34,6 +34,19 @@ public class Rowdata{
         System.out.print("\n");
         return dataBox;
     }
+
+    public String[] getDataSplitWithID(){
+        int size=this.getDataSplit().length+2;
+        String[] dataBox = new String[size];
+        dataBox[0] = Integer.toString(this.id);
+        String[] dataSplit = this.getDataSplit();
+        for (int i = 0; i < dataSplit.length; i++) {
+            dataBox[i + 1] = dataSplit[i];
+        }
+        return dataBox;
+    }
+
+
     public void setData(String data){
         this.data=data;
     }
