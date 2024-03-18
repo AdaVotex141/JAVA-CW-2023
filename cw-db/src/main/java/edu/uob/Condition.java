@@ -29,7 +29,7 @@ public class Condition {
         Collections.addAll(comparisonOperators, ">", "<", ">=", "<=", "==", "!=", "LIKE");
         //create SET of keyowords
         Collections.addAll(keywords, "use", "create", "drop", "alter",
-                "insert", "select", "update", "delete", "join");
+                "insert", "select", "update", "delete", "join","table","database","or","like");
         Collections.addAll(boolOperator, "and", "or","AND","OR");
         Collections.addAll(bracketsSet, "(", ")");
     }
