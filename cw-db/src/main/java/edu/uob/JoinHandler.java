@@ -9,6 +9,10 @@ public class JoinHandler extends CommandHandler{
     //<Join>::=  "JOIN " [TableName] " AND " [TableName] " ON " [AttributeName] " AND " [AttributeName]
     public StringBuilder join(ArrayList<String> tokens, StringBuilder returnBuilder){
         Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
+        if(currentDatabase==null){
+            returnBuilder.append("[ERROR] Hasn't select current database yet!");
+            return returnBuilder;
+        }
         tokenIndex=1;
         if(!tokens.get(tokens.size() - 1).equals(";")){
             returnBuilder.append("[ERROR]:Missing ';' at the end of the sentence");
@@ -94,8 +98,10 @@ public class JoinHandler extends CommandHandler{
         for(int i=0;i<table1.datas.size();i++){
             returnBuilder.append(id+"\t");
             //set Row data -> OXO 3
+
             String[] dataTable1=table1.datas.get(i).getDataSplitWithID();
-            for(int j=0;j< dataTable1.length;j++){
+
+            for(int j=1;j< dataTable1.length;j++){
                 if(j!=index1){
                     returnBuilder.append(dataTable1[j]+"\t");
 
@@ -105,9 +111,11 @@ public class JoinHandler extends CommandHandler{
                     for(int z=0;z<table2.datas.size();z++){
                         String[] dataTable2=table2.datas.get(z).getDataSplitWithID();
                         if(dataTable2[index2].equals(findDataTable1)){
-                            for(int a=0;a< dataTable2.length;a++){
+                            for(int a=1;a< dataTable2.length;a++){
                                 if(a!=index2){
                                     returnBuilder.append(dataTable2[a]+"\t");
+                                }else if(a==(dataTable2.length-1)){
+                                    returnBuilder.append(dataTable2[a]);
                                 }
                             }
                         }
@@ -118,10 +126,6 @@ public class JoinHandler extends CommandHandler{
             id+=1;
             returnBuilder.append("\n");
         }
-
-
-
-
         return returnBuilder;
     }
 }
