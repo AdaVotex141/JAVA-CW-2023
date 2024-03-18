@@ -36,7 +36,7 @@ public class Rowdata{
     }
 
     public String[] getDataSplitWithID(){
-        int size=this.getDataSplit().length+2;
+        int size=this.getDataSplit().length+1;
         String[] dataBox = new String[size];
         dataBox[0] = Integer.toString(this.id);
         String[] dataSplit = this.getDataSplit();
