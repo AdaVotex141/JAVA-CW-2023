@@ -90,11 +90,16 @@ public class UpdateHandler extends CommandHandler{
                 return returnBuilder;
             }
 
+
             for(int i=0;i<table.datas.size();i++){
-                String[] rowData=table.datas.get(i).getDataSplit();
-                if(condition.comparisonOperator(rowData[attributeIndex],oper,value)){
+                ArrayList<String> rowData = new ArrayList<>(Arrays.asList(table.datas.get(i).getDataSplit()));
+                if(condition.comparisonOperator(rowData.get(attributeIndex),oper,value)){
                     for (Integer key : updateList.keySet()){
-                        rowData[key]=updateList.get(key);
+                        if(key>rowData.size()-1){
+                            rowData.add(updateList.get(key));
+                        }else {
+                            rowData.set(key, updateList.get(key));
+                        }
                     }
                 }
                 table.datas.set(i, new Rowdata(table.datas.get(i).getid(), String.join("\t", rowData)));
