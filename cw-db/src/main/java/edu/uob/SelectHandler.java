@@ -72,7 +72,7 @@ public class SelectHandler extends CommandHandler {
             tokenIndex+=1;
             ArrayList<String> subList = new ArrayList<>(tokens.subList(tokenIndex, tokens.size()));
             Condition.ConditionSelector selectorflag=condition.conditionSelection(subList);
-            returnBuilder.append(subList);
+            //returnBuilder.append(subList);
             if(selectorflag == Condition.ConditionSelector.simpleComparison){
                 String attribute=subList.get(0);
                 if(attribute==null){
@@ -120,9 +120,6 @@ public class SelectHandler extends CommandHandler {
             return returnBuilder;
         }
 
-
-
-
         String[] getAttributes=tempTable.getAttribute().split("\t");
         HashSet<String> allAttributes=new HashSet<>();
         allAttributes.addAll(Arrays.asList(getAttributes));
@@ -130,9 +127,6 @@ public class SelectHandler extends CommandHandler {
             returnBuilder.append("[ERROR]Attribute not exist");
             return returnBuilder;
         }
-//        if (attributeSet.contains("id")) {
-//            attributeSet.remove("id");
-//        }
 
         allAttributes.removeAll(attributeSet);
         allAttributes.remove("id");
@@ -169,10 +163,16 @@ public class SelectHandler extends CommandHandler {
 //        returnBuilder.append("[OK]"+"\n");
 //        returnBuilder.append(tempTable.getAttribute()+"\n");
         for(Rowdata data:tempTable.datas){
-            //TODO:flag detection
-            if(data.selected==true){
-                returnBuilder.append(data.getData()+"\n");
+            if (attributeSet.contains("id")) {
+                if(data.selected==true){
+                    returnBuilder.append(data.getid()+"\t"+data.getData()+"\n");
+                }
+            }else{
+                if(data.selected==true){
+                    returnBuilder.append(data.getData()+"\n");
+                }
             }
+
         }
         return returnBuilder;
     }
