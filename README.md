@@ -406,6 +406,44 @@ a comparison of two different data types: attempt a sensible comparison if possi
 
 test update
 
+### 18/3:
+Working on the join functoin
+
+### 19/3:
+added restrictions based on the workshop
+
+√ trying to insert too many (or too few) values into a table entry
+√ attempting to create a database or table using a name that already exists
+√ creating a table with duplicate column names (or trying to add a column with an existing name)
+√ attempting to remove the ID column from a table
+√ changing (updating) the ID of a record
+√ queries on non-existent databases, tables and columns
+√ queries which use invalid element names (e.g. reserved SQL keywords)
+
+√ drop->create table->already exist???-? problem with drop
+
+
+problem with ' '
+problem with (name=='Simon')AND(fire>=2);->re tokenrise
+
+
+
+deal with AND OR without brackets:
+1. get attributes ID
+2. replace every token in that 
+
+### 20/3:
+
+25 failures T T
+debug with transcript
+
+update gets wrong
+some select gets wrong 
+
+
+
+
+
 
 
 ---

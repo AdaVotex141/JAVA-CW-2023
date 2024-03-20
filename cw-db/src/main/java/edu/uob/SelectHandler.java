@@ -111,8 +111,16 @@ public class SelectHandler extends CommandHandler {
         String[] getAttributes=tempTable.getAttribute().split("\t");
         HashSet<String> allAttributes=new HashSet<>();
         allAttributes.addAll(Arrays.asList(getAttributes));
+        if(!allAttributes.containsAll(attributeSet)){
+            returnBuilder.append("[ERROR]Attribute not exist");
+            return returnBuilder;
+        }
+//        if (attributeSet.contains("id")) {
+//            attributeSet.remove("id");
+//        }
+
         allAttributes.removeAll(attributeSet);
-        //allAttributes.remove("id");
+        allAttributes.remove("id");
         if(!attributeSet.isEmpty()){
             for (String element : allAttributes){
                 boolean dropColmnFlag=tempTable.alterDropTable(element);
@@ -124,12 +132,31 @@ public class SelectHandler extends CommandHandler {
         }
 
         //print out to terminal
+
         returnBuilder.append("[OK]"+"\n");
-        returnBuilder.append(tempTable.getAttribute()+"\n");
+        if(!attributeSet.contains("id")){
+            String[] attributes = tempTable.getAttribute().split("\t");
+            ArrayList<String> modifiedAttributes = new ArrayList<>();
+            for (String attribute : attributes) {
+                if (!attribute.equals("id")) {
+                    modifiedAttributes.add(attribute);
+                }
+            }
+            String modifiedAttributeString = String.join("\t", modifiedAttributes);
+            returnBuilder.append(modifiedAttributeString + "\n");
+        }else if(attributeSet.contains("id")){
+            returnBuilder.append(tempTable.getAttribute()+"\n");
+        }
+
+
+
+
+//        returnBuilder.append("[OK]"+"\n");
+//        returnBuilder.append(tempTable.getAttribute()+"\n");
         for(Rowdata data:tempTable.datas){
             //TODO:flag detection
             if(data.selected==true){
-                returnBuilder.append(data.getid()+"\t"+data.getData()+"\n");
+                returnBuilder.append(data.getData()+"\n");
             }
         }
         return returnBuilder;
