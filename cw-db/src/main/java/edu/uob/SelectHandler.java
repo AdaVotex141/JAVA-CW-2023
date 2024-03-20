@@ -50,6 +50,7 @@ public class SelectHandler extends CommandHandler {
             data.selected=true;
         }
         //select attribute
+        int tokenAfterSelect=(tokenIndex);
         if(!tokens.get(tokenIndex).equals("*")){
             while(!tokens.get(tokenIndex).equalsIgnoreCase("FROM")){
                 attributeSet.add(tokens.get(tokenIndex));
@@ -108,6 +109,20 @@ public class SelectHandler extends CommandHandler {
 
         //drop notselected colmn:
         //all attributes, select attributes->common retainAll attributeSet
+        if(tokens.get(tokenAfterSelect).equals("*")){
+            returnBuilder.append("[OK]\n");
+            returnBuilder.append(tempTable.getAttribute() + "\n");
+            for (Rowdata data : tempTable.datas) {
+                if (data.selected == true) {
+                    returnBuilder.append(data.getid()+"\t"+data.getData() + "\n");
+                }
+            }
+            return returnBuilder;
+        }
+
+
+
+
         String[] getAttributes=tempTable.getAttribute().split("\t");
         HashSet<String> allAttributes=new HashSet<>();
         allAttributes.addAll(Arrays.asList(getAttributes));
