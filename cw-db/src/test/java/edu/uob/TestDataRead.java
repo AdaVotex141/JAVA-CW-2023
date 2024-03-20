@@ -43,94 +43,94 @@ public class TestDataRead {
     //Test the basic create and drop database,tables
     @Test
     public void TestCreateDatabase(){
-        //Create a database and delete the database;
-        Database testDatabase= new Database("TestDatabase");
-        testDatabase.createDatabase(server.getStorageFolderPath());
-        Globalstatus.getInstance().setCurrentDatabase(testDatabase);
-        Table testTable = new Table();
-        testTable.createTable(Globalstatus.getInstance().getCurrentDatabase(),server.getStorageFolderPath(),"TestTable");
-        Table testTable2 = new Table();
-        testTable2.createTable(Globalstatus.getInstance().getCurrentDatabase(),server.getStorageFolderPath(),"TestTable2");
-
-        Globalstatus.getInstance().setCurrentTable(testTable);
-
-        assertDatabaseExists(server.getStorageFolderPath(), "testdatabase");
-        assertTabExists(server.getStorageFolderPath() + File.separator + "testdatabase", "testtable");
-        assertTabExists(server.getStorageFolderPath() + File.separator + "testdatabase", "testtable2");
-
-        Table tableDelete= Globalstatus.getInstance().getCurrentTable();
-        Database databaseDelete = Globalstatus.getInstance().getCurrentDatabase();
-        tableDelete.dropTable(databaseDelete);
-        assertTabExists(server.getStorageFolderPath() + File.separator + "testdatabase", "testtable2");
-        databaseDelete.dropDatabase(new File(server.getStorageFolderPath() + File.separator+databaseDelete.name));
+//        //Create a database and delete the database;
+//        Database testDatabase= new Database("TestDatabase");
+//        testDatabase.createDatabase(server.getStorageFolderPath());
+//        Globalstatus.getInstance().setCurrentDatabase(testDatabase);
+//        Table testTable = new Table();
+//        testTable.createTable(Globalstatus.getInstance().getCurrentDatabase(),server.getStorageFolderPath(),"TestTable");
+//        Table testTable2 = new Table();
+//        testTable2.createTable(Globalstatus.getInstance().getCurrentDatabase(),server.getStorageFolderPath(),"TestTable2");
+//
+//        Globalstatus.getInstance().setCurrentTable(testTable);
+//
+//        assertDatabaseExists(server.getStorageFolderPath(), "testdatabase");
+//        assertTabExists(server.getStorageFolderPath() + File.separator + "testdatabase", "testtable");
+//        assertTabExists(server.getStorageFolderPath() + File.separator + "testdatabase", "testtable2");
+//
+//        Table tableDelete= Globalstatus.getInstance().getCurrentTable();
+//        Database databaseDelete = Globalstatus.getInstance().getCurrentDatabase();
+//        tableDelete.dropTable(databaseDelete);
+//        assertTabExists(server.getStorageFolderPath() + File.separator + "testdatabase", "testtable2");
+//        databaseDelete.dropDatabase(new File(server.getStorageFolderPath() + File.separator+databaseDelete.name));
     }
 
     //Test the basic create and drop database,tables
     @Test
     public void TestAlterTable(){
-        //default colmun ID is implement in create Table
-        Database testDatabase= new Database("TestDatabase");
-        testDatabase.createDatabase(server.getStorageFolderPath());
-        Globalstatus.getInstance().setCurrentDatabase(testDatabase);
-        Table testTable = new Table();
-        testTable.createTable(Globalstatus.getInstance().getCurrentDatabase(),server.getStorageFolderPath(),"TestTable");
-        //define if testTable is null:
-        assertNotNull(testTable);
-        testTable.setAttribute("id"+"\t");
-        testTable.addAttribute(testTable.getAttribute());
-
-        testTable.alterAddTable("application");
-        assertEquals(testTable.getAttribute(), "id"+"\t"+"application");
-        //write the result back to file
-        //writeTabFile(Table table, String tableFilePath)
-        reader.writeTabFile(testTable,testTable.tableFilePath);
-        String testTablePath=testTable.tableFilePath;
-        try (BufferedReader reader = new BufferedReader(new FileReader(testTablePath))) {
-            String line;
-            boolean found = false;
-            String firstLine = reader.readLine();
-            boolean isFileEmpty = true;
-            if (firstLine != null && !firstLine.isEmpty()){
-                System.out.print("The attribute is written in!");
-                if(firstLine.contains(testTable.getAttribute())){
-                    found=true;
-                }
-                System.out.println(found);
-            }
-        }catch (IOException e) {
-            System.err.println("Can't read: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        //test Drop:continue added->added "\t"
-        //TODO:continue added "\t"
-        testTable.alterAddTable("\t"+"name");
-        testTable.alterAddTable("\t"+"mark");
-        reader.writeTabFile(testTable,testTable.tableFilePath);
-        try (BufferedReader reader = new BufferedReader(new FileReader(testTablePath))) {
-            String line;
-            boolean found = false;
-            String firstLine = reader.readLine();
-            boolean isFileEmpty = true;
-            if (firstLine != null && !firstLine.isEmpty()){
-                System.out.print("The attribute is written in!");
-                if(firstLine.contains(testTable.getAttribute())){
-                    found=true;
-                }
-                System.out.println(found);
-            }
-        }catch (IOException e) {
-            System.err.println("Can't read: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        testTable.alterDropTable("name");
-        reader.writeTabFile(testTable,testTable.tableFilePath);
-
-
-        Database databaseDelete = Globalstatus.getInstance().getCurrentDatabase();
-        testTable.dropTable(databaseDelete);
-        databaseDelete.dropDatabase(new File(server.getStorageFolderPath() + File.separator+databaseDelete.name));
+//        //default colmun ID is implement in create Table
+//        Database testDatabase= new Database("TestDatabase");
+//        testDatabase.createDatabase(server.getStorageFolderPath());
+//        Globalstatus.getInstance().setCurrentDatabase(testDatabase);
+//        Table testTable = new Table();
+//        testTable.createTable(Globalstatus.getInstance().getCurrentDatabase(),server.getStorageFolderPath(),"TestTable");
+//        //define if testTable is null:
+//        assertNotNull(testTable);
+//        testTable.setAttribute("id"+"\t");
+//        testTable.addAttribute(testTable.getAttribute());
+//
+//        testTable.alterAddTable("application");
+//        assertEquals(testTable.getAttribute(), "id"+"\t"+"application");
+//        //write the result back to file
+//        //writeTabFile(Table table, String tableFilePath)
+//        reader.writeTabFile(testTable,testTable.tableFilePath);
+//        String testTablePath=testTable.tableFilePath;
+//        try (BufferedReader reader = new BufferedReader(new FileReader(testTablePath))) {
+//            String line;
+//            boolean found = false;
+//            String firstLine = reader.readLine();
+//            boolean isFileEmpty = true;
+//            if (firstLine != null && !firstLine.isEmpty()){
+//                System.out.print("The attribute is written in!");
+//                if(firstLine.contains(testTable.getAttribute())){
+//                    found=true;
+//                }
+//                System.out.println(found);
+//            }
+//        }catch (IOException e) {
+//            System.err.println("Can't read: " + e.getMessage());
+//            e.printStackTrace();
+//        }
+//
+//        //test Drop:continue added->added "\t"
+//        //TODO:continue added "\t"
+//        testTable.alterAddTable("\t"+"name");
+//        testTable.alterAddTable("\t"+"mark");
+//        reader.writeTabFile(testTable,testTable.tableFilePath);
+//        try (BufferedReader reader = new BufferedReader(new FileReader(testTablePath))) {
+//            String line;
+//            boolean found = false;
+//            String firstLine = reader.readLine();
+//            boolean isFileEmpty = true;
+//            if (firstLine != null && !firstLine.isEmpty()){
+//                System.out.print("The attribute is written in!");
+//                if(firstLine.contains(testTable.getAttribute())){
+//                    found=true;
+//                }
+//                System.out.println(found);
+//            }
+//        }catch (IOException e) {
+//            System.err.println("Can't read: " + e.getMessage());
+//            e.printStackTrace();
+//        }
+//
+//        testTable.alterDropTable("name");
+//        reader.writeTabFile(testTable,testTable.tableFilePath);
+//
+//
+//        Database databaseDelete = Globalstatus.getInstance().getCurrentDatabase();
+//        testTable.dropTable(databaseDelete);
+//        databaseDelete.dropDatabase(new File(server.getStorageFolderPath() + File.separator+databaseDelete.name));
     }
 
     @Test

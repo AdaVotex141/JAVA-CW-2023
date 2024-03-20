@@ -32,6 +32,7 @@ public class DropHandler extends CommandHandler {
                     if (currentDatabase != null && database.isSameFolder(currentDatabase)) {
                         currentDatabase.tables=null;
                         Globalstatus.getInstance().setCurrentDatabase(null);
+                        Globalstatus.getInstance().setCurrentTable(null);
                     }
                     if (database.dropDatabase(databaseToDelete)) {
                         returnBuilder.append("[OK]");

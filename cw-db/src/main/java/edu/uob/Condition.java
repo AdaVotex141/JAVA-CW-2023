@@ -29,7 +29,7 @@ public class Condition {
         Collections.addAll(comparisonOperators, ">", "<", ">=", "<=", "==", "!=", "LIKE");
         //create SET of keyowords
         Collections.addAll(keywords, "use", "create", "drop", "alter",
-                "insert", "select", "update", "delete", "join","table","database","or","like");
+                "insert", "select", "update", "delete", "join","table","database","like");
         Collections.addAll(boolOperator, "and", "or","AND","OR");
         Collections.addAll(bracketsSet, "(", ")");
     }
@@ -83,6 +83,14 @@ public class Condition {
             return ConditionSelector.simpleComparison;
         }
     }
+    public boolean boolOperator(String bitOperator, boolean con1, boolean con2) {
+        if (bitOperator.equalsIgnoreCase("AND")) {
+            return (con1 && con2);
+        } else if (bitOperator.equalsIgnoreCase("OR")) {
+            return (con1 || con2);
+        }
+        return false;
+    }
 
 
     public boolean comparisonOperator(String data, String comOpr, String value) {
@@ -103,45 +111,91 @@ public class Condition {
         } else if (isNumeric(data) || isNumeric(value)) {
             System.err.print("can't compare");
         } else if (isLetter(data) || isLetter(value)) {
-            //== like
+            //== like !=
             if (comOpr.equals("==")) {
-                data = data.replaceAll("'", "");
-                System.out.print(data.equals(value));
+                //data = data.replaceAll("'", "");
+                //System.out.print(data.equals(value));
                 return data.equals(value);
             } else if (comOpr.equalsIgnoreCase("like")) {
+                String regex = value.replaceAll("%", ".*");
                 return data.contains(value);
             }
         }
-        return true;
-    }
-
-    public boolean evaluateCondition(ArrayList<String> subList) {
-        Stack<String> operandStack = new Stack<>();
-        Stack<String> operatorStack = new Stack<>();
-        for(String token:subList){
-            if(token.equals("(")){
-                operatorStack.push("(");
-            }else if(token.equals(")")){
-                while(!operatorStack.isEmpty() && !operatorStack.peek().equals("(")){
-                    //(String data, String comOpr, String value)
-                    String value= operatorStack.pop();
-                    String oper=operatorStack.pop();
-                    String data=operatorStack.pop();
-                    if(comparisonOperator(data,oper,value)){
-                        //if true
-                        operatorStack.push("1");
-                    }else{
-                        operatorStack.push("0");
-                    }
-                }
-            } else if (boolOperator.contains(token.toLowerCase())) {
-                operandStack.push(token);
-
-
-            }
+        else if(comOpr.equals("!=")){
+            data = data.replaceAll("'", "");
+            value = value.replaceAll("'", "");
+            return !data.equals(value);
+        }else if(comOpr.equals("==")){
+            data = data.replaceAll("'", "");
+            value = value.replaceAll("'", "");
+            return data.equals(value);
         }
         return true;
     }
+    public boolean simpleParser(ArrayList<String> conditionalCommand) {
+        int tokenIndex = 0;
+        if(conditionalCommand.size()<3){
+            System.out.print("invalid");
+            return false;
+        }
+        String attribute=conditionalCommand.get(0);
+        String oper=conditionalCommand.get(1);
+        String value=conditionalCommand.get(2);
+        boolean condition=comparisonOperator(oper,attribute,value);
+        return condition;
+    }
+
+
+    public boolean boolParser(ArrayList<String> conditionalCommand) {
+        int tokenIndex = 0;
+        ArrayList<String> condition1=new ArrayList<>();
+        ArrayList<String> condition2=new ArrayList<>();
+        while(!conditionalCommand.get(tokenIndex).equalsIgnoreCase("AND") &&
+                !conditionalCommand.get(tokenIndex).equalsIgnoreCase("OR")){
+            condition1.add(conditionalCommand.get(tokenIndex));
+            tokenIndex+=1;
+        }
+        boolean con1Flag=simpleParser(condition1);
+        String boolOper=conditionalCommand.get(tokenIndex);
+        while(!conditionalCommand.get(tokenIndex).equals(";")){
+            condition2.add(conditionalCommand.get(tokenIndex));
+            tokenIndex+=1;
+        }
+        boolean con2Flag=simpleParser(condition2);
+        //String bitOperator, boolean con1, boolean con2
+        return boolOperator(boolOper,con1Flag,con2Flag);
+    }
+
+
+
+//
+//    public boolean evaluateCondition(ArrayList<String> subList) {
+//        Stack<String> operandStack = new Stack<>();
+//        Stack<String> operatorStack = new Stack<>();
+//        for(String token:subList){
+//            if(token.equals("(")){
+//                operatorStack.push("(");
+//            }else if(token.equals(")")){
+//                while(!operatorStack.isEmpty() && !operatorStack.peek().equals("(")){
+//                    //(String data, String comOpr, String value)
+//                    String value= operatorStack.pop();
+//                    String oper=operatorStack.pop();
+//                    String data=operatorStack.pop();
+//                    if(comparisonOperator(data,oper,value)){
+//                        //if true
+//                        operatorStack.push("1");
+//                    }else{
+//                        operatorStack.push("0");
+//                    }
+//                }
+//            } else if (boolOperator.contains(token.toLowerCase())) {
+//                operandStack.push(token);
+//
+//
+//            }
+//        }
+//        return true;
+//    }
 
     private boolean isNumeric(String str) {
         return str.matches("-?\\d+(\\.\\d+)?");
@@ -151,14 +205,7 @@ public class Condition {
         return str.matches("[a-zA-Z]+");
     }
 
-    private boolean boolOperator(String bitOperator, boolean con1, boolean con2) {
-        if (bitOperator.equalsIgnoreCase("AND")) {
-            return (con1 && con2);
-        } else if (bitOperator.equalsIgnoreCase("OR")) {
-            return (con1 || con2);
-        }
-        return false;
-    }
+
 //    public boolean evaluateCondition(String condition, Table table) {
 //        List<String> tokens = parseCondition(condition);
 //
@@ -207,40 +254,10 @@ public class Condition {
 
 
 
-//    public boolean simpleParser(ArrayList<String> conditionalCommand) {
-//        int tokenIndex = 0;
-//        if(conditionalCommand.size()<3){
-//            System.out.print("invalid");
-//            return false;
-//        }
-//        String attribute=conditionalCommand.get(0);
-//        String oper=conditionalCommand.get(1);
-//        String value=conditionalCommand.get(2);
-//        boolean condition=comparisonOperator(oper,attribute,value);
-//        return condition;
-//    }
 
 
 
-//    public boolean boolParser(ArrayList<String> conditionalCommand) {
-//        int tokenIndex = 0;
-//        ArrayList<String> condition1=new ArrayList<>();
-//        ArrayList<String> condition2=new ArrayList<>();
-//        while(!conditionalCommand.get(tokenIndex).equalsIgnoreCase("AND")||
-//                !conditionalCommand.get(tokenIndex).equalsIgnoreCase("OR")){
-//            condition1.add(conditionalCommand.get(tokenIndex));
-//            tokenIndex+=1;
-//        }
-//        boolean con1Flag=simpleParser(condition1);
-//        String boolOper=conditionalCommand.get(tokenIndex);
-//        while(!conditionalCommand.get(tokenIndex).equals(";")){
-//            condition2.add(conditionalCommand.get(tokenIndex));
-//            tokenIndex+=1;
-//        }
-//        boolean con2Flag=simpleParser(condition2);
-//        //String bitOperator, boolean con1, boolean con2
-//        return comparisonOperator(boolOper,con1Flag,con2Flag);
-//    }
+
 
 
 //

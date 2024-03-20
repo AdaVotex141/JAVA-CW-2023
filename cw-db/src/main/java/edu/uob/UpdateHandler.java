@@ -45,6 +45,10 @@ public class UpdateHandler extends CommandHandler{
         allAttributes.addAll(Arrays.asList(getAttributes));
         while(!tokens.get(tokenIndex).equalsIgnoreCase("WHERE")){
             //TODO: get <NameValueList>
+            if (!tokens.get(tokenIndex).equals("id")) {
+                returnBuilder.append("[ERROR] Can't update ID!");
+                return returnBuilder;
+            }
             if(allAttributes.contains(tokens.get(tokenIndex))){
                 int attributeID=table.AttributeIndexWithoutID(tokens.get(tokenIndex));
                 String dataString=tokens.get(tokenIndex+2);
