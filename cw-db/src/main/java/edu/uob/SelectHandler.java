@@ -20,7 +20,7 @@ public class SelectHandler extends CommandHandler {
             return returnBuilder;
         }
         if(tokens.size()<4){
-            returnBuilder.append("[ERROR]");
+            returnBuilder.append("[ERROR] Invalid sentence");
             return returnBuilder;
         }
 
@@ -65,23 +65,41 @@ public class SelectHandler extends CommandHandler {
                 rowdata.selected=false;
             }
             //TODO:DEAL with WHERE
-            if(tokens.size()<9){
-                returnBuilder.append("[ERROR]");
+            if(tokens.size()<7){
+                returnBuilder.append("[ERROR]Invalid sentence");
                 return returnBuilder;
             }
             tokenIndex+=1;
             ArrayList<String> subList = new ArrayList<>(tokens.subList(tokenIndex, tokens.size()));
+            //check if it is mark>40 or mark > 40 depends on
+            boolean isContinuous=false;
+            for(String sub:subList){
+                if(condition.comparisonOperators.contains(sub)){
+                    isContinuous=true;
+                    break;
+                }
+            }
+
+
             Condition.ConditionSelector selectorflag=condition.conditionSelection(subList);
             //returnBuilder.append(subList);
             if(selectorflag == Condition.ConditionSelector.simpleComparison){
-                String attribute=subList.get(0);
-                if(attribute==null){
-                    returnBuilder.append("[ERROR]");
-                    return returnBuilder;
+                //if it is mark>40 turn it into mark > 40
+                if(isContinuous==false){
+                    subList=condition.tokenParse(subList);
                 }
+
+
+                String attribute=subList.get(0);
                 int attributeIndex=tempTable.AttributeIndexWithoutID(attribute);
                 String oper=subList.get(1);
                 String value=subList.get(2);
+
+                if(attribute==null || oper==null || value==null || attributeIndex==-1){
+                    returnBuilder.append("[ERROR] Can't deal with the command");
+                    return returnBuilder;
+                }
+
 
                 for(int i=0;i<tempTable.datas.size();i++){
                     String[] rowData=tempTable.datas.get(i).getDataSplit();

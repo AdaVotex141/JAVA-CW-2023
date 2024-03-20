@@ -45,10 +45,20 @@ public class DeleteHandler extends CommandHandler{
 
         ArrayList<String> subList = new ArrayList<>(tokens.subList(tokenIndex, tokens.size()));
         Condition.ConditionSelector selectorflag=condition.conditionSelection(subList);
+        boolean isContinuous=false;
+        for(String sub:subList){
+            if(condition.comparisonOperators.contains(sub)){
+                isContinuous=true;
+                break;
+            }
+        }
+
+
+
         //simplist definition
         if(selectorflag == Condition.ConditionSelector.simpleComparison){
 
-            returnBuilder=simpleComparison(subList,returnBuilder,table);
+            returnBuilder=simpleComparison(subList,returnBuilder,table,isContinuous);
             //write back to file
             reader.writeTabFile(table,table.tableFilePath);
             //reintisualised the database:
@@ -79,11 +89,21 @@ public class DeleteHandler extends CommandHandler{
 
         return returnBuilder;
     }
-    private StringBuilder simpleComparison(ArrayList<String> subList, StringBuilder returnBuilder,Table table){
+    private StringBuilder simpleComparison(ArrayList<String> subList, StringBuilder returnBuilder,Table table,boolean flag){
+        if(flag==false){
+            subList=condition.tokenParse(subList);
+        }
+
         String attribute=subList.get(0);
         int attributeIndex=table.AttributeIndexWithoutID(attribute);
         String oper=subList.get(1);
         String value=subList.get(2);
+
+        if(attribute==null || oper==null || value==null || attributeIndex==-1){
+            returnBuilder.append("[ERROR] Can't deal with the command");
+            return returnBuilder;
+        }
+
         for(int i=0;i<table.datas.size();i++){
             String[] rowData=table.datas.get(i).getDataSplit();
             if(condition.comparisonOperator(rowData[attributeIndex],oper,value)){

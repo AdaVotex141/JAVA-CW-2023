@@ -64,21 +64,31 @@ public class UpdateHandler extends CommandHandler{
         //TODO: <condition>
         Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
         ArrayList<String> subList = new ArrayList<>(tokens.subList(tokenIndex, tokens.size()));
+
+        boolean isContinuous=false;
+        for(String sub:subList){
+            if(condition.comparisonOperators.contains(sub)){
+                isContinuous=true;
+                break;
+            }
+        }
+
         Condition.ConditionSelector selectorflag=condition.conditionSelection(subList);
         //simplist definition
         if(selectorflag == Condition.ConditionSelector.simpleComparison){
+            if(isContinuous==false){
+                subList=condition.tokenParse(subList);
+            }
+
             String attribute=subList.get(0);
             int attributeIndex=table.AttributeIndexWithoutID(attribute);
             String oper=subList.get(1);
             String value=subList.get(2);
 
-            if(attributeIndex==-1){
-
-                returnBuilder.append(attribute+oper+value);
-                returnBuilder.append("[ERROR]");
+            if(attribute==null || oper==null || value==null || attributeIndex==-1){
+                returnBuilder.append("[ERROR] Can't deal with the command");
                 return returnBuilder;
             }
-
 
             for(int i=0;i<table.datas.size();i++){
                 String[] rowData=table.datas.get(i).getDataSplit();

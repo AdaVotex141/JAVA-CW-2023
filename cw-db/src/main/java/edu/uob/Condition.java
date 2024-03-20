@@ -1,5 +1,7 @@
 package edu.uob;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /*
 /<Condition> ::=  "(" <Condition> <BoolOperator> <Condition> ")"
@@ -9,10 +11,10 @@ import java.util.*;
 | [AttributeName] <Comparator> [Value]
  */
 public class Condition {
-    private final Set<String> comparisonOperators = new HashSet<>();
-    private final Set<String> keywords = new HashSet<>();
-    private final Set<String> boolOperator = new HashSet<>();
-    private final Set<String> bracketsSet = new HashSet<>();
+    public final Set<String> comparisonOperators = new HashSet<>();
+    public final Set<String> keywords = new HashSet<>();
+    public final Set<String> boolOperator = new HashSet<>();
+    public final Set<String> bracketsSet = new HashSet<>();
     public ArrayList<Integer> dataIndex=new ArrayList<>();
     public ArrayList<String> attributeSelected = new ArrayList<>();
     //private Set<String> = new HashSet<>();
@@ -162,6 +164,31 @@ public class Condition {
         boolean con2Flag=simpleParser(condition2);
         //String bitOperator, boolean con1, boolean con2
         return boolOperator(boolOper,con1Flag,con2Flag);
+    }
+
+    public ArrayList<String> tokenParse(ArrayList<String> subList){
+        System.out.print("into tokenParse");
+        String condition=subList.get(0);
+        //turn mark>40 into mark > 40
+        Pattern pattern = Pattern.compile("(\\w+)\\s*([<>]=?|==|!=)\\s*(\\d+)");
+        Matcher matcher = pattern.matcher(condition);
+        if(matcher.find()){
+            String attributeName = matcher.group(1);
+            String operator = matcher.group(2);
+            String value = matcher.group(3);
+
+            //set it back to subList
+            ArrayList<String> resultList = new ArrayList<>();
+            resultList.add(attributeName);
+            resultList.add(operator);
+            resultList.add(value);
+            System.out.print("token reparse");
+            return resultList;
+
+        }else{
+            System.err.print("Can't parse token");
+        }
+        return subList;
     }
 
 
