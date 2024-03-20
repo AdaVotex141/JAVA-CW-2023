@@ -45,7 +45,7 @@ public class UpdateHandler extends CommandHandler{
         allAttributes.addAll(Arrays.asList(getAttributes));
         while(!tokens.get(tokenIndex).equalsIgnoreCase("WHERE")){
             //TODO: get <NameValueList>
-            if (!tokens.get(tokenIndex).equals("id")) {
+            if (tokens.get(tokenIndex).equals("id")) {
                 returnBuilder.append("[ERROR] Can't update ID!");
                 return returnBuilder;
             }
@@ -55,6 +55,10 @@ public class UpdateHandler extends CommandHandler{
                 updateList.put(attributeID,dataString);
             }
             tokenIndex+=1;
+        }
+        if(updateList==null){
+            returnBuilder.append("[ERROR] Attribute doesn't exist");
+            return returnBuilder;
         }
         tokenIndex+=1;//where+1
         //TODO: <condition>

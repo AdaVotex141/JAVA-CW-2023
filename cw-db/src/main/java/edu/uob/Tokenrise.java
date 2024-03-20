@@ -46,7 +46,7 @@ public class Tokenrise {
 
     public static void main(String[] args) {
         String query = "  (name<=get)AND(fire==2); ";
-        query="UPDATE marks SET mark = 38 WHERE name == 'Chris'; ";
+        query="SELECT * FROM marks WHERE name LIKE 'i'; ";
         Tokenrise tokenizer = new Tokenrise(query);
         ArrayList<String> tokens = tokenizer.getTokens();
         for (String token : tokens) {

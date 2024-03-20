@@ -112,7 +112,7 @@ public class SelectHandler extends CommandHandler {
         HashSet<String> allAttributes=new HashSet<>();
         allAttributes.addAll(Arrays.asList(getAttributes));
         allAttributes.removeAll(attributeSet);
-        allAttributes.remove("id");
+        //allAttributes.remove("id");
         if(!attributeSet.isEmpty()){
             for (String element : allAttributes){
                 boolean dropColmnFlag=tempTable.alterDropTable(element);

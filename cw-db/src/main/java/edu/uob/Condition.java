@@ -92,7 +92,6 @@ public class Condition {
         return false;
     }
 
-
     public boolean comparisonOperator(String data, String comOpr, String value) {
         if (isNumeric(data) && isNumeric(value)) {
             int dataInt = Integer.parseInt(data);
@@ -109,19 +108,9 @@ public class Condition {
                 return (dataInt < valueInt || dataInt == valueInt);
             }
         } else if (isNumeric(data) || isNumeric(value)) {
-            System.err.print("can't compare");
-        } else if (isLetter(data) || isLetter(value)) {
-            //== like !=
-            if (comOpr.equals("==")) {
-                //data = data.replaceAll("'", "");
-                //System.out.print(data.equals(value));
-                return data.equals(value);
-            } else if (comOpr.equalsIgnoreCase("like")) {
-                String regex = value.replaceAll("%", ".*");
-                return data.contains(value);
-            }
-        }
-        else if(comOpr.equals("!=")){
+            data = String.valueOf(data); // Convert to string
+            value = String.valueOf(value); // Convert to string
+        } else if(comOpr.equals("!=")){
             data = data.replaceAll("'", "");
             value = value.replaceAll("'", "");
             return !data.equals(value);
@@ -129,9 +118,18 @@ public class Condition {
             data = data.replaceAll("'", "");
             value = value.replaceAll("'", "");
             return data.equals(value);
+        } else if (comOpr.equalsIgnoreCase("like")) {
+            data = data.replaceAll("'", "");
+            data= data.replaceAll(" ","");
+            value = value.replaceAll("'", "");
+            value= value.replaceAll(" ","");
+            System.out.print(data+"\t");
+            System.out.print(value);
+            return data.contains(value);
         }
         return true;
     }
+
     public boolean simpleParser(ArrayList<String> conditionalCommand) {
         int tokenIndex = 0;
         if(conditionalCommand.size()<3){
