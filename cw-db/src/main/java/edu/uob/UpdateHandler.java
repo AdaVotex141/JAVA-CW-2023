@@ -252,6 +252,7 @@ public class UpdateHandler extends CommandHandler{
                         }
                     }
                 }
+                tempTable.datas.set(i, new Rowdata(tempTable.datas.get(i).getid(), String.join("\t", rowData)));
 
             } else if (oper.equalsIgnoreCase("OR")) {
                 if (condition.comparisonOperator(rowData.get(attributeIndex1), oper1, value1) ||
@@ -264,16 +265,16 @@ public class UpdateHandler extends CommandHandler{
                             rowData.set(key, updateList.get(key));
                         }
                     }
-                    tempTable.datas.set(i, new Rowdata(tempTable.datas.get(i).getid(), String.join("\t", rowData)));
                 }
+                tempTable.datas.set(i, new Rowdata(tempTable.datas.get(i).getid(), String.join("\t", rowData)));
             }
         }
+
         //write back to file
         reader.writeTabFile(tempTable,tempTable.tableFilePath);
         //reintisualised the database:
         Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
         currentDatabase.updateTable(tempTable);
-
         return true;
     }
 

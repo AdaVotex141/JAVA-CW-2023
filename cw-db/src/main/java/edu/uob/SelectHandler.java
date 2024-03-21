@@ -231,33 +231,33 @@ public class SelectHandler extends CommandHandler {
             return false;
         }
 
-        boolean isContinuous1 = false;
-        boolean isContinuous2 = false;
+        boolean isContinuous1=false;
+        boolean isContinuous2=false;
 
-        for (String sub : sublist1) {
-            if (condition.comparisonOperators.contains(sub)) {
+        for(String sub:sublist1){
+            if(condition.comparisonOperators.contains(sub)) {
                 isContinuous1 = true;
                 break;
             }
         }
-        if (!isContinuous1) {
-            sublist1 = condition.tokenParse(sublist1);
+        if(!isContinuous1){
+            sublist1=condition.tokenParse(sublist1);
         }
-        for (String sub : sublist2) {
-            if (condition.comparisonOperators.contains(sub)) {
-                isContinuous2 = true;
+        for(String sub:sublist2){
+            if(condition.comparisonOperators.contains(sub)){
+                isContinuous2=true;
                 break;
             }
         }
-        if (!isContinuous2) {
-            sublist2 = condition.tokenParse(sublist2);
+        if(!isContinuous2){
+            sublist2=condition.tokenParse(sublist2);
         }
-        String attribute1 = sublist1.get(0);
-        int attributeIndex1 = tempTable.AttributeIndexWithoutID(attribute1);
-        String oper1 = sublist1.get(1);
-        String value1 = sublist1.get(2);
+        String attribute1=sublist1.get(0);
+        int attributeIndex1= tempTable.AttributeIndexWithoutID(attribute1);
+        String oper1=sublist1.get(1);
+        String value1=sublist1.get(2);
 
-        String attribute2 = sublist2.get(0);
+        String attribute2= sublist2.get(0);
         int attributeIndex2 = tempTable.AttributeIndexWithoutID(attribute2);
         String oper2 = sublist2.get(1);
         String value2 = sublist2.get(2);
