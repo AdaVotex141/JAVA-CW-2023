@@ -65,28 +65,34 @@ public class DeleteHandler extends CommandHandler{
             currentDatabase.updateTable(table);
 
         }else if(selectorflag== Condition.ConditionSelector.withBool){
-            returnBuilder=withBool(subList,returnBuilder,table);
+            boolean flagBool=this.parseBool(subList,table,returnBuilder);
+            if(flagBool==false){
+                returnBuilder.append("[ERROR] Delete ERROR");
+                return returnBuilder;
+            }
+            returnBuilder.append("[OK]");
             //write back to file
             reader.writeTabFile(table,table.tableFilePath);
             //reintisualised the database:
             currentDatabase.updateTable(table);
+            return returnBuilder;
 
         } else if (selectorflag== Condition.ConditionSelector.withbrackets) {
             //TODO: re-tokenrise
-
-
-
-
-
-
-
+            boolean flagBrackets=this.parseBrackets(subList,table,returnBuilder);
+            if(flagBrackets==false){
+                returnBuilder.append("[ERROR] Delete ERROR");
+                return returnBuilder;
+            }
+            returnBuilder.append("[OK]");
+            reader.writeTabFile(table,table.tableFilePath);
+            //reintisualised the database:
+            currentDatabase.updateTable(table);
+            return returnBuilder;
         }else{
             returnBuilder.append("[ERROR] Can't resolve condition");
             return returnBuilder;
         }
-
-
-
         return returnBuilder;
     }
     private StringBuilder simpleComparison(ArrayList<String> subList, StringBuilder returnBuilder,Table table,boolean flag){
@@ -135,9 +141,6 @@ public class DeleteHandler extends CommandHandler{
                 returnBuilder.append(subList.get(j)+"\t");
             }
 
-
-
-
             if(condition.boolParser(subList)){
                 table.datas.get(i).flag=false;
             }
@@ -145,4 +148,122 @@ public class DeleteHandler extends CommandHandler{
         returnBuilder.append("[OK]");
         return returnBuilder;
     }
+
+    private boolean parseBool(ArrayList<String> subList, Table tempTable, StringBuilder returnBuilder) {
+        ArrayList<String> sublist1 = new ArrayList<>();
+        ArrayList<String> sublist2 = new ArrayList<>();
+        int index = 0;
+
+
+        while (!subList.get(index).equalsIgnoreCase("AND") && !subList.get(index).equalsIgnoreCase("OR")) {
+            sublist1.add(subList.get(index));
+            index += 1;
+        }
+        if (index >= subList.size()-1) {
+            return false;
+        }
+
+        String oper = subList.get(index);
+        index += 1;
+        while (index < subList.size() && !subList.get(index).equalsIgnoreCase(";")) {
+            sublist2.add(subList.get(index));
+            index += 1;
+        }
+
+        if (!oper.equalsIgnoreCase("AND") && !oper.equalsIgnoreCase("OR")) {
+            returnBuilder.append("[ERROR] Invalid boolean operator");
+            return false;
+        }
+
+        if (!parseSubList(sublist1, tempTable, returnBuilder) || !parseSubList(sublist2, tempTable, returnBuilder)) {
+            return false;
+        }
+
+        boolean isContinuous1 = false;
+        boolean isContinuous2 = false;
+
+        for (String sub : sublist1) {
+            if (condition.comparisonOperators.contains(sub)) {
+                isContinuous1 = true;
+                break;
+            }
+        }
+        if (!isContinuous1) {
+            sublist1 = condition.tokenParse(sublist1);
+        }
+        for (String sub : sublist2) {
+            if (condition.comparisonOperators.contains(sub)) {
+                isContinuous2 = true;
+                break;
+            }
+        }
+        if (!isContinuous2) {
+            sublist2 = condition.tokenParse(sublist2);
+        }
+        String attribute1 = sublist1.get(0);
+        int attributeIndex1 = tempTable.AttributeIndexWithoutID(attribute1);
+        String oper1 = sublist1.get(1);
+        String value1 = sublist1.get(2);
+
+        String attribute2 = sublist2.get(0);
+        int attributeIndex2 = tempTable.AttributeIndexWithoutID(attribute2);
+        String oper2 = sublist2.get(1);
+        String value2 = sublist2.get(2);
+
+        if (attributeIndex1 == -1 || attributeIndex2 == -1) {
+            return false;
+        }
+
+        if (!condition.comparisonOperators.contains(oper1) || !condition.comparisonOperators.contains(oper2)) {
+            return false;
+        }
+
+        for (int i = 0; i < tempTable.datas.size(); i++) {
+            String[] rowData = tempTable.datas.get(i).getDataSplit();
+            if (oper.equalsIgnoreCase("AND")) {
+                if (condition.comparisonOperator(rowData[attributeIndex1], oper1, value1) &&
+                        condition.comparisonOperator(rowData[attributeIndex2], oper2, value2)) {
+                    tempTable.datas.get(i).flag = false;
+                }
+            } else if (oper.equalsIgnoreCase("OR")) {
+                if (condition.comparisonOperator(rowData[attributeIndex1], oper1, value1) ||
+                        condition.comparisonOperator(rowData[attributeIndex2], oper2, value2)) {
+                    tempTable.datas.get(i).flag = false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean parseSubList(ArrayList<String> subList, Table tempTable, StringBuilder returnBuilder) {
+        boolean isContinuous = false;
+        for (String sub : subList) {
+            if (condition.comparisonOperators.contains(sub)) {
+                isContinuous = true;
+                break;
+            }
+        }
+        if (!isContinuous) {
+            subList = condition.tokenParse(subList);
+        }
+        return true;
+    }
+
+    private boolean parseBrackets(ArrayList<String> list, Table tempTable, StringBuilder returnBuilder){
+        //get the sublist without leftbrackes and right brackets
+        ArrayList<String> sublist=new ArrayList<>();
+        for(String element:list){
+            if(!element.equals("(") && !element.equals(")")){
+                sublist.add(element);
+            }
+        }
+        boolean flag;
+        flag=parseBool(sublist,tempTable,returnBuilder);
+        if(!flag){
+            return false;
+        }
+        return true;
+    }
+
+
 }

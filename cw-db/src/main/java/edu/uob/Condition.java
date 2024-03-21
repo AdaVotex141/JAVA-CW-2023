@@ -31,7 +31,7 @@ public class Condition {
         Collections.addAll(comparisonOperators, ">", "<", ">=", "<=", "==", "!=", "LIKE");
         //create SET of keyowords
         Collections.addAll(keywords, "use", "create", "drop", "alter",
-                "insert", "select", "update", "delete", "join","table","database","like");
+                "insert", "select", "update", "delete", "join","table","database","like","true","false");
         Collections.addAll(boolOperator, "and", "or","AND","OR");
         Collections.addAll(bracketsSet, "(", ")");
     }
@@ -170,7 +170,7 @@ public class Condition {
         System.out.print("into tokenParse");
         String condition=subList.get(0);
         //turn mark>40 into mark > 40
-        Pattern pattern = Pattern.compile("(\\w+)\\s*([<>]=?|==|!=)\\s*(\\d+)");
+        Pattern pattern = Pattern.compile("(\\w+)\\s*([<>]=?|==|!=)\\s*(\\w+)");
         Matcher matcher = pattern.matcher(condition);
         if(matcher.find()){
             String attributeName = matcher.group(1);

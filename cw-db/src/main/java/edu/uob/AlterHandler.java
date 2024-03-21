@@ -39,7 +39,7 @@ public class AlterHandler extends CommandHandler {
         }
         Table tableget=currentDatabase.getTable(tokens.get(tokenIndex));
         if(tableget==null){
-            returnBuilder.append("[ERROR]");
+            returnBuilder.append("[ERROR]Table doesn't exist");
             return returnBuilder;
         }
         tokenIndex+=1;

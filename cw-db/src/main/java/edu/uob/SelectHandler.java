@@ -58,13 +58,11 @@ public class SelectHandler extends CommandHandler {
             }
         }
         tokenIndex=tempTokenIndex+1;
-        //TODO very complicated->move to delete instead
         //WHERE
         if(tokens.get(tokenIndex).equalsIgnoreCase("WHERE")){
             for(Rowdata rowdata:tempTable.datas){
                 rowdata.selected=false;
             }
-            //TODO:DEAL with WHERE
             if(tokens.size()<7){
                 returnBuilder.append("[ERROR]Invalid sentence");
                 return returnBuilder;
@@ -80,7 +78,6 @@ public class SelectHandler extends CommandHandler {
                 }
             }
 
-
             Condition.ConditionSelector selectorflag=condition.conditionSelection(subList);
             //returnBuilder.append(subList);
             if(selectorflag == Condition.ConditionSelector.simpleComparison){
@@ -88,7 +85,13 @@ public class SelectHandler extends CommandHandler {
                 if(isContinuous==false){
                     subList=condition.tokenParse(subList);
                 }
-
+                if(subList.size()<3){
+                    returnBuilder.append("[ERROR] Can't resolve tokenParse");
+                    for(String sub:subList){
+                        returnBuilder.append(sub+"\t");
+                    }
+                    return returnBuilder;
+                }
 
                 String attribute=subList.get(0);
                 int attributeIndex=tempTable.AttributeIndexWithoutID(attribute);
@@ -107,17 +110,20 @@ public class SelectHandler extends CommandHandler {
                         tempTable.datas.get(i).selected=true;
                     }
                 }
-            }else if(selectorflag== Condition.ConditionSelector.withBool){
+            }else if(selectorflag== Condition.ConditionSelector.withBool) {
                 //this is the index in the command that should be replaced
-                ArrayList<Integer> dataIndex=condition.dataIndex;
-                for(Rowdata data: tempTable.datas){
-                    String[] rowData=data.getDataSplit();
-
-
-
+                boolean flagBool=this.parseBool(subList,tempTable,returnBuilder);
+                if(flagBool==false){
+                    returnBuilder.append("[ERROR] select ERROR");
+                    return returnBuilder;
                 }
 
-            } else if (selectorflag== Condition.ConditionSelector.withbrackets) {
+             }else if (selectorflag== Condition.ConditionSelector.withbrackets) {
+                boolean flagBrackets=this.parseBrackets(subList,tempTable,returnBuilder);
+                if(flagBrackets==false){
+                    returnBuilder.append("[ERROR] select ERROR");
+                    return returnBuilder;
+                }
 
             }else{
                 returnBuilder.append("[ERROR] Can't resolve condition");
@@ -176,8 +182,6 @@ public class SelectHandler extends CommandHandler {
         }
 
 
-
-
 //        returnBuilder.append("[OK]"+"\n");
 //        returnBuilder.append(tempTable.getAttribute()+"\n");
         for(Rowdata data:tempTable.datas){
@@ -194,4 +198,125 @@ public class SelectHandler extends CommandHandler {
         }
         return returnBuilder;
     }
+
+
+
+    private boolean parseBool(ArrayList<String> subList, Table tempTable, StringBuilder returnBuilder) {
+        ArrayList<String> sublist1 = new ArrayList<>();
+        ArrayList<String> sublist2 = new ArrayList<>();
+        int index = 0;
+
+
+        while (!subList.get(index).equalsIgnoreCase("AND") && !subList.get(index).equalsIgnoreCase("OR")) {
+            sublist1.add(subList.get(index));
+            index += 1;
+        }
+        if (index >= subList.size()-1) {
+            return false;
+        }
+
+        String oper = subList.get(index);
+        index += 1;
+        while (index < subList.size() && !subList.get(index).equalsIgnoreCase(";")) {
+            sublist2.add(subList.get(index));
+            index += 1;
+        }
+
+        if (!oper.equalsIgnoreCase("AND") && !oper.equalsIgnoreCase("OR")) {
+            returnBuilder.append("[ERROR] Invalid boolean operator");
+            return false;
+        }
+
+        if (!parseSubList(sublist1, tempTable, returnBuilder) || !parseSubList(sublist2, tempTable, returnBuilder)) {
+            return false;
+        }
+
+        boolean isContinuous1 = false;
+        boolean isContinuous2 = false;
+
+        for (String sub : sublist1) {
+            if (condition.comparisonOperators.contains(sub)) {
+                isContinuous1 = true;
+                break;
+            }
+        }
+        if (!isContinuous1) {
+            sublist1 = condition.tokenParse(sublist1);
+        }
+        for (String sub : sublist2) {
+            if (condition.comparisonOperators.contains(sub)) {
+                isContinuous2 = true;
+                break;
+            }
+        }
+        if (!isContinuous2) {
+            sublist2 = condition.tokenParse(sublist2);
+        }
+        String attribute1 = sublist1.get(0);
+        int attributeIndex1 = tempTable.AttributeIndexWithoutID(attribute1);
+        String oper1 = sublist1.get(1);
+        String value1 = sublist1.get(2);
+
+        String attribute2 = sublist2.get(0);
+        int attributeIndex2 = tempTable.AttributeIndexWithoutID(attribute2);
+        String oper2 = sublist2.get(1);
+        String value2 = sublist2.get(2);
+
+        if (attributeIndex1 == -1 || attributeIndex2 == -1) {
+            return false;
+        }
+
+        if (!condition.comparisonOperators.contains(oper1) || !condition.comparisonOperators.contains(oper2)) {
+            return false;
+        }
+
+        for (int i = 0; i < tempTable.datas.size(); i++) {
+            String[] rowData = tempTable.datas.get(i).getDataSplit();
+            if (oper.equalsIgnoreCase("AND")) {
+                if (condition.comparisonOperator(rowData[attributeIndex1], oper1, value1) &&
+                        condition.comparisonOperator(rowData[attributeIndex2], oper2, value2)) {
+                    tempTable.datas.get(i).selected = true;
+                }
+            } else if (oper.equalsIgnoreCase("OR")) {
+                if (condition.comparisonOperator(rowData[attributeIndex1], oper1, value1) ||
+                        condition.comparisonOperator(rowData[attributeIndex2], oper2, value2)) {
+                    tempTable.datas.get(i).selected = true;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean parseSubList(ArrayList<String> subList, Table tempTable, StringBuilder returnBuilder) {
+        boolean isContinuous = false;
+        for (String sub : subList) {
+            if (condition.comparisonOperators.contains(sub)) {
+                isContinuous = true;
+                break;
+            }
+        }
+        if (!isContinuous) {
+            subList = condition.tokenParse(subList);
+        }
+        return true;
+    }
+
+    private boolean parseBrackets(ArrayList<String> list, Table tempTable, StringBuilder returnBuilder){
+        //get the sublist without leftbrackes and right brackets
+        ArrayList<String> sublist=new ArrayList<>();
+        for(String element:list){
+            if(!element.equals("(") && !element.equals(")")){
+                sublist.add(element);
+            }
+        }
+        boolean flag;
+        flag=parseBool(sublist,tempTable,returnBuilder);
+        if(!flag){
+            return false;
+        }
+        return true;
+    }
+
+
+
 }

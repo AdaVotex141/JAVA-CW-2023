@@ -37,6 +37,10 @@ public class JoinHandler extends CommandHandler{
         //get the two table
         Table table1=currentDatabase.getTable(tableName1);
         Table table2=currentDatabase.getTable(tableName2);
+        if(table1==null || table2==null){
+            returnBuilder.append("[ERROR] table doesn't exist");
+            return returnBuilder;
+        }
 
         tokenIndex+=1;//ON
         if(!tokens.get(tokenIndex).equalsIgnoreCase("ON")){
@@ -67,6 +71,12 @@ public class JoinHandler extends CommandHandler{
         //why this two are -1???
         int index1=table1.AttributeIndexWithID(attribute1);
         int index2=table2.AttributeIndexWithID(attribute2);
+
+        if(index1==-1 || index2==-1){
+            returnBuilder.append("[ERROR] Attribute name error");
+            return returnBuilder;
+        }
+
 
         //Table table1, int index1, Table table2, int index2,StringBuilder returnBuilder)
         returnBuilder=printTheSelected(table1,index1,table2,index2,returnBuilder);

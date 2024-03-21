@@ -44,13 +44,13 @@ public class Tokenrise {
         return input.split(" ");
     }
 
-//    public static void main(String[] args) {
-//        String query = "  (name<=get)AND(fire==2); ";
-//        query="SELECT name FROM marks WHERE mark>60; ";
-//        Tokenrise tokenizer = new Tokenrise(query);
-//        ArrayList<String> tokens = tokenizer.getTokens();
-//        for (String token : tokens) {
-//            System.out.println(token);
-//        }
-//    }
+    public static void main(String[] args) {
+        String query = "  (name<=get)AND(fire==2); ";
+        query="SELECT * FROM marks WHERE (pass==FALSE) AND (mark>20);";
+        Tokenrise tokenizer = new Tokenrise(query);
+        ArrayList<String> tokens = tokenizer.getTokens();
+        for (String token : tokens) {
+            System.out.println(token);
+        }
+    }
 }
