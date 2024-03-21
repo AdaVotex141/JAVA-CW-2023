@@ -91,7 +91,7 @@ public class UpdateHandler extends CommandHandler{
             return returnBuilder;
         }
         tokenIndex+=1;//where+1
-        //TODO: <condition>
+
         Database currentDatabase=Globalstatus.getInstance().getCurrentDatabase();
         ArrayList<String> subList = new ArrayList<>(tokens.subList(tokenIndex, tokens.size()));
 
@@ -146,12 +146,24 @@ public class UpdateHandler extends CommandHandler{
                 returnBuilder.append("[ERROR] select ERROR");
                 return returnBuilder;
             }
+            returnBuilder.append("[OK]");
+            //write back to file
+            reader.writeTabFile(table,table.tableFilePath);
+            //reintisualised the database:
+            currentDatabase.updateTable(table);
+            return returnBuilder;
         } else if (selectorflag== Condition.ConditionSelector.withbrackets) {
             boolean flagBrackets=this.parseBrackets(subList,table,returnBuilder,updateList);
             if(flagBrackets==false){
                 returnBuilder.append("[ERROR] select ERROR");
                 return returnBuilder;
             }
+            returnBuilder.append("[OK]");
+            //write back to file
+            reader.writeTabFile(table,table.tableFilePath);
+            //reintisualised the database:
+            currentDatabase.updateTable(table);
+            return returnBuilder;
         }else{
             returnBuilder.append("[ERROR] Can't resolve condition");
             return returnBuilder;
@@ -256,7 +268,6 @@ public class UpdateHandler extends CommandHandler{
                 }
             }
         }
-        returnBuilder.append("[OK]");
         //write back to file
         reader.writeTabFile(tempTable,tempTable.tableFilePath);
         //reintisualised the database:
