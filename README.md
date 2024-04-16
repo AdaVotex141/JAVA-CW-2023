@@ -14,7 +14,7 @@ or
 ```./mvnw exec:java@server```
 ```./mvnw exec:java@client```
 .mvn 
-maven相关
+maven
 src
 test
 
@@ -441,6 +441,43 @@ update gets wrong
 some select gets wrong 
 
 
+### 21/3:
+
+AND OR
+SELECT * FROM marks WHERE (pass == FALSE) AND (mark > 20);
+SELECT * FROM marks WHERE (pass==FALSE) AND (mark>20);
+SELECT * FROM marks WHERE (pass==FALSE) AND (mark > 20);
+SELECT * FROM marks WHERE pass==FALSE AND mark>20;->PASS!!!!!!!!!
+SELECT * FROM marks WHERE mark>35;->PASS
+SELECT * FROM marks WHERE PASS==FALSE;->PASS
+
+select delete update->condition
+
+
+UPDATE marks SET mark=90 WHERE name == 'Simon';->PASS
+UPDATE marks SET mark = 45 WHERE name == 'Simon';->infinite loop????->PASS
+
+SELECT * FROM marks WHERE (pass==FALSE) AND (mark>20);
+
+
+only update?!
+UPDATE marks SET mark=90 WHERE (pass==FALSE) AND (mark>20);
+UPDATE marks SET mark=90 WHERE (pass==FALSE) AND (mark > 20);
+UPDATE marks SET mark=90 WHERE pass==FALSE AND mark>20;
+UPDATE marks SET mark=90 WHERE (pass==FALSE) AND (mark>20);
+
+
+<Delete> ::=  "DELETE " "FROM " [TableName] " WHERE " <Condition>
+DELETE FROM marks WHERE pass==FALSE AND mark>20;
+DELETE FROM marks WHERE (pass==TRUE) AND (mark < 90);
+
+
+
+
+
+
+
+
 
 
 
@@ -452,3 +489,49 @@ DELETE (WHERE)
 UPDATE(WHERE)->finish
 
 JOIN (WHERE)
+
+# STAG
+
+task 1:
+1. game entities->.dot->provided parser
+
+* Locations: 
+  * Paths(one-way or both-way)
+  * character
+  * artefacts
+  * furniture
+* Artefacts: things to be collected
+* Furniture: things can't be collected
+* Characters: people to interact
+* Players: user(multiple in the future)
+
+2. actions->XML->provided parser
+
+inventory (or inv ):
+get: picks up
+drop: put down the artefacts
+goto: move
+look:
+   1. prints names and descriptions of entities 
+   2. lists paths to other locations
+
+
+task 2:
+actions-> interact with game entities
+
+task 3: input->natural language->interact with looks
+   1. Case Insensitivity
+   upper and lower cases doens't matter
+   2. Decorated Commands
+   ```chop tree with axe```和```please chop the tree using the axe```-> chop tree axe
+   3. Word Ordering
+   ```chop tree with axe``` ```use axe to chop tree```-> unordered sentece
+   4. Partial Commands
+   minimum:a trigger phrase and at least one subject  ->```unlock trapdoor``` ```unlock with key```
+   5. Extraneous Entities
+   6. Ambiguous Commands
+   7. Composite Commands
+   no compound commands?
+   8. Error messages
+
+---
