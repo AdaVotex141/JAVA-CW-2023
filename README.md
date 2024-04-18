@@ -489,10 +489,22 @@ DELETE (WHERE)
 UPDATE(WHERE)->finish
 
 JOIN (WHERE)
+---
+## Feedback
+
+48 tests->70% * persentage
+
+Total Tests Passed: 47/60 (see separate file for features not successfully implemented).
+Fairly steady and consistent implementation of features over the duration of project.
+Moderate penalty applied for significant, rapid 'un-agile' increase in size of codebase.
+Penalty applied for pushing some inappropriate file types onto GitHub - check your repo.
+Moderate penalty applied for a number of code quality issues - see separate file for more details.
 
 # STAG
 
-task 1:
+## General design
+
+**task 1:**
 1. game entities->.dot->provided parser
 
 * Locations: 
@@ -516,10 +528,10 @@ look:
    2. lists paths to other locations
 
 
-task 2:
+**task 2:**
 actions-> interact with game entities
 
-task 3: input->natural language->interact with looks
+**task 3:** input->natural language->interact with looks
    1. Case Insensitivity
    upper and lower cases doens't matter
    2. Decorated Commands
@@ -535,3 +547,7 @@ task 3: input->natural language->interact with looks
    8. Error messages
 
 ---
+
+## things to be clarified
+
+what are the toher thing 
