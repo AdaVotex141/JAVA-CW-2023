@@ -520,7 +520,16 @@ Moderate penalty applied for a number of code quality issues - see separate file
 * Characters: people to interact
 * Players: user(multiple in the future)
 
-2. actions->XML->provided parser
+.DOT:
+* locations subgraph-> define locations
+    * cluster
+      * location(name+description)
+        * artefacts(name+description)
+        * furniture(name+description)
+        * characters(name+description)
+* paths subgraph-> define paths
+
+1. actions->XML->provided parser
 
 inventory (or inv ):
 get: picks up
@@ -550,3 +559,4 @@ actions-> interact with game entities
    8. Error messages
 
 ---
+
