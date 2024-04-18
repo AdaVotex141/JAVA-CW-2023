@@ -500,6 +500,9 @@ Moderate penalty applied for significant, rapid 'un-agile' increase in size of c
 Penalty applied for pushing some inappropriate file types onto GitHub - check your repo.
 Moderate penalty applied for a number of code quality issues - see separate file for more details.
 
+**quality?**
+
+
 # STAG
 
 ## General design
@@ -547,7 +550,3 @@ actions-> interact with game entities
    8. Error messages
 
 ---
-
-## things to be clarified
-
-what are the toher thing 
