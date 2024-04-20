@@ -14,7 +14,7 @@ or
 ```./mvnw exec:java@server```
 ```./mvnw exec:java@client```
 .mvn 
-maven相关
+maven
 src
 test
 
@@ -489,3 +489,74 @@ DELETE (WHERE)
 UPDATE(WHERE)->finish
 
 JOIN (WHERE)
+---
+## Feedback
+
+48 tests->70% * persentage
+
+Total Tests Passed: 47/60 (see separate file for features not successfully implemented).
+Fairly steady and consistent implementation of features over the duration of project.
+Moderate penalty applied for significant, rapid 'un-agile' increase in size of codebase.
+Penalty applied for pushing some inappropriate file types onto GitHub - check your repo.
+Moderate penalty applied for a number of code quality issues - see separate file for more details.
+
+**quality?**
+
+
+# STAG
+
+## General design
+
+**task 1:**
+1. game entities->.dot->provided parser
+
+* Locations: 
+  * Paths(one-way or both-way)
+  * character
+  * artefacts
+  * furniture
+* Artefacts: things to be collected
+* Furniture: things can't be collected
+* Characters: people to interact
+* Players: user(multiple in the future)
+
+.DOT:
+* locations subgraph-> define locations
+    * cluster
+      * location(name+description)
+        * artefacts(name+description)
+        * furniture(name+description)
+        * characters(name+description)
+* paths subgraph-> define paths
+
+1. actions->XML->provided parser
+
+inventory (or inv ):
+get: picks up
+drop: put down the artefacts
+goto: move
+look:
+   1. prints names and descriptions of entities 
+   2. lists paths to other locations
+
+
+**task 2:**
+actions-> interact with game entities
+
+**task 3:** input->natural language->interact with looks
+   1. Case Insensitivity
+   upper and lower cases doens't matter
+   2. Decorated Commands
+   ```chop tree with axe```和```please chop the tree using the axe```-> chop tree axe
+   3. Word Ordering
+   ```chop tree with axe``` ```use axe to chop tree```-> unordered sentece
+   4. Partial Commands
+   minimum:a trigger phrase and at least one subject  ->```unlock trapdoor``` ```unlock with key```
+   5. Extraneous Entities
+   6. Ambiguous Commands
+   7. Composite Commands
+   no compound commands?
+   8. Error messages
+
+---
+
