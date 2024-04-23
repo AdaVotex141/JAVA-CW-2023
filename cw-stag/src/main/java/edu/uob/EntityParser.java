@@ -12,13 +12,18 @@ import com.alexmerz.graphviz.ParseException;
 import com.alexmerz.graphviz.objects.Graph;
 import com.alexmerz.graphviz.objects.Node;
 import com.alexmerz.graphviz.objects.Edge;
+import edu.uob.Entity.Artefact;
+import edu.uob.Entity.Character;
+import edu.uob.Entity.Furniture;
 import edu.uob.Entity.Location;
 
 public class EntityParser {
     public HashMap<String,Location> locations;
+    public HashMap<String, String> paths;
 
     public EntityParser() throws FileNotFoundException, ParseException {
         locations = new HashMap<>();
+        paths = new HashMap<>();
         EntityParse();
     }
     public void EntityParse() throws FileNotFoundException, ParseException {
@@ -79,29 +84,40 @@ public class EntityParser {
         while(i<otherEntities.size()){
             Node entityDetails = otherEntities.get(i).getNodes(false).get(0);
             String entityType = entityDetails.getAttribute("shape");
-            if(entityType.equals("diamond")){
-                //artefacts
-
-            }else if(entityType.equals("hexagon")){
-                //furniture
-
-
-
-            }else if(entityType.equals("ellipse")){
-                //characters
-
-            }else{
-                System.err.print("Invalid type");
+            ArrayList<Node> nodes = otherEntities.get(i).getNodes(false);
+            for (Node node:nodes){
+                String name = node.getId().getId();
+                String description = node.getAttribute("description");
+                if(entityType.equals("diamond")){
+                    //artefacts
+                    Artefact artefactNew = new Artefact(name,description);
+                    locationNew.setArtefact(artefactNew);
+                }else if(entityType.equals("hexagon")){
+                    //furniture
+                    Furniture furnitureNew = new Furniture(name,description);
+                    locationNew.setFurniture(furnitureNew);
+                }else if(entityType.equals("ellipse")){
+                    //characters
+                    Character characterNew = new Character(name,description);
+                    locationNew.setCharacter(characterNew);
+                }else{
+                    System.err.print("Invalid type");
+                }
             }
             i++;
         }
     }
 
 
-
-
-
     private void PathParse(ArrayList<Edge> paths){
+        for (Edge path:paths){
+            Node fromLocation = path.getSource().getNode();
+            String fromName = fromLocation.getId().getId();
+            Node toLocation = path.getTarget().getNode();
+            String toName = toLocation.getId().getId();
+            this.paths.put(fromName,toName);
+        }
+
         Edge firstPath = paths.get(0);
         Node fromLocation = firstPath.getSource().getNode();
         String fromName = fromLocation.getId().getId();
