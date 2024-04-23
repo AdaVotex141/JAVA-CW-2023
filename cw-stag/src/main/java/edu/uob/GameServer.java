@@ -1,11 +1,8 @@
 package edu.uob;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import com.alexmerz.graphviz.ParseException;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Paths;
@@ -13,8 +10,10 @@ import java.nio.file.Paths;
 public final class GameServer {
 
     private static final char END_OF_TRANSMISSION = 4;
+    EntityParser entityParser;
 
-    public static void main(String[] args) throws IOException {
+
+    public static void main(String[] args) throws IOException, ParseException {
         File entitiesFile = Paths.get("config" + File.separator + "basic-entities.dot").toAbsolutePath().toFile();
         File actionsFile = Paths.get("config" + File.separator + "basic-actions.xml").toAbsolutePath().toFile();
         GameServer server = new GameServer(entitiesFile, actionsFile);
@@ -28,8 +27,8 @@ public final class GameServer {
     * @param entitiesFile The game configuration file containing all game entities to use in your game
     * @param actionsFile The game configuration file containing all game actions to use in your game
     */
-    public GameServer(File entitiesFile, File actionsFile) {
-
+    public GameServer(File entitiesFile, File actionsFile) throws FileNotFoundException, ParseException {
+        entityParser = new EntityParser(entitiesFile);
 
 
         // TODO implement your server logic here

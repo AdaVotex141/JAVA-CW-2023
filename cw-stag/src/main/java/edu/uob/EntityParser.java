@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import com.alexmerz.graphviz.Parser;
 import com.alexmerz.graphviz.ParseException;
@@ -21,15 +23,15 @@ public class EntityParser {
     public HashMap<String,Location> locations;
     public HashMap<String, String> paths;
 
-    public EntityParser() throws FileNotFoundException, ParseException {
+    public EntityParser(File entitiesFile) throws FileNotFoundException, ParseException {
         locations = new HashMap<>();
         paths = new HashMap<>();
-        EntityParse();
+        EntityParse(entitiesFile);
     }
-    public void EntityParse() throws FileNotFoundException, ParseException {
+    public void EntityParse(File entitiesFile) {
         try {
             Parser parser = new Parser();
-            FileReader reader = new FileReader("config" + File.separator + "basic-entities.dot");
+            FileReader reader = new FileReader(entitiesFile.getPath());
             parser.parse(reader);
             Graph wholeDocument = parser.getGraphs().get(0);
             ArrayList<Graph> sections = wholeDocument.getSubgraphs();
@@ -69,7 +71,7 @@ public class EntityParser {
         if(i==0){
             locationNew.setAttribute(Location.LocationAttribute.first);
         }else if(i == endIndex){
-            locationNew.setAttribute(Location.LocationAttribute.transparent);
+            locationNew.setAttribute(Location.LocationAttribute.store);
         }else{
             locationNew.setAttribute(Location.LocationAttribute.usual);
         }
@@ -108,23 +110,43 @@ public class EntityParser {
         }
     }
 
-
     private void PathParse(ArrayList<Edge> paths){
-        for (Edge path:paths){
+        for (Edge path : paths){
             Node fromLocation = path.getSource().getNode();
             String fromName = fromLocation.getId().getId();
             Node toLocation = path.getTarget().getNode();
             String toName = toLocation.getId().getId();
             this.paths.put(fromName,toName);
         }
-
-        Edge firstPath = paths.get(0);
-        Node fromLocation = firstPath.getSource().getNode();
-        String fromName = fromLocation.getId().getId();
-        Node toLocation = firstPath.getTarget().getNode();
-        String toName = toLocation.getId().getId();
     }
 
+    public Location getBornLocation(){
+        if (locations == null || locations.isEmpty()) {
+            System.out.print("No locations yet");
+            return null;
+        }
+        Collection<Location> values = locations.values();
+        for(Location location: values){
+            if(location.getAttribute().equals(Location.LocationAttribute.first)){
+                return location;
+            }
+        }
+        return null;
+    }
+
+    public Location getStoreRoom(){
+        if (locations == null || locations.isEmpty()) {
+            System.out.print("No locations yet");
+            return null;
+        }
+        Collection<Location> values = locations.values();
+        for(Location location: values){
+            if(location.getAttribute().equals(Location.LocationAttribute.store)){
+                return location;
+            }
+        }
+        return null;
+    }
 
 
 }

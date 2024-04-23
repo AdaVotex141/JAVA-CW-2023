@@ -7,13 +7,13 @@ public class Location extends GameEntity{
     private HashMap<String, Character> charactersMap;
     private HashMap<String, Artefact> artefactsMap;
 
-    LocationAttribute attribute = null;
+    private LocationAttribute attribute = null;
 
 
     public enum LocationAttribute{
         first,
         usual,
-        transparent
+        store
     }
     //TODO: Paths
 
@@ -55,6 +55,7 @@ public class Location extends GameEntity{
         Artefact artefact = artefactsMap.get(artefactName);
         return artefact;
     }
+
 
 
 }
