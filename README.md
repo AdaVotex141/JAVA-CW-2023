@@ -169,8 +169,9 @@ Hashmap<String>(table name): deleted id
 4. √ drop for databases and files
 5. √ Tests for generating folders and files and drop
 6. USE methods in DATAreader
-    1. √ USE->USE DATABASE,check if it is exists, set the globalstatus, generate a new hashmap based on the current files. generate new TXT based on the hashmap.
-    2. √ INSERT INTO->USE table, check if it is exists on globalDATABASE, set the globalstatus.
+    1. √ USE->USE DATABASE,check if it is exists, set the 
+    2. globalstatus, generate a new hashmap based on the current files. generate new TXT based on the hashmap.
+    3. √ INSERT INTO->USE table, check if it is exists on globalDATABASE, set the globalstatus.
  7. √ insert data in Tables and update in TXT
  8. delete data in Tables and update in TXT
 
@@ -560,3 +561,6 @@ actions-> interact with game entities
 
 ---
 
+### 23/4:
+
+starting on entity Parser
