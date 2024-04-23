@@ -32,6 +32,8 @@ final class EntitiesFileTests {
           Node locationDetails = firstLocation.getNodes(false).get(0);
           // Yes, you do need to get the ID twice !
           String locationName = locationDetails.getId().getId();
+          String decription =  locationDetails.getAttribute("description");
+          assertEquals("A log cabin in the woods",decription);
           assertEquals("cabin", locationName, "First location should have been 'cabin'");
 
           // The paths will always be in the second subgraph
