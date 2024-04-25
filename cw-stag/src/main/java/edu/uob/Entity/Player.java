@@ -15,28 +15,32 @@ public class Player {
         currentlocation = entityParser.getBornLocation();
     }
     //inv:look at carryings
-    public String playerInv(){
-        String inventory="";
+    public StringBuilder playerInv(){
+        StringBuilder result = new StringBuilder();
         if (!carryings.isEmpty()){
             for(String carrying:carryings){
-                inventory+=carrying+" ";
+                result.append(carrying+",");
             }
         }else{
-            inventory = "NULL";
+            result.append("[WARNING] Doesn't have anything");
         }
-        return inventory;
+        return result;
     }
 
     //goto
-    public void playerGoto(String toLocation){
+    public StringBuilder playerGoto(String toLocation){
+        StringBuilder result = new StringBuilder();
         String currentLocation = entityParser.findLocationName(this.currentlocation);
         String toLocationCheck = entityParser.paths.get(currentLocation);
         if(toLocationCheck.equals(toLocation)){
             Location finalLocation = entityParser.findLocation(toLocation);
             this.currentlocation = finalLocation;
+            result.append("reach"+toLocation);
         }else{
+            result.append("[WARNING]Can't reach");
             System.err.print("toLocation doesn't exist");
         }
+        return result;
     }
     //drop
     public void playerDrop(Artefact item){
