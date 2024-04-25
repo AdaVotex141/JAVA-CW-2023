@@ -80,8 +80,6 @@ final class EntitiesFileTests {
           assertTrue(parserTest.locations.containsKey("cellar"));
           assertTrue(parserTest.locations.containsKey("storeroom"));
 
-
-
       }catch(FileNotFoundException fnfe){
           
       }catch(ParseException pe){

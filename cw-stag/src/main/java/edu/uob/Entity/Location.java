@@ -3,9 +3,9 @@ package edu.uob.Entity;
 import java.util.HashMap;
 
 public class Location extends GameEntity{
-    private HashMap<String, Furniture> furnituresMap;
-    private HashMap<String, Character> charactersMap;
-    private HashMap<String, Artefact> artefactsMap;
+    protected HashMap<String, Furniture> furnituresMap;
+    protected HashMap<String, Character> charactersMap;
+    protected HashMap<String, Artefact> artefactsMap;
 
     private LocationAttribute attribute = null;
 
@@ -54,6 +54,14 @@ public class Location extends GameEntity{
     public Artefact getArtefact(String artefactName){
         Artefact artefact = artefactsMap.get(artefactName);
         return artefact;
+    }
+    public void deleteArtefact(Artefact artefact){
+        String artefactName = artefact.getName();
+        Artefact removedArtefact = artefactsMap.remove(artefactName);
+        if(removedArtefact!=null){
+            System.err.print("remove fail");
+        }
+
     }
 
 

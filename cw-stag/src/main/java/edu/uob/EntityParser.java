@@ -1,13 +1,10 @@
 package edu.uob;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 
 import com.alexmerz.graphviz.Parser;
 import com.alexmerz.graphviz.ParseException;
@@ -149,6 +146,19 @@ public class EntityParser {
         for(Location location: values){
             if(location.getAttribute().equals(Location.LocationAttribute.store)){
                 return location;
+            }
+        }
+        return null;
+    }
+
+    public Location findLocation(String location){
+        Location findLocation = locations.get(location);
+        return findLocation;
+    }
+    public String findLocationName(Location location){
+        for (Map.Entry<String, Location> entry : locations.entrySet()) {
+            if (location.equals(entry.getValue())) {
+                return entry.getKey();
             }
         }
         return null;

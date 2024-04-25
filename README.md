@@ -564,3 +564,8 @@ actions-> interact with game entities
 ### 23/4:
 
 starting on entity Parser
+
+### 25/4:
+1. String entityType = entityDetails.getAttribute("shape"); entytyTpe -null-FIXED
+2. 
+

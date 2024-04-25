@@ -1,7 +1,9 @@
 package edu.uob;
 
 import com.alexmerz.graphviz.ParseException;
+import edu.uob.Entity.*;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,6 +13,9 @@ public final class GameServer {
 
     private static final char END_OF_TRANSMISSION = 4;
     EntityParser entityParser;
+    ActionParser actionParser;
+    Player player;
+
 
 
     public static void main(String[] args) throws IOException, ParseException {
@@ -30,12 +35,13 @@ public final class GameServer {
     public GameServer(File entitiesFile, File actionsFile) {
         try {
             entityParser = new EntityParser(entitiesFile);
+            actionParser =  new ActionParser(actionsFile);
         } catch(FileNotFoundException fnfe){
             System.err.print("file is not founded");
         }catch( ParseException pe){
             System.err.print("parse not succeed");
         }
-
+        player=new Player(entityParser);
         // TODO implement your server logic here
     }
 
@@ -47,6 +53,9 @@ public final class GameServer {
     */
     public String handleCommand(String command) {
         // TODO implement your server logic here
+
+
+
         return "";
     }
 
