@@ -27,9 +27,14 @@ public final class GameServer {
     * @param entitiesFile The game configuration file containing all game entities to use in your game
     * @param actionsFile The game configuration file containing all game actions to use in your game
     */
-    public GameServer(File entitiesFile, File actionsFile) throws FileNotFoundException, ParseException {
-        entityParser = new EntityParser(entitiesFile);
-
+    public GameServer(File entitiesFile, File actionsFile) {
+        try {
+            entityParser = new EntityParser(entitiesFile);
+        } catch(FileNotFoundException fnfe){
+            System.err.print("file is not founded");
+        }catch( ParseException pe){
+            System.err.print("parse not succeed");
+        }
 
         // TODO implement your server logic here
     }

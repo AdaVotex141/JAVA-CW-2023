@@ -68,7 +68,7 @@ public class EntityParser {
         Location locationNew = new Location(locationName,description);
         locations.put(locationName,locationNew);
 
-        if(i==0){
+        if(i == 0){
             locationNew.setAttribute(Location.LocationAttribute.first);
         }else if(i == endIndex){
             locationNew.setAttribute(Location.LocationAttribute.store);
@@ -83,22 +83,28 @@ public class EntityParser {
 
     private void otherEntityParse(ArrayList<Graph> otherEntities, Location locationNew){
         int i = 0;
+        //loop every subgraph artefacts, furnitures, etc.
         while(i<otherEntities.size()){
-            Node entityDetails = otherEntities.get(i).getNodes(false).get(0);
-            String entityType = entityDetails.getAttribute("shape");
+            // artefacts:
+            String entityType = otherEntities.get(i).getId().getId();
             ArrayList<Node> nodes = otherEntities.get(i).getNodes(false);
+//            Node firstNode = nodes.get(0);
+//            System.out.print("  "+firstNode.getId().getId()+"  ");
+//            String entityType = firstNode.getAttribute("shape");
+//            System.out.print(entityType);
+
             for (Node node:nodes){
                 String name = node.getId().getId();
                 String description = node.getAttribute("description");
-                if(entityType.equals("diamond")){
+                if(entityType.equals("artefacts")){
                     //artefacts
                     Artefact artefactNew = new Artefact(name,description);
                     locationNew.setArtefact(artefactNew);
-                }else if(entityType.equals("hexagon")){
+                }else if(entityType.equals("furniture")){
                     //furniture
                     Furniture furnitureNew = new Furniture(name,description);
                     locationNew.setFurniture(furnitureNew);
-                }else if(entityType.equals("ellipse")){
+                }else if(entityType.equals("characters")){
                     //characters
                     Character characterNew = new Character(name,description);
                     locationNew.setCharacter(characterNew);

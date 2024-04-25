@@ -1,18 +1,22 @@
 package edu.uob;
 
 import org.junit.jupiter.api.Test;
+
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.alexmerz.graphviz.Parser;
 import com.alexmerz.graphviz.ParseException;
 import com.alexmerz.graphviz.objects.Graph;
 import com.alexmerz.graphviz.objects.Node;
 import com.alexmerz.graphviz.objects.Edge;
 
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 final class EntitiesFileTests {
 
@@ -53,4 +57,35 @@ final class EntitiesFileTests {
       }
   }
 
+  @Test
+    void testEntityParser(){
+      try{
+          File entitiesFile = Paths.get("config" + File.separator + "basic-entities.dot").toAbsolutePath().toFile();
+          EntityParser parserTest= new EntityParser(entitiesFile);
+          //check path
+          assertTrue(parserTest.paths.containsKey("cabin"));
+          assertTrue(parserTest.paths.containsValue("forest"));
+
+          assertEquals(parserTest.paths.get("cabin"),"forest");
+
+
+          assertTrue(parserTest.paths.containsKey("forest"));
+          assertTrue(parserTest.paths.containsKey("cellar"));
+
+          assertEquals(parserTest.paths.get("forest"),"cabin");
+          assertEquals(parserTest.paths.get("cellar"),"cabin");
+          //actually done
+          assertTrue(parserTest.locations.containsKey("cabin"));
+          assertTrue(parserTest.locations.containsKey("forest"));
+          assertTrue(parserTest.locations.containsKey("cellar"));
+          assertTrue(parserTest.locations.containsKey("storeroom"));
+
+
+
+      }catch(FileNotFoundException fnfe){
+          
+      }catch(ParseException pe){
+
+      }
+  }
 }
