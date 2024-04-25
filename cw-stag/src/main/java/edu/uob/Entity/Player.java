@@ -4,6 +4,7 @@ import edu.uob.*;
 import edu.uob.Command.GameAction;
 
 import java.util.HashSet;
+import java.util.Map;
 
 public class Player {
     Location currentlocation;
@@ -81,25 +82,42 @@ public class Player {
             }
             result.append("\n");
         }else{
-            result.append("Artefacts is empty.\n");
+            result.append("Doesn't have any artefact at this location\n");
         }
 
         //furnitures:
         if(!currentlocation.furnituresMap.isEmpty()){
             Iterable<Furniture> furnitureIterator = currentlocation.furnituresMap.values();
             for (Furniture value : furnitureIterator) {
-                result.append(value.getName());
-                result.append(value.getDescription());
+                result.append(value.getName()+"(");
+                result.append(value.getDescription()+"), ");
             }
             result.append("\n");
         }else{
-            result.append("Furniture is empty");
+            result.append("Doesn't have any furniture at this location\n");
         }
 
         //Characters:
+        if(!currentlocation.furnituresMap.isEmpty()){
+            Iterable<Character> charactorIterator = currentlocation.charactersMap.values();
+            for (Character value : charactorIterator) {
+                result.append(value.getName()+"(");
+                result.append(value.getDescription()+"), ");
+            }
+            result.append("\n");
+        }else{
+            result.append("Doesn't have any characters at this location\n");
+        }
 
-
-
+        //show paths:
+        Iterable<Map.Entry<String, String>> entries = entityParser.paths.entrySet();
+        for (Map.Entry<String, String> entry : entries){
+            String fromPlace = entry.getKey();
+            String toPlace =  entry.getValue();
+            if(fromPlace.equals(currentlocation.getName())){
+                result.append(fromPlace+"->"+toPlace+"\n");
+            }
+        }
         return result;
     }
 
