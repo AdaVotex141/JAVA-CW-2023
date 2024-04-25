@@ -57,11 +57,7 @@ public class Location extends GameEntity{
     }
     public void deleteArtefact(Artefact artefact){
         String artefactName = artefact.getName();
-        Artefact removedArtefact = artefactsMap.remove(artefactName);
-        if(removedArtefact!=null){
-            System.err.print("remove fail");
-        }
-
+        artefactsMap.remove(artefactName,artefact);
     }
 
 

@@ -7,16 +7,19 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class Player {
-    Location currentlocation;
+    public Location currentlocation;
     HashSet<String> carryings;
     int Health;
-    EntityParser entityParser;
+    public EntityParser entityParser;
     public Player(EntityParser entityParser){
+        this.entityParser =  entityParser;
         currentlocation = entityParser.getBornLocation();
+        this.carryings = new HashSet<>();
     }
     //inv:look at carryings
     public StringBuilder playerInv(){
         StringBuilder result = new StringBuilder();
+        result.append("Current Location:"+this.currentlocation.getName());
         if (!carryings.isEmpty()){
             for(String carrying:carryings){
                 result.append(carrying+",");
@@ -62,11 +65,8 @@ public class Player {
     public void playerGet(GameEntity item){
         if(item instanceof Artefact){
             Artefact itemArtefact = (Artefact)item;
-            currentlocation.deleteArtefact(itemArtefact);
-            if(currentlocation.artefactsMap.containsValue(item)){
-                System.err.print("get item fail");
-            }
-            carryings.add(item.getName());
+            currentlocation.artefactsMap.remove(itemArtefact.getName());
+            carryings.add(itemArtefact.getName());
         }else{
             System.err.print("This item is not a Artefact");
         }
@@ -76,41 +76,40 @@ public class Player {
     public StringBuilder playerLook(){
         StringBuilder result = new StringBuilder();
         //names and descriptions:
+        //locations:
+        result.append("Location:");
+        result.append(currentlocation.getName()+"("+currentlocation.getDescription() +")");
+        result.append("\n");
         //Artefacts:
         if(!currentlocation.artefactsMap.isEmpty()){
             result.append("Artefacts:");
             Iterable<Artefact> artefactsIteractor = currentlocation.artefactsMap.values();
             for (Artefact value : artefactsIteractor) {
                 result.append(value.getName()+"(");
-                result.append(value.getDescription()+"), ");
+                result.append(value.getDescription()+") ");
             }
             result.append("\n");
-        }else{
-            result.append("Doesn't have any artefact at this location\n");
         }
-
         //furnitures:
         if(!currentlocation.furnituresMap.isEmpty()){
+            result.append("Furniture:");
             Iterable<Furniture> furnitureIterator = currentlocation.furnituresMap.values();
             for (Furniture value : furnitureIterator) {
                 result.append(value.getName()+"(");
-                result.append(value.getDescription()+"), ");
+                result.append(value.getDescription()+") ");
             }
             result.append("\n");
-        }else{
-            result.append("Doesn't have any furniture at this location\n");
         }
 
         //Characters:
-        if(!currentlocation.furnituresMap.isEmpty()){
+        if(!currentlocation.charactersMap.isEmpty()){
+            result.append("Character:");
             Iterable<Character> charactorIterator = currentlocation.charactersMap.values();
             for (Character value : charactorIterator) {
                 result.append(value.getName()+"(");
                 result.append(value.getDescription()+"), ");
             }
             result.append("\n");
-        }else{
-            result.append("Doesn't have any characters at this location\n");
         }
 
         //show paths:

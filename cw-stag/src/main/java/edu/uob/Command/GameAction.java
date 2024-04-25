@@ -3,11 +3,11 @@ package edu.uob.Command;
 import java.util.HashSet;
 
 public class GameAction{
-    protected HashSet<String> builtinAction;
-    protected HashSet<String> subjects;
-    protected HashSet<String> consumed;
-    protected HashSet<String> produced;
-    protected String narration;
+    public HashSet<String> builtinAction;
+    public HashSet<String> subjects;
+    public HashSet<String> consumed;
+    public HashSet<String> produced;
+    public String narration;
 
     public GameAction(){
         subjects = new HashSet<>();

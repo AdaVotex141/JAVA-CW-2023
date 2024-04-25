@@ -36,13 +36,12 @@ public final class GameServer {
         try {
             entityParser = new EntityParser(entitiesFile);
             actionParser =  new ActionParser(actionsFile);
+            player=new Player(this.entityParser);
         } catch(FileNotFoundException fnfe){
             System.err.print("file is not founded");
         }catch( ParseException pe){
             System.err.print("parse not succeed");
         }
-        player=new Player(entityParser);
-        // TODO implement your server logic here
     }
 
     /**
@@ -53,10 +52,13 @@ public final class GameServer {
     */
     public String handleCommand(String command) {
         // TODO implement your server logic here
+        StringBuilder result = new StringBuilder();
 
 
 
-        return "";
+
+        String resultString = result.toString();
+        return resultString;
     }
 
     /**
