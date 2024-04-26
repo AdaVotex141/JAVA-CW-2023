@@ -569,3 +569,6 @@ starting on entity Parser
 1. String entityType = entityDetails.getAttribute("shape"); entytyTpe -null-FIXED
 2. 
 
+### 26/4：
+finish all the basic commands
+deal with "cut down"->sliding windows

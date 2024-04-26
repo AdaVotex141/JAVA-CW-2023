@@ -18,12 +18,12 @@ public class CommandParser {
     GameAction gameAction;
     Player player;
 
-    public CommandParser(EntityParser entityParser, ActionParser actionParser, GameAction gameAction) {
+    public CommandParser(EntityParser entityParser, ActionParser actionParser, GameAction gameAction, Player player) {
         commands = new ArrayList<>();
         this.actionParser = actionParser;
         this.entityParser = entityParser;
         this.gameAction = gameAction;
-        this.player = new Player(entityParser);
+        this.player = player;
     }
 
     public StringBuilder commandParse(String command) {
@@ -106,6 +106,7 @@ public class CommandParser {
     private StringBuilder actionFileIntepreter(String trigger,StringBuilder result, HashSet<String> entities){
         GameAction gameAction = new GameAction();
         gameAction = actionParser.actions.get(trigger);
+
 
 
 
