@@ -1,6 +1,7 @@
 package edu.uob;
 
 import com.alexmerz.graphviz.ParseException;
+import edu.uob.Command.GameAction;
 import edu.uob.Entity.*;
 
 import javax.swing.*;
@@ -14,9 +15,8 @@ public final class GameServer {
     private static final char END_OF_TRANSMISSION = 4;
     EntityParser entityParser;
     ActionParser actionParser;
-    Player player;
-
-
+    CommandParser commandParser;
+    GameAction gameAction;
 
     public static void main(String[] args) throws IOException, ParseException {
         File entitiesFile = Paths.get("config" + File.separator + "basic-entities.dot").toAbsolutePath().toFile();
@@ -36,7 +36,8 @@ public final class GameServer {
         try {
             entityParser = new EntityParser(entitiesFile);
             actionParser =  new ActionParser(actionsFile);
-            player=new Player(this.entityParser);
+            gameAction = new GameAction();
+            commandParser = new CommandParser(entityParser,actionParser,gameAction);
         } catch(FileNotFoundException fnfe){
             System.err.print("file is not founded");
         }catch( ParseException pe){
@@ -53,6 +54,7 @@ public final class GameServer {
     public String handleCommand(String command) {
         // TODO implement your server logic here
         StringBuilder result = new StringBuilder();
+        result = commandParser.commandParser(command);
 
 
 

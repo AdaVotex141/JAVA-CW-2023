@@ -38,7 +38,7 @@ public class Player {
         if(toLocationCheck.equals(toLocation)){
             Location finalLocation = entityParser.findLocation(toLocation);
             this.currentlocation = finalLocation;
-            result.append("reach"+toLocation);
+            //result.append("reach"+toLocation);
         }else{
             result.append("[WARNING]Can't reach");
             System.err.print("toLocation doesn't exist");
