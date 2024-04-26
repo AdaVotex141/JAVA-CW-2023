@@ -3,9 +3,9 @@ package edu.uob.Entity;
 import java.util.HashMap;
 
 public class Location extends GameEntity{
-    protected HashMap<String, Furniture> furnituresMap;
-    protected HashMap<String, Character> charactersMap;
-    protected HashMap<String, Artefact> artefactsMap;
+    public HashMap<String, Furniture> furnituresMap;
+    public HashMap<String, Character> charactersMap;
+    public HashMap<String, Artefact> artefactsMap;
 
     private LocationAttribute attribute = null;
 

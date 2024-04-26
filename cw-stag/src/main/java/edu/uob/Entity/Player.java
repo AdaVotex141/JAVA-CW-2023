@@ -19,7 +19,7 @@ public class Player {
     //inv:look at carryings
     public StringBuilder playerInv(){
         StringBuilder result = new StringBuilder();
-        result.append("Current Location:"+this.currentlocation.getName());
+        //result.append("Current Location:"+this.currentlocation.getName());
         if (!carryings.isEmpty()){
             for(String carrying:carryings){
                 result.append(carrying+",");
@@ -46,30 +46,31 @@ public class Player {
         return result;
     }
     //drop
-    public void playerDrop(Artefact item){
+    public boolean playerDrop(Artefact item){
         if(!carryings.isEmpty()){
             boolean removeCheck = carryings.remove(item.getName());
             if(removeCheck == true){
                 System.out.print("player remove success");
+                currentlocation.setArtefact(item);
+                return true;
             }else{
                 System.out.print("player remove fail");
+                return false;
             }
         }else{
             System.out.print("inventory is empty");
+            return false;
         }
-
-        currentlocation.setArtefact(item);
     }
 
     //get
-    public void playerGet(GameEntity item){
+    public boolean playerGet(Artefact item){
         if(item instanceof Artefact){
-            Artefact itemArtefact = (Artefact)item;
+            Artefact itemArtefact = item;
             currentlocation.artefactsMap.remove(itemArtefact.getName());
             carryings.add(itemArtefact.getName());
-        }else{
-            System.err.print("This item is not a Artefact");
-        }
+            return true;
+        }return false;
     }
 
     //look:prints names and descriptions of entities in the current location and lists paths to other locations

@@ -35,8 +35,8 @@ public final class GameServer {
     public GameServer(File entitiesFile, File actionsFile) {
         try {
             entityParser = new EntityParser(entitiesFile);
-            actionParser =  new ActionParser(actionsFile);
             gameAction = new GameAction();
+            actionParser =  new ActionParser(actionsFile);
             commandParser = new CommandParser(entityParser,actionParser,gameAction);
         } catch(FileNotFoundException fnfe){
             System.err.print("file is not founded");
@@ -52,13 +52,8 @@ public final class GameServer {
     * @param command The incoming command to be processed
     */
     public String handleCommand(String command) {
-        // TODO implement your server logic here
         StringBuilder result = new StringBuilder();
         result = commandParser.commandParser(command);
-
-
-
-
         String resultString = result.toString();
         return resultString;
     }
