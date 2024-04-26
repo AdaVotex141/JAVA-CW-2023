@@ -105,8 +105,6 @@ public class EntityParser {
                     //characters
                     Character characterNew = new Character(name,description);
                     locationNew.setCharacter(characterNew);
-                }else{
-                    System.err.print("Invalid type");
                 }
             }
             i++;

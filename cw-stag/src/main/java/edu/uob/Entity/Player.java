@@ -43,7 +43,6 @@ public class Player {
             result.append("reach "+toLocation);
         }else{
             result.append("[WARNING]Can't reach");
-            System.err.print("toLocation doesn't exist");
         }
         return result;
     }
@@ -52,15 +51,12 @@ public class Player {
         if(!carryings.isEmpty()){
             boolean removeCheck = carryings.remove(item.getName());
             if(removeCheck == true){
-                //System.out.print("player remove success");
                 currentlocation.setArtefact(item);
                 return true;
             }else{
-                //System.out.print("player remove fail");
                 return false;
             }
         }else{
-            //System.out.print("inventory is empty");
             return false;
         }
     }
