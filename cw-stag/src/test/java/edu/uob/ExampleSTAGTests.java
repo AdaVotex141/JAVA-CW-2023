@@ -41,7 +41,7 @@ class ExampleSTAGTests {
     assertTrue(response.contains("magic potion"), "Did not see a description of artifacts in response to look");
     assertTrue(response.contains("wooden trapdoor"), "Did not see description of furniture in response to look");
     assertTrue(response.contains("forest"), "Did not see available paths in response to look");
-    System.out.print(response);
+    //System.out.print(response);
   }
 
     @Test
@@ -56,20 +56,31 @@ class ExampleSTAGTests {
 
 
   // Test that we can pick something up and that it appears in our inventory
-  @Test
-  void testGet()
-  {
-      String response;
-      sendCommandToServer("simon: get potion");
-      response = sendCommandToServer("simon: inv");
-      response = response.toLowerCase();
-      System.err.print(response);
-      //assertTrue(response.contains("potion"), "Did not see the potion in the inventory after an attempt was made to get it");
-      response = sendCommandToServer("simon: look");
-      response = response.toLowerCase();
-      System.err.print(response);
-      //assertFalse(response.contains("potion"), "Potion is still present in the room after an attempt was made to get it");
-  }
+    @Test
+    void testGet()
+    {
+        String response;
+        sendCommandToServer("simon: get potion");
+        response = sendCommandToServer("simon: inv");
+        response = response.toLowerCase();
+        System.err.print(response);
+        assertTrue(response.contains("potion"), "Did not see the potion in the inventory after an attempt was made to get it");
+        response = sendCommandToServer("simon: look");
+        response = response.toLowerCase();
+        System.err.print(response);
+        assertFalse(response.contains("potion"), "Potion is still present in the room after an attempt was made to get it");
+    }
+
+    @Test
+    void testDrop(){
+        String response;
+        sendCommandToServer("simon: get potion");
+        response = sendCommandToServer("simon: drop potion");
+        response = response.toLowerCase();
+        System.out.print(response);
+    }
+
+
 
   // Test that we can goto a different location (we won't get very far if we can't move around the game !)
   @Test
@@ -78,6 +89,7 @@ class ExampleSTAGTests {
       sendCommandToServer("simon: goto forest");
       String response = sendCommandToServer("simon: look");
       response = response.toLowerCase();
+      System.out.print(response);
       assertTrue(response.contains("key"), "Failed attempt to use 'goto' command to move to the forest - there is no key in the current location");
   }
 

@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class Player {
     public Location currentlocation;
-    HashSet<String> carryings;
+    public HashSet<String> carryings;
     int Health;
     public EntityParser entityParser;
     public Player(EntityParser entityParser){
@@ -22,7 +22,7 @@ public class Player {
         //result.append("Current Location:"+this.currentlocation.getName());
         if (!carryings.isEmpty()){
             for(String carrying:carryings){
-                result.append(carrying+",");
+                result.append(carrying+" ");
             }
         }else{
             result.append("[WARNING] Doesn't have anything");
@@ -33,12 +33,14 @@ public class Player {
     //goto
     public StringBuilder playerGoto(String toLocation){
         StringBuilder result = new StringBuilder();
-        String currentLocation = entityParser.findLocationName(this.currentlocation);
-        String toLocationCheck = entityParser.paths.get(currentLocation);
+        String currentlocationName = this.currentlocation.getName();
+        //check wether toLocation is in the paths
+        String toLocationCheck = entityParser.paths.get(currentlocationName);
+
         if(toLocationCheck.equals(toLocation)){
             Location finalLocation = entityParser.findLocation(toLocation);
             this.currentlocation = finalLocation;
-            //result.append("reach"+toLocation);
+            result.append("reach "+toLocation);
         }else{
             result.append("[WARNING]Can't reach");
             System.err.print("toLocation doesn't exist");
@@ -50,15 +52,15 @@ public class Player {
         if(!carryings.isEmpty()){
             boolean removeCheck = carryings.remove(item.getName());
             if(removeCheck == true){
-                System.out.print("player remove success");
+                //System.out.print("player remove success");
                 currentlocation.setArtefact(item);
                 return true;
             }else{
-                System.out.print("player remove fail");
+                //System.out.print("player remove fail");
                 return false;
             }
         }else{
-            System.out.print("inventory is empty");
+            //System.out.print("inventory is empty");
             return false;
         }
     }

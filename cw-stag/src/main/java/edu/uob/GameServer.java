@@ -17,6 +17,7 @@ public final class GameServer {
     ActionParser actionParser;
     CommandParser commandParser;
     GameAction gameAction;
+    //Player player;// for debugging
 
     public static void main(String[] args) throws IOException, ParseException {
         File entitiesFile = Paths.get("config" + File.separator + "basic-entities.dot").toAbsolutePath().toFile();
@@ -38,6 +39,7 @@ public final class GameServer {
             gameAction = new GameAction();
             actionParser =  new ActionParser(actionsFile);
             commandParser = new CommandParser(entityParser,actionParser,gameAction);
+            //player = new Player(entityParser);// for debugging
         } catch(FileNotFoundException fnfe){
             System.err.print("file is not founded");
         }catch( ParseException pe){
@@ -53,8 +55,9 @@ public final class GameServer {
     */
     public String handleCommand(String command) {
         StringBuilder result = new StringBuilder();
-        result = commandParser.commandParser(command);
+        result.append(commandParser.commandParse(command));
         String resultString = result.toString();
+        //System.out.print(resultString);
         return resultString;
     }
 
