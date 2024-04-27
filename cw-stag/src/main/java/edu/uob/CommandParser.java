@@ -18,13 +18,21 @@ public class CommandParser {
     ActionParser actionParser;
     GameAction gameAction;
     Player player;
+    public HashSet<String> builtinAction;
 
-    public CommandParser(EntityParser entityParser, ActionParser actionParser, GameAction gameAction, Player player) {
+    public CommandParser(EntityParser entityParser, ActionParser actionParser, Player player) {
         commands = new ArrayList<>();
         this.actionParser = actionParser;
         this.entityParser = entityParser;
-        this.gameAction = gameAction;
+        //this.gameAction = gameAction;
         this.player = player;
+        builtinAction = new HashSet<>();
+        builtinAction.add("look");
+        builtinAction.add("inv");
+        builtinAction.add("inventory");
+        builtinAction.add("get");
+        builtinAction.add("goto");
+        builtinAction.add("drop");
     }
 
     public StringBuilder commandParse(String command) {
@@ -42,10 +50,10 @@ public class CommandParser {
             result.append("[WARNING] Can't resolve command.");
         }
 
-        if(gameAction.builtinAction.contains(trigger)){
+        if(this.builtinAction.contains(trigger)){
             builtInIntepreter(trigger,result);
         }else if(actionParser.actions.containsKey(trigger)){
-            result.append("get into actionParser here");
+            GameAction gameAction = actionParser.actions.get(trigger);
             HashSet<String> entities = new HashSet<>();
             for(String word: commands){
                 if(gameAction.subjects.contains(word)){
@@ -55,7 +63,7 @@ public class CommandParser {
             if(entities.size() == 2 || entities.size() == 1){
                 result.append(actionFileIntepreter(trigger,result,entities));
             }else{
-                result.append("[WARNING] multiple entities");
+                result.append("[WARNING] no or multiple entities detected");
             }
         }
         return result;
@@ -114,7 +122,6 @@ public class CommandParser {
             if(gameAction.consumed.equals("potion")){
                 player.playerHealthAdd();
                 player.carryings.remove(gameAction.consumed);
-                result.append(gameAction.narration);
             }else{
                 //move the produced from storeroom to here
                 Location storeRoom = entityParser.locations.get("storeroom");
@@ -145,7 +152,7 @@ public class CommandParser {
         int countEntity = 0;
         String triggerWord = "";
         for (String word : this.commands) {
-            if (gameAction.builtinAction.contains(word)) {
+            if (this.builtinAction.contains(word)) {
                 count += 1;
                 triggerWord = word;
             }

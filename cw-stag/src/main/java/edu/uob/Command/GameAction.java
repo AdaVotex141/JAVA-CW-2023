@@ -3,7 +3,6 @@ package edu.uob.Command;
 import java.util.HashSet;
 
 public class GameAction{
-    public HashSet<String> builtinAction;
     public HashSet<String> subjects;
     public String consumed;
     public HashSet<String> produced;
@@ -13,13 +12,6 @@ public class GameAction{
         subjects = new HashSet<>();
         consumed = "";
         produced = new HashSet<>();
-        builtinAction = new HashSet<>();
-        builtinAction.add("look");
-        builtinAction.add("inv");
-        builtinAction.add("inventory");
-        builtinAction.add("get");
-        builtinAction.add("goto");
-        builtinAction.add("drop");
         narration = null;
     }
 
