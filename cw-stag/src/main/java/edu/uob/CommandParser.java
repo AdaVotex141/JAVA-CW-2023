@@ -126,6 +126,11 @@ public class CommandParser {
             }else{
                 // loop through all the locations to find this thing, and set it at current location
                 for(Location locationCheck : entityParser.locations.values()){
+                    //if produced is a path, add this path
+                    if(gameAction.produced.contains(locationCheck.getName())){
+                        entityParser.paths.put(player.currentlocation.getName(),locationCheck.getName());
+                    }
+                    //check for items
                     for(String item : gameAction.produced){
                         if(locationCheck.furnituresMap.containsKey(item)){
                             player.currentlocation.setFurniture(locationCheck.furnituresMap.get(item));
@@ -143,7 +148,7 @@ public class CommandParser {
             //if consumed is health
             player.playerHealthMinus();
         }else{
-            result.append("[warning] missing item in bag");
+            result.append("[warning] This item is not appear in the game config");
         }
         return result;
     }
