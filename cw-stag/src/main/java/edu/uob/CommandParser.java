@@ -61,7 +61,7 @@ public class CommandParser {
                 }
             }
             if(entities.size() == 2 || entities.size() == 1){
-                result.append(actionFileIntepreter(trigger,result,entities));
+                actionFileIntepreter(trigger,result,entities);
             }else{
                 result.append("[WARNING] no or multiple entities detected");
             }
@@ -116,30 +116,32 @@ public class CommandParser {
     private StringBuilder actionFileIntepreter(String trigger,StringBuilder result, HashSet<String> entities){
         GameAction gameAction = new GameAction();
         gameAction = actionParser.actions.get(trigger);
-        //check whether consumed is in the player's carryings or heath
-        if (player.carryings.contains(gameAction.consumed)){
+        //check whether consumed is in the player's carryings or current location
+        if (player.carryings.contains(gameAction.consumed)
+        || player.currentlocation.artefactsMap.containsKey(gameAction.consumed)){
                 //if consumed is potion:
             if(gameAction.consumed.equals("potion")){
                 player.playerHealthAdd();
                 player.carryings.remove(gameAction.consumed);
             }else{
-                //move the produced from storeroom to here
-                Location storeRoom = entityParser.locations.get("storeroom");
-                for(String item : gameAction.produced){
-                    if(storeRoom.furnituresMap.containsKey(item)){
-                        player.currentlocation.setFurniture(storeRoom.furnituresMap.get(item));
-                    }else if(storeRoom.charactersMap.containsKey(item)){
-                        player.currentlocation.setCharacter(storeRoom.charactersMap.get(item));
-                    }else if(storeRoom.artefactsMap.containsKey(item)){
-                        player.carryings.add(item);
+                // loop through all the locations to find this thing, and set it at current location
+                for(Location locationCheck : entityParser.locations.values()){
+                    for(String item : gameAction.produced){
+                        if(locationCheck.furnituresMap.containsKey(item)){
+                            player.currentlocation.setFurniture(locationCheck.furnituresMap.get(item));
+                        }else if(locationCheck.charactersMap.containsKey(item)){
+                            player.currentlocation.setCharacter(locationCheck.charactersMap.get(item));
+                        }else if(locationCheck.artefactsMap.containsKey(item)){
+                            player.currentlocation.setArtefact(locationCheck.artefactsMap.get(item));
+                        }
                     }
                 }
             }
             result.append(gameAction.narration);
+            return result;
         }else if(gameAction.consumed.equals("health")){
             //if consumed is health
             player.playerHealthMinus();
-            result.append(gameAction.narration);
         }else{
             result.append("[warning] missing item in bag");
         }
@@ -155,8 +157,7 @@ public class CommandParser {
             if (this.builtinAction.contains(word)) {
                 count += 1;
                 triggerWord = word;
-            }
-            if (actionParser.actions.containsKey(word)) {
+            }else if (actionParser.actions.containsKey(word)) {
                 count += 1;
                 triggerWord = word;
                 //check for entity number-> 2 or 1
