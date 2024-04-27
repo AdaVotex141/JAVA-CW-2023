@@ -54,15 +54,15 @@ public class ActionParser {
         subParse(subjects, gameAction, tag);
 
         NodeList consumedList = action.getElementsByTagName("consumed");
-        if (consumedList.getLength()>1){
-            Element consumed = (Element)action.getElementsByTagName("consumed");
+        if (consumedList.getLength() > 0) {
+            Element consumed = (Element) consumedList.item(0);
             tag = "consumed";
             subParse(consumed, gameAction, tag);
         }
 
         NodeList producedList = action.getElementsByTagName("produced");
-        if (producedList.getLength()>1){
-            Element produced = (Element)action.getElementsByTagName("produced");
+        if (producedList.getLength() > 0) {
+            Element produced = (Element) producedList.item(0);
             tag = "produced";
             subParse(produced, gameAction, tag);
         }
