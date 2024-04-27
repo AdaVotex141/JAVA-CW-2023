@@ -29,7 +29,7 @@ public class ActionParser {
             Element root = document.getDocumentElement();
             NodeList actions = root.getChildNodes();
             // Get the first action (only the odd items are actually actions - 1, 3, 5 etc.)
-            for(int i = 0; i<actions.getLength();i++){
+            for(int i = 0; i < actions.getLength();i++){
                 if(i % 2 ==1){
                     actionsParse(actions,i);
                 }
@@ -44,22 +44,29 @@ public class ActionParser {
     }
 
     private void actionsParse(NodeList actions, int index){
-        Element action = (Element)actions.item(index);
-        NodeList triggers = action.getElementsByTagName("triggers");
+        Element action = (Element) actions.item(index);
+        Element triggers = (Element)action.getElementsByTagName("triggers").item(0);
         ArrayList<String> triggersName=triggerParse(triggers);
         GameAction gameAction = new GameAction();
 
-        NodeList subjects = action.getElementsByTagName("subjects");
+        Element subjects = (Element)action.getElementsByTagName("subjects").item(0);
         String tag = "subjects";
         subParse(subjects, gameAction, tag);
 
-        NodeList consumed = action.getElementsByTagName("consumed");
-        tag = "consumed";
-        subParse(consumed, gameAction, tag);
+        NodeList consumedList = action.getElementsByTagName("consumed");
+        if (consumedList.getLength()>1){
+            Element consumed = (Element)action.getElementsByTagName("consumed");
+            tag = "consumed";
+            subParse(consumed, gameAction, tag);
+        }
 
-        NodeList produced = action.getElementsByTagName("produced");
-        tag = "produced";
-        subParse(produced, gameAction, tag);
+        NodeList producedList = action.getElementsByTagName("produced");
+        if (producedList.getLength()>1){
+            Element produced = (Element)action.getElementsByTagName("produced");
+            tag = "produced";
+            subParse(produced, gameAction, tag);
+        }
+
 
         NodeList narration = action.getElementsByTagName("narration");
         Element narrationElement = (Element) narration.item(0);
@@ -73,20 +80,22 @@ public class ActionParser {
 
 
 
-    private ArrayList triggerParse(NodeList triggers){
+    private ArrayList triggerParse(Element triggers){
         ArrayList<String> triggerName=new ArrayList<>();
-        for (int i = 0; i < triggers.getLength(); i++) {
-            Element triggerElement = (Element) triggers.item(i);
-            String trigger = triggerElement.getTextContent();
-            triggerName.add(trigger);
+        int i = 0;
+        while(triggers.getElementsByTagName("keyphrase").item(i)!=null){
+            String firstTriggerPhrase = triggers.getElementsByTagName("keyphrase").item(i).getTextContent();
+            triggerName.add(firstTriggerPhrase);
+            i++;
         }
         return triggerName;
     }
-    private void subParse(NodeList nodes, GameAction gameAction, String tag){
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Element element = (Element) nodes.item(i);
-            String elementName = element.getTextContent();
-            if(tag.equals("subject")){
+
+    private void subParse(Element nodes, GameAction gameAction, String tag){
+        int i = 0;
+        while(nodes.getElementsByTagName("entity").item(i)!=null){
+            String elementName = nodes.getElementsByTagName("entity").item(i).getTextContent();
+            if(tag.equals("subjects")){
                 gameAction.setSubjects(elementName);
             }else if(tag.equals("consumed")){
                 gameAction.setConsumed(elementName);
@@ -95,11 +104,7 @@ public class ActionParser {
             }else{
                 System.err.print("Invalid tagName");
             }
-    }
-
-    }
-
-
-    public static class CommandParser {
+            i++;
+        }
     }
 }
