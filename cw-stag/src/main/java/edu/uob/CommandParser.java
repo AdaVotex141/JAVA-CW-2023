@@ -118,11 +118,14 @@ public class CommandParser {
         gameAction = actionParser.actions.get(trigger);
         //check whether consumed is in the player's carryings or current location
         if (player.carryings.contains(gameAction.consumed)
-        || player.currentlocation.artefactsMap.containsKey(gameAction.consumed)){
+        || player.currentlocation.artefactsMap.containsKey(gameAction.consumed)
+        || gameAction.consumed.equals("health")){
                 //if consumed is potion:
             if(gameAction.consumed.equals("potion")){
                 player.playerHealthAdd();
                 player.carryings.remove(gameAction.consumed);
+            }else if(gameAction.consumed.equals("health")){
+                player.playerHealthMinus();
             }else{
                 // loop through all the locations to find this thing, and set it at current location
                 for(Location locationCheck : entityParser.locations.values()){
@@ -143,10 +146,11 @@ public class CommandParser {
                 }
             }
             result.append(gameAction.narration);
+            if(!player.playerHealthdetect()){
+                result.append("\n"+"You died, reset game");
+                player.playerReset();
+            }
             return result;
-        }else if(gameAction.consumed.equals("health")){
-            //if consumed is health
-            player.playerHealthMinus();
         }else{
             result.append("[warning] This item is not appear in the game config");
         }

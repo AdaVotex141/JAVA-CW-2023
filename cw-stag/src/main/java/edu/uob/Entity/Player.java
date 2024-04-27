@@ -15,6 +15,7 @@ public class Player {
         this.entityParser =  entityParser;
         currentlocation = entityParser.getBornLocation();
         this.carryings = new HashSet<>();
+        this.health = 3;
     }
     //inv:look at carryings
     public StringBuilder playerInv(){
@@ -129,8 +130,17 @@ public class Player {
     public void playerHealthMinus(){
         health-=1;
     }
-    public int playerHealthdetect(){
-        return health;
+    public boolean playerHealthdetect(){
+        if(health == 0){
+            return false;
+        }
+        return true;
+    }
+    public void playerReset(){
+        this.entityParser =  entityParser;
+        currentlocation = entityParser.getBornLocation();
+        this.carryings = new HashSet<>();
+        this.health = 3;
     }
 
 
