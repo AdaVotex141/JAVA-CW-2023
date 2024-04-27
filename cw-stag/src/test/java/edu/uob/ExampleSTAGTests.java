@@ -89,10 +89,20 @@ class ExampleSTAGTests {
       sendCommandToServer("simon: goto forest");
       String response = sendCommandToServer("simon: look");
       response = response.toLowerCase();
-      System.out.print(response);
       assertTrue(response.contains("key"), "Failed attempt to use 'goto' command to move to the forest - there is no key in the current location");
   }
 
   // Add more unit tests or integration tests here.
+    @Test
+    void testBasic(){
+        sendCommandToServer("simon: look");
+        sendCommandToServer("simon: get potion");
+        String response = sendCommandToServer("simon: drink potion");
+        response = response.toLowerCase();
+        assertTrue(response.contains("health"), "drink fail");
+    }
+
+
+
 
 }

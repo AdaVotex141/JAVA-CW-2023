@@ -1,6 +1,8 @@
 package edu.uob;
 
 import org.junit.jupiter.api.Test;
+
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.io.File;
@@ -12,8 +14,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 final class ActionsFileTests {
 
@@ -39,5 +40,19 @@ final class ActionsFileTests {
           fail("IOException was thrown when attempting to read basic actions file");
       }
   }
+    @Test
+    public void actionFileParseTest(){
+        File actionsFile = Paths.get("config" + File.separator + "basic-actions.xml").toAbsolutePath().toFile();
+        ActionParser parserTest = new ActionParser(actionsFile);
+        //check triggers
+        assertTrue(parserTest.actions.containsKey("drink"));
+        assertTrue(parserTest.actions.containsKey("cutdown"));
+        assertTrue(parserTest.actions.containsKey("fight"));
+        assertTrue(parserTest.actions.containsKey("attack"));
+
+
+
+        //check trigger->gameAction
+    }
 
 }

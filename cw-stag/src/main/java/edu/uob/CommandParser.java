@@ -45,6 +45,7 @@ public class CommandParser {
         if(gameAction.builtinAction.contains(trigger)){
             builtInIntepreter(trigger,result);
         }else if(actionParser.actions.containsKey(trigger)){
+            result.append("get into actionParser here");
             HashSet<String> entities = new HashSet<>();
             for(String word: commands){
                 if(gameAction.subjects.contains(word)){
@@ -52,7 +53,7 @@ public class CommandParser {
                 }
             }
             if(entities.size() == 2 || entities.size() == 1){
-                actionFileIntepreter(trigger,result,entities);
+                result.append(actionFileIntepreter(trigger,result,entities));
             }else{
                 result.append("[WARNING] multiple entities");
             }
@@ -67,7 +68,7 @@ public class CommandParser {
             //TODO the key thing
             String toLocation = locationParse(commands);
             if (toLocation == null) {
-                result.append("[WARNING] invalid");
+                result.append("[WARNING] invalid, you can't goto this location");
             } else {
                 result.append(player.playerGoto(toLocation));
             }
@@ -75,7 +76,7 @@ public class CommandParser {
         } else if (trigger.equals("get")) {
             Artefact item = itemParse(commands);
             if (item == null) {
-                result.append("[WARNING]");
+                result.append("[WARNING] the item isn't appear in this location");
             } else {
                 boolean getFlag = player.playerGet(item);
                 if (getFlag) {
@@ -88,7 +89,7 @@ public class CommandParser {
         } else if (trigger.equals("drop")) {
             Artefact item = itemParse(commands);
             if (item == null) {
-                result.append("[WARNING]");
+                result.append("[WARNING] invalid, doesn't have the item in the bag");
             } else {
                 boolean getFlag = player.playerDrop(item);
                 if (getFlag) {
@@ -113,6 +114,7 @@ public class CommandParser {
             if(gameAction.consumed.equals("potion")){
                 player.playerHealthAdd();
                 player.carryings.remove(gameAction.consumed);
+                result.append(gameAction.narration);
             }else{
                 //move the produced from storeroom to here
                 Location storeRoom = entityParser.locations.get("storeroom");
