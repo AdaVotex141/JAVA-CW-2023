@@ -5,13 +5,13 @@ import java.util.HashSet;
 public class GameAction{
     public HashSet<String> builtinAction;
     public HashSet<String> subjects;
-    public HashSet<String> consumed;
+    public String consumed;
     public HashSet<String> produced;
     public String narration;
 
     public GameAction(){
         subjects = new HashSet<>();
-        consumed = new HashSet<>();
+        consumed = "";
         produced = new HashSet<>();
         builtinAction = new HashSet<>();
         builtinAction.add("look");
@@ -28,7 +28,7 @@ public class GameAction{
     }
 
     public void setConsumed(String name){
-        this.consumed.add(name);
+        this.consumed = name;
     }
 
     public void setProduced(String name){

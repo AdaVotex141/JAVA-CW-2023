@@ -9,7 +9,7 @@ import java.util.Map;
 public class Player {
     public Location currentlocation;
     public HashSet<String> carryings;
-    int Health;
+    private int health;
     public EntityParser entityParser;
     public Player(EntityParser entityParser){
         this.entityParser =  entityParser;
@@ -121,6 +121,16 @@ public class Player {
             }
         }
         return result;
+    }
+
+    public void playerHealthAdd(){
+        health+=1;
+    }
+    public void playerHealthMinus(){
+        health-=1;
+    }
+    public int playerHealthdetect(){
+        return health;
     }
 
 

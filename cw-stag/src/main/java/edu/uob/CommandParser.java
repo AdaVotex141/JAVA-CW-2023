@@ -3,6 +3,7 @@ package edu.uob;
 import edu.uob.Command.GameAction;
 import edu.uob.Entity.Artefact;
 import edu.uob.Entity.GameEntity;
+import edu.uob.Entity.Location;
 import edu.uob.Entity.Player;
 
 import java.lang.reflect.GenericArrayType;
@@ -106,11 +107,33 @@ public class CommandParser {
     private StringBuilder actionFileIntepreter(String trigger,StringBuilder result, HashSet<String> entities){
         GameAction gameAction = new GameAction();
         gameAction = actionParser.actions.get(trigger);
-
-
-
-
-
+        //check whether consumed is in the player's carryings or heath
+        if (player.carryings.contains(gameAction.consumed)){
+                //if consumed is potion:
+            if(gameAction.consumed.equals("potion")){
+                player.playerHealthAdd();
+                player.carryings.remove(gameAction.consumed);
+            }else{
+                //move the produced from storeroom to here
+                Location storeRoom = entityParser.locations.get("storeroom");
+                for(String item : gameAction.produced){
+                    if(storeRoom.furnituresMap.containsKey(item)){
+                        player.currentlocation.setFurniture(storeRoom.furnituresMap.get(item));
+                    }else if(storeRoom.charactersMap.containsKey(item)){
+                        player.currentlocation.setCharacter(storeRoom.charactersMap.get(item));
+                    }else if(storeRoom.artefactsMap.containsKey(item)){
+                        player.carryings.add(item);
+                    }
+                }
+            }
+            result.append(gameAction.narration);
+        }else if(gameAction.consumed.equals("health")){
+            //if consumed is health
+            player.playerHealthMinus();
+            result.append(gameAction.narration);
+        }else{
+            result.append("[warning] missing item in bag");
+        }
         return result;
     }
 
