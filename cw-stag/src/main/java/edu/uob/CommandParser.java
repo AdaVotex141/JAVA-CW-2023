@@ -205,6 +205,6 @@ public class CommandParser {
         if(count == 1){
             return location;
         }
-        return "location not found";
+        return null;
     }
 }

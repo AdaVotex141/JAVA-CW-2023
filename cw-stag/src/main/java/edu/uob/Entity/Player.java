@@ -37,8 +37,14 @@ public class Player {
         String currentlocationName = this.currentlocation.getName();
         //check wether toLocation is in the paths
         String toLocationCheck = entityParser.paths.get(currentlocationName);
+        boolean multipPathFlag = false;
+        if(toLocationCheck == null){
+            HashSet<String> valuesForMultplePaths = entityParser.multiplePaths.get(this.currentlocation.getName());
+            multipPathFlag = valuesForMultplePaths.contains(toLocation);
+            toLocationCheck = "check";
+        }
 
-        if(toLocationCheck.equals(toLocation)){
+        if(toLocationCheck.equals(toLocation) || multipPathFlag == true){
             Location finalLocation = entityParser.findLocation(toLocation);
             this.currentlocation = finalLocation;
             result.append("reach "+toLocation);
@@ -121,6 +127,18 @@ public class Player {
                 result.append(fromPlace+"->"+toPlace+"\n");
             }
         }
+        //show paths in multiple Paths:
+        Iterable<Map.Entry<String, HashSet<String>>> multipleEntries = entityParser.multiplePaths.entrySet();
+        for (Map.Entry<String, HashSet<String>> entry : multipleEntries) {
+            String fromPlace = entry.getKey();
+            HashSet<String> toPlaces = entry.getValue();
+            for (String toPlace : toPlaces) {
+                if (fromPlace.equals(currentlocation.getName())) {
+                    result.append(fromPlace + "->"+toPlace+"\n");
+                }
+            }
+        }
+
         return result;
     }
 

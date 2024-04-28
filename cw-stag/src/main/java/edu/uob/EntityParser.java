@@ -19,10 +19,12 @@ import edu.uob.Entity.Location;
 public class EntityParser {
     public HashMap<String,Location> locations;
     public HashMap<String, String> paths;
+    public HashMap<String,HashSet<String>> multiplePaths;
 
     public EntityParser(File entitiesFile) throws FileNotFoundException, ParseException {
         locations = new HashMap<>();
         paths = new HashMap<>();
+        multiplePaths = new HashMap<>();
         EntityParse(entitiesFile);
     }
     public void EntityParse(File entitiesFile) {
@@ -117,7 +119,14 @@ public class EntityParser {
             String fromName = fromLocation.getId().getId();
             Node toLocation = path.getTarget().getNode();
             String toName = toLocation.getId().getId();
-            this.paths.put(fromName,toName);
+            if(this.paths.containsKey(fromName)){
+                this.multiplePaths.put(fromName,new HashSet<String>());
+                this.multiplePaths.get(fromName).add(this.paths.get(fromName));
+                this.multiplePaths.get(fromName).add(toName);
+                this.paths.remove(fromName);
+            }else{
+                this.paths.put(fromName,toName);
+            }
             System.out.print(fromName+"->"+toName+"\n");
         }
     }
