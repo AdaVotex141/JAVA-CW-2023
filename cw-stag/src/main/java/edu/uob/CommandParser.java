@@ -24,7 +24,6 @@ public class CommandParser {
         commands = new ArrayList<>();
         this.actionParser = actionParser;
         this.entityParser = entityParser;
-        //this.gameAction = gameAction;
         this.player = player;
         builtinAction = new HashSet<>();
         builtinAction.add("look");
@@ -53,7 +52,7 @@ public class CommandParser {
         if(this.builtinAction.contains(trigger)){
             builtInIntepreter(trigger,result);
         }else if(actionParser.actions.containsKey(trigger)){
-            GameAction gameAction = actionParser.actions.get(trigger);
+            this.gameAction = actionParser.actions.get(trigger);
             HashSet<String> entities = new HashSet<>();
             for(String word: commands){
                 if(gameAction.subjects.contains(word)){
@@ -65,6 +64,8 @@ public class CommandParser {
             }else{
                 result.append("[WARNING] no or multiple entities detected");
             }
+        }else{
+            result.append("[WARNING] no triggerword");
         }
         return result;
     }
@@ -114,36 +115,23 @@ public class CommandParser {
     }
 
     private StringBuilder actionFileIntepreter(String trigger,StringBuilder result, HashSet<String> entities){
-        GameAction gameAction = new GameAction();
         gameAction = actionParser.actions.get(trigger);
         //check whether consumed is in the player's carryings or current location
+        //TODO only support one consumed for now
         if (player.carryings.contains(gameAction.consumed)
         || player.currentlocation.artefactsMap.containsKey(gameAction.consumed)
         || gameAction.consumed.equals("health")){
                 //if consumed is potion:
             if(gameAction.consumed.equals("potion")){
                 player.playerHealthAdd();
-                player.carryings.remove(gameAction.consumed);
+                moveToStoreRoom("potion");
             }else if(gameAction.consumed.equals("health")){
                 player.playerHealthMinus();
             }else{
-                // loop through all the locations to find this thing, and set it at current location
-                for(Location locationCheck : entityParser.locations.values()){
-                    //if produced is a path, add this path
-                    if(gameAction.produced.contains(locationCheck.getName())){
-                        entityParser.paths.put(player.currentlocation.getName(),locationCheck.getName());
-                    }
-                    //check for items
-                    for(String item : gameAction.produced){
-                        if(locationCheck.furnituresMap.containsKey(item)){
-                            player.currentlocation.setFurniture(locationCheck.furnituresMap.get(item));
-                        }else if(locationCheck.charactersMap.containsKey(item)){
-                            player.currentlocation.setCharacter(locationCheck.charactersMap.get(item));
-                        }else if(locationCheck.artefactsMap.containsKey(item)){
-                            player.currentlocation.setArtefact(locationCheck.artefactsMap.get(item));
-                        }
-                    }
-                }
+                //Consumed:move consumed to storeroom
+                moveToStoreRoom(gameAction.consumed);
+                //Produced:
+                producedItem(gameAction.consumed);
             }
             result.append(gameAction.narration);
             if(!player.playerHealthdetect()){
@@ -152,7 +140,7 @@ public class CommandParser {
             }
             return result;
         }else{
-            result.append("[warning] This item is not appear in the game config");
+            result.append("[warning]Can't do it");
         }
         return result;
     }
@@ -191,6 +179,39 @@ public class CommandParser {
             }
         }
         return null;
+    }
+
+    private void moveToStoreRoom(String consumed){
+        if(player.carryings.contains(gameAction.consumed)){
+            player.carryings.remove(gameAction.consumed);
+        }
+        //loop all the locations
+        for(Location locationCheck : entityParser.locations.values()){
+            if(locationCheck.artefactsMap.containsKey(gameAction.consumed)){
+                Artefact consumedItem = locationCheck.artefactsMap.get(gameAction.consumed);
+                entityParser.getStoreRoom().setArtefact(consumedItem);
+            }
+        }
+    }
+
+    private void producedItem(String produced){
+        // loop through all the locations to find this thing, and set it at current location
+        for(Location locationCheck : entityParser.locations.values()){
+            //if produced is a path, add this path
+            if(gameAction.produced.contains(locationCheck.getName())){
+                entityParser.paths.put(player.currentlocation.getName(),locationCheck.getName());
+            }
+            //check for items
+            for(String item : gameAction.produced){
+                if(locationCheck.furnituresMap.containsKey(item)){
+                    player.currentlocation.setFurniture(locationCheck.furnituresMap.get(item));
+                }else if(locationCheck.charactersMap.containsKey(item)){
+                    player.currentlocation.setCharacter(locationCheck.charactersMap.get(item));
+                }else if(locationCheck.artefactsMap.containsKey(item)){
+                    player.currentlocation.setArtefact(locationCheck.artefactsMap.get(item));
+                }
+            }
+        }
     }
 
     private String locationParse(ArrayList<String> commands){
