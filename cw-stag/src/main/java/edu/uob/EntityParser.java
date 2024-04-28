@@ -118,6 +118,7 @@ public class EntityParser {
             Node toLocation = path.getTarget().getNode();
             String toName = toLocation.getId().getId();
             this.paths.put(fromName,toName);
+            System.out.print(fromName+"->"+toName+"\n");
         }
     }
 
