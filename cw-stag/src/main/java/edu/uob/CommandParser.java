@@ -39,7 +39,7 @@ public class CommandParser {
 
         String[] words = command.split(" ");
         for (String word : words) {
-            commands.add(word);
+            commands.add(word.toLowerCase());
         }
 
         String trigger = findTrigger();
