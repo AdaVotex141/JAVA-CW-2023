@@ -48,6 +48,7 @@ public class Extended {
 //        response = sendCommandToServer("Simon: goto forest and riverbank");
 //        System.out.print(response);
         response = sendCommandToServer("Ada: look");
+        response = sendCommandToServer("Kate: look");
         System.out.print(response);
 /*        response = sendCommandToServer("Simon: goto trapdoor");
         System.out.print(response);*/
