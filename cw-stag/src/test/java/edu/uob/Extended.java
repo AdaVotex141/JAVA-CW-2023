@@ -45,10 +45,17 @@ public class Extended {
 
         String response = sendCommandToServer("Simon: get axe from cabin");
         System.out.print(response);
-        response = sendCommandToServer("Simon: goto forest and riverbank");
+//        response = sendCommandToServer("Simon: goto forest and riverbank");
+//        System.out.print(response);
+        response = sendCommandToServer("Ada: look");
         System.out.print(response);
 /*        response = sendCommandToServer("Simon: goto trapdoor");
         System.out.print(response);*/
+        //TODO : "cut down" if trigger includes space between
+
+        //TODO : other player
+
+        //TODO :
     }
 
 

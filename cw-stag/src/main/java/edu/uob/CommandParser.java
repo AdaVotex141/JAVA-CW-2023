@@ -20,11 +20,11 @@ public class CommandParser {
     Player player;
     public HashSet<String> builtinAction;
 
-    public CommandParser(EntityParser entityParser, ActionParser actionParser, Player player) {
+    public CommandParser(EntityParser entityParser, ActionParser actionParser) {
         commands = new ArrayList<>();
         this.actionParser = actionParser;
         this.entityParser = entityParser;
-        this.player = player;
+        //this.player = player;
         builtinAction = new HashSet<>();
         builtinAction.add("look");
         builtinAction.add("inv");
@@ -40,6 +40,12 @@ public class CommandParser {
         String[] words = command.split(" ");
         for (String word : words) {
             commands.add(word.toLowerCase());
+        }
+
+        //player->
+        this.player = new Player(this.entityParser,words[0],"a player");
+        if(entityParser.playerMap.isEmpty() || (!entityParser.playerMap.containsKey(this.player.getName()))){
+            entityParser.playerMap.put(this.player.getName(),this.player);
         }
 
         String trigger = findTrigger();
@@ -86,10 +92,9 @@ public class CommandParser {
             }
         }
         if(count>1){
-            result.append("[WARNING]invalid command");
+            result.append("[WARNING] invalid command");
             return result;
         }
-
 
         if (trigger.equals("look")) {
             result.append(player.playerLook());

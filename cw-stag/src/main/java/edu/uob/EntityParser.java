@@ -11,20 +11,20 @@ import com.alexmerz.graphviz.ParseException;
 import com.alexmerz.graphviz.objects.Graph;
 import com.alexmerz.graphviz.objects.Node;
 import com.alexmerz.graphviz.objects.Edge;
-import edu.uob.Entity.Artefact;
+import edu.uob.Entity.*;
 import edu.uob.Entity.Character;
-import edu.uob.Entity.Furniture;
-import edu.uob.Entity.Location;
 
 public class EntityParser {
     public HashMap<String,Location> locations;
     public HashMap<String, String> paths;
     public HashMap<String,HashSet<String>> multiplePaths;
+    public HashMap<String, Player> playerMap;
 
     public EntityParser(File entitiesFile) throws FileNotFoundException, ParseException {
         locations = new HashMap<>();
         paths = new HashMap<>();
         multiplePaths = new HashMap<>();
+        playerMap = new HashMap<>();
         EntityParse(entitiesFile);
     }
     public void EntityParse(File entitiesFile) {
