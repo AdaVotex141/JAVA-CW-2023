@@ -40,6 +40,16 @@ public class Extended {
         assertTrue(response.contains("forest"), "Did not see available paths in response to look");
         //System.out.print(response);
     }
+    @Test
+    void testGoto() {
+
+        String response = sendCommandToServer("Simon: get axe from cabin");
+        System.out.print(response);
+        response = sendCommandToServer("Simon: goto forest and riverbank");
+        System.out.print(response);
+/*        response = sendCommandToServer("Simon: goto trapdoor");
+        System.out.print(response);*/
+    }
 
 
 

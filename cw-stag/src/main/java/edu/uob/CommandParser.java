@@ -70,6 +70,27 @@ public class CommandParser {
         return result;
     }
     private StringBuilder builtInIntepreter(String trigger,StringBuilder result){
+
+        int count = 0;
+        // entity <= 1
+        for(String command :commands){
+            if(entityParser.locations.containsKey(command)){
+                count+=1;
+            }
+            for(Location locationItem : entityParser.locations.values()){
+                if(locationItem.artefactsMap.containsKey(command)
+                        || locationItem.furnituresMap.containsKey(command)
+                        || locationItem.charactersMap.containsKey(command)){
+                    count+=1;
+                }
+            }
+        }
+        if(count>1){
+            result.append("[WARNING]invalid command");
+            return result;
+        }
+
+
         if (trigger.equals("look")) {
             result.append(player.playerLook());
 
@@ -225,7 +246,8 @@ public class CommandParser {
         }
         if(count == 1){
             return location;
+        }else{
+            return null;
         }
-        return null;
     }
 }
