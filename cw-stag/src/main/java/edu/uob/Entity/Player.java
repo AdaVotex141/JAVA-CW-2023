@@ -161,7 +161,9 @@ public class Player extends GameEntity {
     }
 
     public void playerHealthAdd() {
-        health += 1;
+        if(health<3){
+            health += 1;
+        }
     }
 
     public void playerHealthMinus() {
