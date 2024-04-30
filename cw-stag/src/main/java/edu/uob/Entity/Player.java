@@ -175,6 +175,10 @@ public class Player extends GameEntity {
         return true;
     }
 
+    public int getHealth(){
+        return health;
+    }
+
     public void playerReset() {
         //drop all the thing in current
         for (String carrying : carryings){

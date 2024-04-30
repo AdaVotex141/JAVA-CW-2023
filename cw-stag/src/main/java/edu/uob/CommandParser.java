@@ -32,6 +32,7 @@ public class CommandParser {
         builtinAction.add("get");
         builtinAction.add("goto");
         builtinAction.add("drop");
+        builtinAction.add("health");
     }
 
     public StringBuilder commandParse(String command) {
@@ -138,6 +139,8 @@ public class CommandParser {
 
         } else if (trigger.equals("inv") || trigger.equals("inventory")) {
             result.append(player.playerInv());
+        }else if(trigger.equals("health")){
+            result.append("HP:" + player.getHealth());
         }
         return result;
     }
