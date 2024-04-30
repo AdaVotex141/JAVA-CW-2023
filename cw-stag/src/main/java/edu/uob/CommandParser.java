@@ -163,7 +163,7 @@ public class CommandParser {
             }
             result.append(gameAction.narration);
             if(!player.playerHealthdetect()){
-                result.append("\n"+"You died, reset game");
+                result.append("\n"+"you died and lost all of your items, you must return to the start of the game");
                 player.playerReset();
             }
             return result;
