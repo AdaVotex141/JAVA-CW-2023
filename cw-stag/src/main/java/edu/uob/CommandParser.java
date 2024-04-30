@@ -227,7 +227,13 @@ public class CommandParser {
         for(Location locationCheck : entityParser.locations.values()){
             //if produced is a path, add this path
             if(gameAction.produced.contains(locationCheck.getName())){
-                entityParser.paths.put(player.currentlocation.getName(),locationCheck.getName());
+                String currentLocationName = this.player.currentlocation.getName();
+                String toName = locationCheck.getName();
+                entityParser.multiplePaths.put(currentLocationName,new HashSet<String>());
+                entityParser.multiplePaths.get(currentLocationName).add(entityParser.paths.get(currentLocationName));
+                entityParser.multiplePaths.get(currentLocationName).add(toName);
+                entityParser.paths.remove(currentLocationName);
+                //entityParser.paths.put(player.currentlocation.getName(),locationCheck.getName());
             }
             //check for items
             for(String item : gameAction.produced){
