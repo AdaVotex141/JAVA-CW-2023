@@ -37,8 +37,8 @@ public final class GameServer {
         try {
             entityParser = new EntityParser(entitiesFile);
             actionParser =  new ActionParser(actionsFile);
-            //player = new Player(entityParser);
-            commandParser = new CommandParser(entityParser,actionParser);
+            player = new Player(entityParser);
+            commandParser = new CommandParser(entityParser,actionParser,player);
         } catch(FileNotFoundException fnfe){
             System.err.print("file is not founded");
         }catch( ParseException pe){

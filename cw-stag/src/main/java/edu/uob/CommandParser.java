@@ -20,11 +20,11 @@ public class CommandParser {
     Player player;
     public HashSet<String> builtinAction;
 
-    public CommandParser(EntityParser entityParser, ActionParser actionParser) {
+    public CommandParser(EntityParser entityParser, ActionParser actionParser, Player player) {
         commands = new ArrayList<>();
         this.actionParser = actionParser;
         this.entityParser = entityParser;
-        //this.player = player;
+        this.player = player;
         builtinAction = new HashSet<>();
         builtinAction.add("look");
         builtinAction.add("inv");
@@ -43,10 +43,10 @@ public class CommandParser {
         }
 
         //player->
-        this.player = new Player(this.entityParser,words[0],"a player");
-        if(entityParser.playerMap.isEmpty() || (!entityParser.playerMap.containsKey(this.player.getName()))){
-            entityParser.playerMap.put(this.player.getName(),this.player);
-        }
+//        this.player = new Player(this.entityParser,words[0],"a player");
+//        if(entityParser.playerMap.isEmpty() || (!entityParser.playerMap.containsKey(this.player.getName()))){
+//            entityParser.playerMap.put(this.player.getName(),this.player);
+//        }
 
         String trigger = findTrigger();
         StringBuilder result = new StringBuilder();

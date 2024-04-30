@@ -6,19 +6,22 @@ import edu.uob.Command.GameAction;
 import java.util.HashSet;
 import java.util.Map;
 
-public class Player extends GameEntity{
+public class Player{
     public Location currentlocation;
     public HashSet<String> carryings;
     private int health;
     public EntityParser entityParser;
 
-    public Player(EntityParser entityParser,String name, String description){
-        super(name,description);
+    public Player(EntityParser entityParser){
+        //super(name,description);
         this.entityParser =  entityParser;
         currentlocation = entityParser.getBornLocation();
         this.carryings = new HashSet<>();
         this.health = 3;
     }
+
+
+
     //inv:look at carryings
     public StringBuilder playerInv(){
         StringBuilder result = new StringBuilder();
@@ -118,14 +121,14 @@ public class Player extends GameEntity{
                 result.append(value.getDescription()+")");
             }
             //check for other player
-            for(Player otherPlayer : entityParser.playerMap.values()){
-                if(otherPlayer.currentlocation.getName().equals(this.currentlocation.getName())
-                         && !otherPlayer.getName().equals(this.getName())){
-                    result.append(otherPlayer.getName()+"("+otherPlayer.getDescription()+")");
-                }
-            }
-            result.append("\n");
-        }
+//            for(Player otherPlayer : entityParser.playerMap.values()){
+//                if(otherPlayer.currentlocation.getName().equals(this.currentlocation.getName())
+//                         && !otherPlayer.getName().equals(this.getName())){
+//                    result.append(otherPlayer.getName()+"("+otherPlayer.getDescription()+")");
+//                }
+//            }
+//            result.append("\n");
+ }
 
         //show paths:
         Iterable<Map.Entry<String, String>> entries = entityParser.paths.entrySet();
