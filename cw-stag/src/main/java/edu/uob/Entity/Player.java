@@ -6,14 +6,14 @@ import edu.uob.Command.GameAction;
 import java.util.HashSet;
 import java.util.Map;
 
-public class Player{
+public class Player extends GameEntity{
     public Location currentlocation;
     public HashSet<String> carryings;
     private int health;
     public EntityParser entityParser;
 
-    public Player(EntityParser entityParser){
-        //super(name,description);
+    public Player(EntityParser entityParser, String name, String description){
+        super(name,description);
         this.entityParser =  entityParser;
         currentlocation = entityParser.getBornLocation();
         this.carryings = new HashSet<>();
@@ -121,15 +121,17 @@ public class Player{
                 result.append(value.getDescription()+")");
             }
             //check for other player
-//            for(Player otherPlayer : entityParser.playerMap.values()){
-//                if(otherPlayer.currentlocation.getName().equals(this.currentlocation.getName())
-//                         && !otherPlayer.getName().equals(this.getName())){
-//                    result.append(otherPlayer.getName()+"("+otherPlayer.getDescription()+")");
-//                }
-//            }
-//            result.append("\n");
+            for(Player otherPlayer : entityParser.playerMap.values()){
+                if(otherPlayer.currentlocation.getName().equals(this.currentlocation.getName())
+                         && !otherPlayer.getName().equals(this.getName())){
+                    result.append(otherPlayer.getName()+"("+otherPlayer.getDescription()+")");
+                }
+            }
+            result.append("\n");
  }
 
+        //TODO after open cellar ,the forest disappear (multiple paths ERROR)
+        //TODO health trigger word
         //show paths:
         Iterable<Map.Entry<String, String>> entries = entityParser.paths.entrySet();
         for (Map.Entry<String, String> entry : entries){

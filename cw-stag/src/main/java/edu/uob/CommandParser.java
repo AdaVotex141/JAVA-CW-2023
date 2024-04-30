@@ -24,7 +24,7 @@ public class CommandParser {
         commands = new ArrayList<>();
         this.actionParser = actionParser;
         this.entityParser = entityParser;
-        this.player = player;
+        //this.player = player;
         builtinAction = new HashSet<>();
         builtinAction.add("look");
         builtinAction.add("inv");
@@ -43,10 +43,12 @@ public class CommandParser {
         }
 
         //player->
-//        this.player = new Player(this.entityParser,words[0],"a player");
-//        if(entityParser.playerMap.isEmpty() || (!entityParser.playerMap.containsKey(this.player.getName()))){
-//            entityParser.playerMap.put(this.player.getName(),this.player);
-//        }
+        if(!entityParser.playerMap.containsKey(words[0])){
+            this.player = new Player(this.entityParser,words[0],"a player");
+            entityParser.playerMap.put(this.player.getName(),this.player);
+        }else{
+            this.player = entityParser.playerMap.get(words[0]);
+        }
 
         String trigger = findTrigger();
         StringBuilder result = new StringBuilder();
@@ -143,7 +145,7 @@ public class CommandParser {
     private StringBuilder actionFileIntepreter(String trigger,StringBuilder result, HashSet<String> entities){
         gameAction = actionParser.actions.get(trigger);
         //check whether consumed is in the player's carryings or current location
-        //TODO only support one consumed for now
+        //TODO only support one consumed for nows
         if (player.carryings.contains(gameAction.consumed)
         || player.currentlocation.artefactsMap.containsKey(gameAction.consumed)
         || gameAction.consumed.equals("health")){
