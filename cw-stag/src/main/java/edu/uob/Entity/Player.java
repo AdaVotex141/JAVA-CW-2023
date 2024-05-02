@@ -60,19 +60,19 @@ public class Player extends GameEntity {
     }
 
     //drop
-    public boolean playerDrop(Artefact item) {
-        if (!carryings.isEmpty()) {
-            boolean removeCheck = carryings.remove(item.getName());
-            if (removeCheck == true) {
-                currentlocation.setArtefact(item);
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
+//    public boolean playerDrop(Artefact item) {
+//        if (!carryings.isEmpty()) {
+//            boolean removeCheck = carryings.remove(item.getName());
+//            if (removeCheck == true) {
+//                currentlocation.setArtefact(item);
+//                return true;
+//            } else {
+//                return false;
+//            }
+//        } else {
+//            return false;
+//        }
+//    }
 
     //get
     public boolean playerGet(Artefact item) {

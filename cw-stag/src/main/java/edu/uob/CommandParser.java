@@ -1,10 +1,8 @@
 package edu.uob;
 
 import edu.uob.Command.GameAction;
-import edu.uob.Entity.Artefact;
-import edu.uob.Entity.GameEntity;
-import edu.uob.Entity.Location;
-import edu.uob.Entity.Player;
+import edu.uob.Entity.*;
+import edu.uob.Entity.Character;
 
 import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
@@ -12,12 +10,7 @@ import java.util.HashSet;
 
 //TODO can't get shovel after the elf produced it -> can't detect the produced new product ????
 //TODO the 'cut down' and 'cut'
-//TODO Kate:> drop axe -> fixed for now?
-/*
-[warning] invalid, doesn't have the item in the bag
-Kate:> inv
-axe
-*/
+
 
 
 public class CommandParser {
@@ -123,7 +116,7 @@ public class CommandParser {
         } else if (trigger.equals("get")) {
             Artefact item = itemParse(commands);
             if (item == null) {
-                result.append("[WARNING] the item isn't appear in this location");
+                result.append("[WARNING] Can't get");
             } else {
                 boolean getFlag = player.playerGet(item);
                 if (getFlag) {
@@ -141,6 +134,7 @@ public class CommandParser {
                         Artefact item = storeRoom.artefactsMap.get(command);
                         player.currentlocation.setArtefact(item);
                         storeRoom.artefactsMap.remove(command);
+                        player.carryings.remove(command);
                         result.append("[Drop "+item.getName()+ " success]");
                         return result;
                     }
@@ -173,18 +167,38 @@ public class CommandParser {
         //TODO only support one consumed for nows
         if (player.carryings.contains(gameAction.consumed)
         || player.currentlocation.artefactsMap.containsKey(gameAction.consumed)
-        || gameAction.consumed.equals("health")){
+        || gameAction.consumed.equals("health") || player.currentlocation.furnituresMap.containsKey(gameAction.consumed)){
                 //if consumed is potion:
             if(gameAction.consumed.equals("potion")){
-                player.playerHealthAdd();
-                moveToStoreRoom("potion");
+                if(player.carryings.contains("potion")){
+                    player.playerHealthAdd();
+                    moveToStoreRoom("potion");
+                }else{
+                    result.append("[warning] You don't have potion in inventory");
+                    return result;
+                }
             }else if(gameAction.consumed.equals("health")){
                 player.playerHealthMinus();
             }else{
-                //Consumed:move consumed to storeroom
-                moveToStoreRoom(gameAction.consumed);
-                //Produced:
-                producedItem(gameAction.consumed);
+                boolean flag = false;
+                for (String item : gameAction.subjects) {
+                    if(player.carryings.contains(item)){
+                        //check the carryings?
+                        moveToStoreRoom(gameAction.consumed);
+                        //Produced:
+                        for(String produced: gameAction.produced){
+                            producedItem(produced);
+                        }
+                        flag = true;
+                    }
+                }
+                if(flag){
+                    result.append(gameAction.narration);
+                    return result;
+                }else{
+                    result.append("[warning]missing");
+                    return result;
+                }
             }
             result.append(gameAction.narration);
             if(!player.playerHealthdetect()){
@@ -243,6 +257,12 @@ public class CommandParser {
             if(locationCheck.artefactsMap.containsKey(gameAction.consumed)){
                 Artefact consumedItem = locationCheck.artefactsMap.get(gameAction.consumed);
                 entityParser.getStoreRoom().setArtefact(consumedItem);
+                locationCheck.artefactsMap.remove(gameAction.consumed);
+            }
+            if(locationCheck.furnituresMap.containsKey(gameAction.consumed)){
+                Furniture item = locationCheck.furnituresMap.get(gameAction.consumed);
+                entityParser.getStoreRoom().setFurniture(item);
+                locationCheck.furnituresMap.remove(gameAction.consumed);
             }
         }
     }
@@ -261,15 +281,32 @@ public class CommandParser {
                 //entityParser.paths.put(player.currentlocation.getName(),locationCheck.getName());
             }
             //check for items
-            for(String item : gameAction.produced){
-                if(locationCheck.furnituresMap.containsKey(item)){
-                    player.currentlocation.setFurniture(locationCheck.furnituresMap.get(item));
-                }else if(locationCheck.charactersMap.containsKey(item)){
-                    player.currentlocation.setCharacter(locationCheck.charactersMap.get(item));
-                }else if(locationCheck.artefactsMap.containsKey(item)){
-                    player.currentlocation.setArtefact(locationCheck.artefactsMap.get(item));
-                }
-            }
+//            for(String item : gameAction.produced){
+//                if(locationCheck.furnituresMap.containsKey(item)){
+//                    player.currentlocation.setFurniture(locationCheck.furnituresMap.get(item));
+//                }else if(locationCheck.charactersMap.containsKey(item)){
+//                    player.currentlocation.setCharacter(locationCheck.charactersMap.get(item));
+//                }else if(locationCheck.artefactsMap.containsKey(item)){
+//                    player.currentlocation.setArtefact(locationCheck.artefactsMap.get(item));
+//                }
+//            }
+        }
+        //check storeRoom for items:
+        Location storeRoom = entityParser.getStoreRoom();
+        if(storeRoom.artefactsMap.containsKey(produced)){
+            Artefact item = storeRoom.artefactsMap.get(produced);
+            player.currentlocation.setArtefact(item);
+            storeRoom.artefactsMap.remove(produced);
+        }
+        if(storeRoom.furnituresMap.containsKey(produced)){
+            Furniture item = storeRoom.furnituresMap.get(produced);
+            player.currentlocation.setFurniture(item);
+            storeRoom.furnituresMap.remove(produced);
+        }
+        if(storeRoom.charactersMap.containsKey(produced)){
+            Character item = storeRoom.charactersMap.get(produced);
+            player.currentlocation.setCharacter(item);
+            storeRoom.charactersMap.remove(item);
         }
     }
 
