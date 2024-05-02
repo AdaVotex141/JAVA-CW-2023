@@ -12,7 +12,7 @@ import java.util.HashSet;
 
 //TODO can't get shovel after the elf produced it -> can't detect the produced new product ????
 //TODO the 'cut down' and 'cut'
-//TODO Kate:> drop axe
+//TODO Kate:> drop axe -> fixed for now?
 /*
 [warning] invalid, doesn't have the item in the bag
 Kate:> inv
@@ -134,17 +134,30 @@ public class CommandParser {
             }
 
         } else if (trigger.equals("drop")) {
-            Artefact item = itemParse(commands);
-            if (item == null) {
-                result.append("[warning] invalid, doesn't have the item in the bag");
-            } else {
-                boolean getFlag = player.playerDrop(item);
-                if (getFlag) {
-                    result.append("");
-                } else {
-                    result.append("[warning] invalid, drop fail");
+            Location storeRoom = entityParser.getStoreRoom();
+            for(String command:commands){
+                if (storeRoom.artefactsMap.containsKey(command)){
+                    if(player.carryings.contains(command)){
+                        Artefact item = storeRoom.artefactsMap.get(command);
+                        player.currentlocation.setArtefact(item);
+                        storeRoom.artefactsMap.remove(command);
+                        result.append("[Drop "+item.getName()+ " success]");
+                        return result;
+                    }
                 }
             }
+            result.append("[warning] invalid, drop fail");
+//            Artefact item = itemParse(commands);
+//            if (item == null) {
+//                result.append("[warning] invalid, doesn't have the item in the bag");
+//            } else {
+//                boolean getFlag = player.playerDrop(item);
+//                if (getFlag) {
+//                    result.append("");
+//                } else {
+//                    result.append("[warning] invalid, drop fail");
+//                }
+//            }
 
         } else if (trigger.equals("inv") || trigger.equals("inventory")) {
             result.append(player.playerInv());
