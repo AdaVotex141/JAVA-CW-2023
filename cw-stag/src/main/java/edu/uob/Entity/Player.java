@@ -30,7 +30,7 @@ public class Player extends GameEntity {
                 result.append(carrying + " ");
             }
         } else {
-            result.append("[WARNING] Doesn't have anything");
+            result.append(" ");
         }
         return result;
     }
@@ -51,9 +51,10 @@ public class Player extends GameEntity {
         if (toLocationCheck.equals(toLocation) || multipPathFlag == true) {
             Location finalLocation = entityParser.findLocation(toLocation);
             this.currentlocation = finalLocation;
+            //result.append(" ");
             result.append("reach " + toLocation);
         } else {
-            result.append("[WARNING]Can't reach");
+            result.append("[WARNING] Can't reach");
         }
         return result;
     }

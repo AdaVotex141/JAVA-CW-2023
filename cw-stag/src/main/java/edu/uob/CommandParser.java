@@ -10,6 +10,15 @@ import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+//TODO can't get shovel after the elf produced it -> can't detect the produced new product ????
+//TODO the 'cut down' and 'cut'
+//TODO Kate:> drop axe
+/*
+[warning] invalid, doesn't have the item in the bag
+Kate:> inv
+axe
+*/
+
 
 public class CommandParser {
     //find trigger->
@@ -127,20 +136,20 @@ public class CommandParser {
         } else if (trigger.equals("drop")) {
             Artefact item = itemParse(commands);
             if (item == null) {
-                result.append("[WARNING] invalid, doesn't have the item in the bag");
+                result.append("[warning] invalid, doesn't have the item in the bag");
             } else {
                 boolean getFlag = player.playerDrop(item);
                 if (getFlag) {
                     result.append("");
                 } else {
-                    result.append("[WARNING] invalid, drop fail");
+                    result.append("[warning] invalid, drop fail");
                 }
             }
 
         } else if (trigger.equals("inv") || trigger.equals("inventory")) {
             result.append(player.playerInv());
         }else if(trigger.equals("health")){
-            result.append("HP:" + player.getHealth());
+            result.append("hp:" + player.getHealth());
         }
         return result;
     }
