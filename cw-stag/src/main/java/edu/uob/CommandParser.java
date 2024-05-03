@@ -10,6 +10,16 @@ import java.util.HashSet;
 
 //TODO can't get shovel after the elf produced it -> can't detect the produced new product ????
 //TODO the 'cut down' and 'cut'
+//TODO Kate:> open inv :[warning] no triggerword
+/*
+Kate:> bridge with log
+you bridge the river with the log and can now reach the other side
+Kate:> look
+location:forest(a deep dark forest)
+forest->null
+forest->clearing
+* */
+
 
 
 
@@ -53,11 +63,13 @@ public class CommandParser {
             this.player = entityParser.playerMap.get(words[0]);
         }
 
-        String trigger = findTrigger();
         StringBuilder result = new StringBuilder();
+        HashSet<String> triggerWords = findTrigger();
+        String trigger = triggerParser(triggerWords);
 
-        if (trigger.isEmpty()) {
-            result.append("[WARNING] Can't resolve command.");
+        if (triggerWords.isEmpty() || trigger.equals("")){
+            result.append("Can't resolve commands");
+            return result;
         }
 
         if(this.builtinAction.contains(trigger)){
@@ -80,6 +92,9 @@ public class CommandParser {
         }
         return result;
     }
+
+
+
     private StringBuilder builtInIntepreter(String trigger,StringBuilder result){
 
         int count = 0;
@@ -213,22 +228,14 @@ public class CommandParser {
     }
 
 
-    private String findTrigger() {
-        int count = 0;
-        int countEntity = 0;
-        String triggerWord = "";
+    private HashSet<String>  findTrigger() {
+        HashSet<String> triggerWord = new HashSet<>();
         for (String word : this.commands) {
             if (this.builtinAction.contains(word)) {
-                count += 1;
-                triggerWord = word;
+                triggerWord.add(word);
             }else if (actionParser.actions.containsKey(word)) {
-                count += 1;
-                triggerWord = word;
-                //check for entity number-> 2 or 1
+                triggerWord.add(word);
             }
-        }
-        if (count != 1) {
-            triggerWord = "Multiple Command or no Trigger Command";
         }
         return triggerWord;
     }
@@ -324,5 +331,33 @@ public class CommandParser {
         }else{
             return null;
         }
+    }
+
+    private String triggerParser(HashSet<String> triggerWords){
+        String trigger = "";
+        int count = 0;
+        if(triggerWords.size()>1) {
+            for (String triggerWord : triggerWords) {
+                if (actionParser.actions.containsKey(triggerWord)) {
+                    //entity check?
+                    for(String commandEntityCheck:commands){
+                        if(actionParser.actions.get(triggerWord).subjects.contains(commandEntityCheck)){
+                            trigger = triggerWord;
+                            count+=1;
+                        }
+                    }
+                } else if (builtinAction.contains(triggerWord)) {
+                    trigger = triggerWord;
+                    count+=1;
+                }
+            }
+        }else if(triggerWords.size() == 1){
+            String[] triggerArray = triggerWords.toArray(new String[0]);
+            trigger = triggerArray[0];
+        }
+        if(count > 1){
+            trigger = "";
+        }
+        return trigger;
     }
 }
