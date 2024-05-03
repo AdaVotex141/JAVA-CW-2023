@@ -28,13 +28,11 @@ public class ActionIntep {
         this.entityParser = entityParser;
     }
 
-    public StringBuilder actionFileIntepreter(String trigger,StringBuilder result, HashSet<String> entities){
+    public StringBuilder actionFileIntepreter(String trigger,StringBuilder result){
         gameAction = actionParser.actions.get(trigger);
         //check whether consumed is in the player's carryings or current location
 
-        if (player.carryings.contains(gameAction.consumed)
-                || player.currentlocation.artefactsMap.containsKey(gameAction.consumed)
-                || gameAction.consumed.equals("health") || player.currentlocation.furnituresMap.containsKey(gameAction.consumed)){
+        if (entityCheck()){
             //if consumed is potion:
             if(gameAction.consumed.equals("potion")){
                 if(player.carryings.contains("potion")){
@@ -63,7 +61,7 @@ public class ActionIntep {
                     result.append(gameAction.narration);
                     return result;
                 }else{
-                    result.append("[warning]missing");
+                    result.append("[warning]missing item");
                     return result;
                 }
             }
@@ -130,6 +128,26 @@ public class ActionIntep {
             player.currentlocation.setCharacter(item);
             storeRoom.charactersMap.remove(item);
         }
+    }
+
+    private boolean entityCheck(){
+        if(gameAction.consumed.equals("health") || gameAction.consumed.equals("potion")){
+            return true;
+        }
+            int countSubject = 0;
+            for(String subject : gameAction.subjects){
+                if(player.currentlocation.artefactsMap.containsKey(subject)
+                        || player.currentlocation.furnituresMap.containsKey(subject)
+                        || player.currentlocation.charactersMap.containsKey(subject)
+                        || player.carryings.contains(subject)){
+                    countSubject+=1;
+                }
+            }
+            if(gameAction.subjects.size() == countSubject){
+                return true;
+            }
+
+        return false;
     }
 
 }

@@ -3,9 +3,7 @@ package edu.uob;
 //import edu.uob.Command.GameAction;
 import edu.uob.Command.*;
 import edu.uob.Entity.*;
-import edu.uob.Entity.Character;
 
-import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -64,7 +62,7 @@ public class CommandParser {
         String trigger = triggerParser(triggerWords);
 
         if (triggerWords.isEmpty() || trigger.equals("")){
-            result.append("Can't resolve commands");
+            result.append("[warning] Can't resolve commands");
             return result;
         }
 
@@ -87,13 +85,10 @@ public class CommandParser {
             }
             if(entities.size() == 2 || entities.size() == 1){
                 ActionIntep intep = new ActionIntep(commands,actionParser,player,gameAction,entityParser);
-                intep.actionFileIntepreter(trigger,result,entities);
-                //actionFileIntepreter(trigger,result,entities);
+                intep.actionFileIntepreter(trigger,result);
             }else{
                 result.append("[WARNING] no or multiple entities detected");
             }
-        }else{
-            result.append("[WARNING] no triggerword");
         }
 
     }
