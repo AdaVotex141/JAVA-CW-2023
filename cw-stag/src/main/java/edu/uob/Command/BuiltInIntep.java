@@ -1,6 +1,5 @@
 package edu.uob.Command;
 
-import edu.uob.ActionParser;
 import edu.uob.Entity.Artefact;
 import edu.uob.Entity.Location;
 import edu.uob.Entity.Player;
@@ -30,50 +29,61 @@ public class BuiltInIntep {
             return result;
         }
 
-        if (trigger.equals("look")) {
-            result.append(player.playerLook());
+        switch (trigger) {
+            case "look":
+                result.append(player.playerLook());
+                break;
 
-        } else if (trigger.equals("goto")) {
-            //TODO the key thing
-            String toLocation = locationParse(commands);
-            if (toLocation == null) {
-                result.append("[WARNING] invalid, you can't goto this location");
-            } else {
-                result.append(player.playerGoto(toLocation));
-            }
-
-        } else if (trigger.equals("get")) {
-            Artefact item = itemParse(commands);
-            if (item == null) {
-                result.append("[WARNING] Can't get");
-            } else {
-                boolean getFlag = player.playerGet(item);
-                if (getFlag) {
-                    result.append("[GET SUCCESS]");
+            case "goto":
+                String toLocation = locationParse(commands);
+                if (toLocation == null) {
+                    result.append("[WARNING] invalid, you can't goto this location");
                 } else {
-                    result.append("[WARNING] invalid, get fail");
+                    result.append(player.playerGoto(toLocation));
                 }
-            }
+                break;
 
-        } else if (trigger.equals("drop")) {
-            Location storeRoom = entityParser.getStoreRoom();
-            for(String command:commands){
-                if (storeRoom.artefactsMap.containsKey(command)){
-                    if(player.carryings.contains(command)){
-                        Artefact item = storeRoom.artefactsMap.get(command);
-                        player.currentlocation.setArtefact(item);
-                        storeRoom.artefactsMap.remove(command);
-                        player.carryings.remove(command);
-                        result.append("[Drop "+item.getName()+ " success]");
-                        return result;
+            case "get":
+                Artefact item = itemParse(commands);
+                if (item == null) {
+                    result.append("[WARNING] Can't get");
+                } else {
+                    boolean getFlag = player.playerGet(item);
+                    if (getFlag) {
+                        result.append("[GET SUCCESS]");
+                    } else {
+                        result.append("[WARNING] invalid, get fail");
                     }
                 }
-            }
-            result.append("[warning] invalid, drop fail");
-        } else if (trigger.equals("inv") || trigger.equals("inventory")) {
-            result.append(player.playerInv());
-        }else if(trigger.equals("health")){
-            result.append("hp:" + player.getHealth());
+                break;
+
+            case "drop":
+                Location storeRoom = entityParser.getStoreRoom();
+                for(String command:commands){
+                    if (storeRoom.artefactsMap.containsKey(command)
+                                    && player.carryings.contains(command)){
+                            Artefact itemDrop = storeRoom.artefactsMap.get(command);
+                            player.currentlocation.setArtefact(itemDrop);
+                            storeRoom.artefactsMap.remove(command);
+                            player.carryings.remove(command);
+                            result.append("[Drop "+itemDrop.getName()+ " success]");
+                            return result;
+                    }
+                }
+                result.append("[warning] invalid, drop fail");
+                break;
+
+            case "inv":
+            case "inventory":
+                result.append(player.playerInv());
+                break;
+
+            case "health":
+                result.append("hp:" + player.getHealth());
+                break;
+
+            default:
+
         }
         return result;
     }

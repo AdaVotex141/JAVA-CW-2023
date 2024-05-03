@@ -31,7 +31,7 @@ public class ActionIntep {
     public StringBuilder actionFileIntepreter(String trigger,StringBuilder result, HashSet<String> entities){
         gameAction = actionParser.actions.get(trigger);
         //check whether consumed is in the player's carryings or current location
-        //TODO only support one consumed for nows
+
         if (player.carryings.contains(gameAction.consumed)
                 || player.currentlocation.artefactsMap.containsKey(gameAction.consumed)
                 || gameAction.consumed.equals("health") || player.currentlocation.furnituresMap.containsKey(gameAction.consumed)){
