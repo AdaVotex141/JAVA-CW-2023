@@ -51,22 +51,23 @@ public class CommandParser {
             commands.add(word.toLowerCase());
         }
 
-        setPlayer(words);
+        //player->
+        if(!entityParser.playerMap.containsKey(words[0])){
+            this.player = new Player(this.entityParser,words[0],"a player");
+            entityParser.playerMap.put(this.player.getName(),this.player);
+        }else{
+            this.player = entityParser.playerMap.get(words[0]);
+        }
 
         StringBuilder result = new StringBuilder();
         HashSet<String> triggerWords = findTrigger();
         String trigger = triggerParser(triggerWords);
+
         if (triggerWords.isEmpty() || trigger.equals("")){
             result.append("Can't resolve commands");
             return result;
         }
 
-        interpreter(trigger,result);
-
-        return result;
-    }
-
-    private void interpreter(String trigger, StringBuilder result){
         if(this.builtinAction.contains(trigger)){
             BuiltInIntep intep = new BuiltInIntep(commands,entityParser,player,builtinAction);
             intep.builtInIntepreter(trigger,result);
@@ -89,16 +90,7 @@ public class CommandParser {
         }else{
             result.append("[WARNING] no triggerword");
         }
-    }
-
-    private void setPlayer(String[] words){
-        //player->
-        if(!entityParser.playerMap.containsKey(words[0])){
-            this.player = new Player(this.entityParser,words[0],"a player");
-            entityParser.playerMap.put(this.player.getName(),this.player);
-        }else{
-            this.player = entityParser.playerMap.get(words[0]);
-        }
+        return result;
     }
 
     private HashSet<String>  findTrigger() {
@@ -113,69 +105,32 @@ public class CommandParser {
         return triggerWord;
     }
 
-    private String triggerParser(HashSet<String> triggerWords) {
+    private String triggerParser(HashSet<String> triggerWords){
         String trigger = "";
         int count = 0;
-        if (triggerWords.size() > 1) {
-            trigger = processMultipleTriggers(triggerWords);
-            count = countValidTriggers(triggerWords);
-        } else if (triggerWords.size() == 1) {
-            trigger = getSingleTrigger(triggerWords);
+        if(triggerWords.size()>1) {
+            for (String triggerWord : triggerWords) {
+                if (actionParser.actions.containsKey(triggerWord)) {
+                    //entity check?
+                    for(String commandEntityCheck:commands){
+                        if(actionParser.actions.get(triggerWord).subjects.contains(commandEntityCheck)){
+                            trigger = triggerWord;
+                            count+=1;
+                        }
+                    }
+                } else if (builtinAction.contains(triggerWord)) {
+                    trigger = triggerWord;
+                    count+=1;
+                }
+            }
+        }else if(triggerWords.size() == 1){
+            String[] triggerArray = triggerWords.toArray(new String[0]);
+            trigger = triggerArray[0];
         }
-        if (count > 1) {
+        if(count > 1){
             trigger = "";
         }
         return trigger;
-    }
-
-    private String processMultipleTriggers(HashSet<String> triggerWords) {
-        for (String triggerWord : triggerWords) {
-            if (isAction(triggerWord)) {
-                String trigger = processAction(triggerWord);
-                if (!trigger.isEmpty()) {
-                    return trigger;
-                }
-            } else if (isBuiltinAction(triggerWord)) {
-                return triggerWord;
-            }
-        }
-        return "";
-    }
-
-    private int countValidTriggers(HashSet<String> triggerWords) {
-        int count = 0;
-        for (String triggerWord : triggerWords) {
-            if (isValidTrigger(triggerWord)) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    private String getSingleTrigger(HashSet<String> triggerWords) {
-        String[] triggerArray = triggerWords.toArray(new String[0]);
-        return triggerArray[0];
-    }
-
-    private boolean isAction(String triggerWord) {
-        return actionParser.actions.containsKey(triggerWord);
-    }
-
-    private String processAction(String triggerWord) {
-        for (String commandEntityCheck : commands) {
-            if (actionParser.actions.get(triggerWord).subjects.contains(commandEntityCheck)) {
-                return triggerWord;
-            }
-        }
-        return "";
-    }
-
-    private boolean isBuiltinAction(String triggerWord) {
-        return builtinAction.contains(triggerWord);
-    }
-
-    private boolean isValidTrigger(String triggerWord) {
-        return isAction(triggerWord) || isBuiltinAction(triggerWord);
     }
 
 
