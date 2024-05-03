@@ -81,15 +81,14 @@ public class CommandParser {
             this.gameAction = actionParser.actions.get(trigger);
             HashSet<String> entities = new HashSet<>();
             for(String word: commands){
-                if(gameAction.subjects.contains(word)){
-                    entities.add(word);
-                }
+                entities = entityCount(word,entities);
             }
-            if(entities.size() == 2 || entities.size() == 1){
+
+            if(gameAction.subjects.containsAll(entities)){
                 ActionIntep intep = new ActionIntep(commands,actionParser,player,gameAction,entityParser);
                 intep.actionFileIntepreter(trigger,result);
             }else{
-                result.append("[WARNING] no or multiple entities detected");
+                result.append("[WARNING] invalid or no entities detected");
             }
         }
 
@@ -105,6 +104,19 @@ public class CommandParser {
             }
         }
         return triggerWord;
+    }
+
+    private HashSet<String> entityCount(String word,HashSet<String> entities){
+        for(Location locationCheck : entityParser.locations.values()){
+            if(locationCheck.artefactsMap.containsKey(word)){
+                entities.add(word);
+            }else if(locationCheck.furnituresMap.containsKey(word)){
+                entities.add(word);
+            }else if(locationCheck.charactersMap.containsKey(word)){
+                entities.add(word);
+            }
+        }
+        return entities;
     }
 
     private String triggerParser(HashSet<String> triggerWords){
