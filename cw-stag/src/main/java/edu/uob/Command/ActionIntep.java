@@ -42,8 +42,12 @@ public class ActionIntep {
                     result.append("[warning] You don't have potion in inventory");
                     return result;
                 }
+
+
             }else if(gameAction.consumed.equals("health")){
                 player.playerHealthMinus();
+
+
             }else{
                 boolean flag = false;
                 for (String item : gameAction.subjects) {
@@ -143,9 +147,6 @@ public class ActionIntep {
             if(gameAction.subjects.size() == countSubject){
                 return true;
             }
-//        if(gameAction.consumed.equals("health") || gameAction.consumed.equals("potion")){
-//            return true;
-//        }
 
         return false;
     }

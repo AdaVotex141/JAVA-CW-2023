@@ -60,19 +60,6 @@ public class Player extends GameEntity {
     }
 
     //drop
-//    public boolean playerDrop(Artefact item) {
-//        if (!carryings.isEmpty()) {
-//            boolean removeCheck = carryings.remove(item.getName());
-//            if (removeCheck == true) {
-//                currentlocation.setArtefact(item);
-//                return true;
-//            } else {
-//                return false;
-//            }
-//        } else {
-//            return false;
-//        }
-//    }
 
     //get
     public boolean playerGet(Artefact item) {
@@ -117,7 +104,7 @@ public class Player extends GameEntity {
         }
 
         //Characters:
-        if (!currentlocation.charactersMap.isEmpty() || entityParser.playerMap.size() > 1) {
+        if (!currentlocation.charactersMap.isEmpty()) {
             result.append("Character:");
             Iterable<Character> charactorIterator = currentlocation.charactersMap.values();
             for (Character value : charactorIterator) {
