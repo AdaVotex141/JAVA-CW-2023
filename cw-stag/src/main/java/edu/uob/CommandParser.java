@@ -68,6 +68,11 @@ public class CommandParser {
             return result;
         }
 
+        interpreter(trigger,result);
+        return result;
+    }
+
+    private void interpreter(String trigger, StringBuilder result){
         if(this.builtinAction.contains(trigger)){
             BuiltInIntep intep = new BuiltInIntep(commands,entityParser,player,builtinAction);
             intep.builtInIntepreter(trigger,result);
@@ -90,7 +95,7 @@ public class CommandParser {
         }else{
             result.append("[WARNING] no triggerword");
         }
-        return result;
+
     }
 
     private HashSet<String>  findTrigger() {
