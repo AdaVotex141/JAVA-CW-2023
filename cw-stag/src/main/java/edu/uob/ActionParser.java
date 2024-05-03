@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ActionParser {
-    HashMap<String, GameAction> actions;
+    public HashMap<String, GameAction> actions;
     public ActionParser(File actionsFile){
         actions = new HashMap<>();
         actionParse(actionsFile);
