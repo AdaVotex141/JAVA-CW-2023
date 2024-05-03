@@ -59,6 +59,12 @@ public class Extended {
         //TODO :
     }
 
+    @Test
+    void testHIT(){
+        String response = sendCommandToServer("Simon: hit elf");
+        System.out.print(response);
+    }
+
 
 
 }

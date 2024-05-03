@@ -9,6 +9,8 @@ import java.util.HashSet;
 
 //TODO can't get shovel after the elf produced it -> can't detect the produced new product ????
 //TODO the 'cut down' and 'cut'
+//TODO player name check
+//TODO can hit elf in cabin??
 /*
 Kate:> bridge with log
 you bridge the river with the log and can now reach the other side
@@ -27,7 +29,7 @@ public class CommandParser {
     Player player;
     public HashSet<String> builtinAction;
 
-    public CommandParser(EntityParser entityParser, ActionParser actionParser, Player player) {
+    public CommandParser(EntityParser entityParser, ActionParser actionParser) {
         commands = new ArrayList<>();
         this.actionParser = actionParser;
         this.entityParser = entityParser;

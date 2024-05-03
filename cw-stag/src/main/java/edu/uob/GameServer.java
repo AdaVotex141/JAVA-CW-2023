@@ -1,10 +1,8 @@
 package edu.uob;
 
 import com.alexmerz.graphviz.ParseException;
-import edu.uob.Command.GameAction;
 import edu.uob.Entity.*;
 
-import javax.swing.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,8 +14,6 @@ public final class GameServer {
     EntityParser entityParser;
     ActionParser actionParser;
     CommandParser commandParser;
-    GameAction gameAction;
-    Player player;
 
     public static void main(String[] args) throws IOException, ParseException {
         File entitiesFile = Paths.get("config" + File.separator + "extended-entities.dot").toAbsolutePath().toFile();
@@ -37,8 +33,7 @@ public final class GameServer {
         try {
             entityParser = new EntityParser(entitiesFile);
             actionParser =  new ActionParser(actionsFile);
-            //player = new Player(entityParser,);
-            commandParser = new CommandParser(entityParser,actionParser,player);
+            commandParser = new CommandParser(entityParser,actionParser);
         } catch(FileNotFoundException fnfe){
             System.err.print("file is not founded");
         }catch( ParseException pe){

@@ -131,9 +131,6 @@ public class ActionIntep {
     }
 
     private boolean entityCheck(){
-        if(gameAction.consumed.equals("health") || gameAction.consumed.equals("potion")){
-            return true;
-        }
             int countSubject = 0;
             for(String subject : gameAction.subjects){
                 if(player.currentlocation.artefactsMap.containsKey(subject)
@@ -146,6 +143,9 @@ public class ActionIntep {
             if(gameAction.subjects.size() == countSubject){
                 return true;
             }
+//        if(gameAction.consumed.equals("health") || gameAction.consumed.equals("potion")){
+//            return true;
+//        }
 
         return false;
     }
