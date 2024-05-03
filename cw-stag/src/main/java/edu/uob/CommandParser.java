@@ -7,18 +7,9 @@ import edu.uob.Entity.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-//TODO can't get shovel after the elf produced it -> can't detect the produced new product ????
-//TODO the 'cut down' and 'cut'
-//TODO player name check
-//TODO can hit elf in cabin??
-/*
-Kate:> bridge with log
-you bridge the river with the log and can now reach the other side
-Kate:> look
-location:forest(a deep dark forest)
-forest->null
-forest->clearing
-* */
+//TODO trigger->multiple gameAction???
+//TODO consumed -> Paths
+//TODO there is more than one 'open' action possible - which one do you want to perform ?
 
 public class CommandParser {
     //find trigger->
