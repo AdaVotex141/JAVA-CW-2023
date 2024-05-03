@@ -50,8 +50,15 @@ public class CommandParser {
         for (String word : words) {
             commands.add(word.toLowerCase());
         }
-
+        StringBuilder result = new StringBuilder();
         //player->
+
+        String playerNameWith = words[0].replace(":","");
+        if(builtinAction.contains(playerNameWith)){
+            result.append("[WARNING] invalid player name");
+            return result;
+        }
+
         if(!entityParser.playerMap.containsKey(words[0])){
             this.player = new Player(this.entityParser,words[0],"a player");
             entityParser.playerMap.put(this.player.getName(),this.player);
@@ -59,7 +66,7 @@ public class CommandParser {
             this.player = entityParser.playerMap.get(words[0]);
         }
 
-        StringBuilder result = new StringBuilder();
+
         HashSet<String> triggerWords = findTrigger();
         String trigger = triggerParser(triggerWords);
 
