@@ -28,37 +28,40 @@ public class ActionIntep {
         this.entityParser = entityParser;
     }
 
-    public StringBuilder actionFileIntepreter(String trigger,StringBuilder result){
-        gameAction = actionParser.actions.get(trigger);
+    public StringBuilder actionFileIntepreter(StringBuilder result){
         if (entityCheck()){
-            if (!gameAction.consumed.isEmpty()){
-                for(String consumed : gameAction.consumed){
-                    if(consumed.equals("potion")){
-                        result.append(drinkPotion(result));
-                    }else if(consumed.equals("health")){
-                        player.playerHealthMinus();
-                    }else if(locationCheck()){
-                        consumedPaths(consumed);
-                    }else{
-                        moveToStoreRoom(consumed);
-                    }
-                }
-            }
+                result.append(doConsumed(result));
             if(!gameAction.subjects.isEmpty()){
                 for (String produced : gameAction.produced) {
                     producedItem(produced);
                 }
-
-                if(!player.playerHealthdetect()){
-                    result.append("\n"+"you died and lost all of your items, you must return to the start of the game");
-                    player.playerReset();
-                }
+            }
+            if(!player.playerHealthdetect()){
+                result.append("\n"+"you died and lost all of your items, you must return to the start of the game");
+                player.playerReset();
             }
             result.append(gameAction.narration);
         }else{
             result.append("[warning]Can't do it");
         }
             return result;
+    }
+
+    private StringBuilder doConsumed(StringBuilder result) {
+        if (!gameAction.consumed.isEmpty()) {
+            for (String consumed : gameAction.consumed) {
+                if (consumed.equals("potion")) {
+                    result.append(drinkPotion(result));
+                } else if (consumed.equals("health")) {
+                    player.playerHealthMinus();
+                } else if (locationCheck()) {
+                    consumedPaths(consumed);
+                } else {
+                    moveToStoreRoom(consumed);
+                }
+            }
+        }
+        return result;
     }
 
 
@@ -113,21 +116,20 @@ public class ActionIntep {
             storeRoom.charactersMap.remove(item);
         }
     }
-
+// check whether subject needed for this gameAction is in currentSpace
     private boolean entityCheck(){
-            int countSubject = 0;
+
+            HashSet<String> entitySet = new HashSet<>();
             for(String subject : gameAction.subjects){
-                if(player.currentlocation.artefactsMap.containsKey(subject)
-                        || player.currentlocation.furnituresMap.containsKey(subject)
+                if(player.currentlocation.furnituresMap.containsKey(subject)
                         || player.currentlocation.charactersMap.containsKey(subject)
                         || player.carryings.contains(subject)){
-                    countSubject+=1;
+                    entitySet.add(subject);
                 }
             }
-            if(gameAction.subjects.size() == countSubject){
+            if(gameAction.subjects.equals(entitySet)){
                 return true;
             }
-
         return false;
     }
 
@@ -148,6 +150,10 @@ public class ActionIntep {
         }else if(entityParser.multiplePaths.containsKey(currentLocationName)
                 && entityParser.multiplePaths.get(currentLocationName).equals(toName)){
             entityParser.multiplePaths.get(currentLocationName).remove(toName);
+            if(entityParser.multiplePaths.get(currentLocationName).size() == 1){
+                entityParser.paths.put(currentLocationName,toName);
+                entityParser.multiplePaths.remove(currentLocationName);
+            }
         }
     }
 

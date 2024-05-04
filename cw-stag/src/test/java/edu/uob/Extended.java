@@ -48,21 +48,23 @@ public class Extended {
 //        response = sendCommandToServer("Simon: goto forest and riverbank");
 //        System.out.print(response);
         response = sendCommandToServer("Ada: look");
-        response = sendCommandToServer("Kate: look");
-        System.out.print(response);
-/*        response = sendCommandToServer("Simon: goto trapdoor");
-        System.out.print(response);*/
-        //TODO : "cut down" if trigger includes space between
 
-        //TODO : other player
-
-        //TODO :
     }
 
     @Test
     void testHIT(){
-        String response = sendCommandToServer("Simon: hit elf");
-        System.out.print(response);
+        String response = sendCommandToServer("Simon: get potion");
+        response = sendCommandToServer("Simon: get axe");
+        response = sendCommandToServer("Simon: get potion");
+        response = sendCommandToServer("Simon: goto forest");
+        response = sendCommandToServer("Simon: cut down tree and drink potion");
+        System.out.print(response+"\n");
+        System.out.print("============="+"\n");
+        response = sendCommandToServer("Simon: drink potion and look");
+        System.out.print(response+"\n");
+        System.out.print("============="+"\n");
+        response = sendCommandToServer("Simon: look and inv");
+        System.out.print(response+"\n"+"\n");
     }
 
 

@@ -4,19 +4,19 @@ package edu.uob;
 import edu.uob.Command.*;
 import edu.uob.Entity.*;
 
+import java.lang.Character;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 //TODO trigger->multiple gameAction???
-//TODO consumed -> Paths
+//TODO consumed -> Paths -> how to consumed
 //TODO there is more than one 'open' action possible - which one do you want to perform ?
-
+//TODO attack ll ->
 public class CommandParser {
     //find trigger->
     ArrayList<String> commands;
     EntityParser entityParser;
     ActionParser actionParser;
-    GameAction gameAction;
     Player player;
     public HashSet<String> builtinAction;
 
@@ -57,8 +57,9 @@ public class CommandParser {
             this.player = entityParser.playerMap.get(words[0]);
         }
 
-
-        HashSet<String> triggerWords = findTrigger();
+        HashSet<String> triggerWords = new HashSet<>();
+        triggerWords.clear();
+        triggerWords = findTrigger();
         String trigger = triggerParser(triggerWords);
 
         if (triggerWords.isEmpty() || trigger.equals("")){
@@ -76,20 +77,27 @@ public class CommandParser {
             intep.builtInIntepreter(trigger,result);
 
         }else if(actionParser.actions.containsKey(trigger)){
-            this.gameAction = actionParser.actions.get(trigger);
-            HashSet<String> entities = new HashSet<>();
-            for(String word: commands){
-                entities = entityCount(word,entities);
+            int gameActionCount = 0;
+            GameAction rightGameAction = new GameAction();
+            for(GameAction gameAction :actionParser.actions.get(trigger)){
+                HashSet<String> entities = new HashSet<>();
+                for(String word: commands){
+                    entities = entityCount(word,entities);
+                }
+                if(gameAction.subjects.containsAll(entities) && !entities.isEmpty()){
+                    rightGameAction = gameAction;
+                    gameActionCount +=1;
+                }
             }
-
-            if(gameAction.subjects.containsAll(entities)){
-                ActionIntep intep = new ActionIntep(commands,actionParser,player,gameAction,entityParser);
-                intep.actionFileIntepreter(trigger,result);
-            }else{
+            if(gameActionCount == 0){
                 result.append("[WARNING] invalid or no entities detected");
+            }else if (gameActionCount == 1){
+                ActionIntep intep = new ActionIntep(commands,actionParser,player,rightGameAction,entityParser);
+                intep.actionFileIntepreter(result);
+            }else if (gameActionCount > 1){
+                result.append("there is more than one "+ trigger +" action possible - which one do you want to perform ?");
             }
         }
-
     }
 
     private HashSet<String>  findTrigger() {
@@ -117,33 +125,91 @@ public class CommandParser {
         return entities;
     }
 
+    //find the only trigger depends on commandss
     private String triggerParser(HashSet<String> triggerWords){
         String trigger = "";
-        int count = 0;
-        if(triggerWords.size()>1) {
-            for (String triggerWord : triggerWords) {
-                if (actionParser.actions.containsKey(triggerWord)) {
-                    //entity check?
-                    for(String commandEntityCheck:commands){
-                        if(actionParser.actions.get(triggerWord).subjects.contains(commandEntityCheck)){
-                            trigger = triggerWord;
-                            count+=1;
-                        }
-                    }
-                } else if (builtinAction.contains(triggerWord)) {
-                    trigger = triggerWord;
-                    count+=1;
-                }
-            }
+        if(triggerWords.size()>1){
+            trigger = multipleTriggerParse(triggerWords);
         }else if(triggerWords.size() == 1){
             String[] triggerArray = triggerWords.toArray(new String[0]);
             trigger = triggerArray[0];
         }
-        if(count > 1){
-            trigger = "";
-        }
         return trigger;
     }
+
+    private String multipleTriggerParse(HashSet<String> triggerWords){
+            int count = 0;
+            String trigger = "";
+            for(String triggerWord : triggerWords){
+                System.out.print("this triggerWord is :" +triggerWord+"\n");
+                if(actionParser.actions.containsKey(triggerWord)){
+                    // open unlock -> check for further entity in command
+                    HashSet<String> entityCommand = findEntityCommands();
+                    HashSet<GameAction> gameActionHashSet = actionParser.actions.get(triggerWord);
+                    for(GameAction gameAction : gameActionHashSet){
+                        if(gameAction.subjects.containsAll(entityCommand) && !entityCommand.isEmpty()){
+                            trigger = triggerWord;
+                            count+=1;
+                            System.out.print("actions +1"+"\n");
+                        }
+                    }
+
+                }else if(builtinAction.contains(triggerWord)){
+                    trigger = triggerWord;
+                    count+=1;
+                    System.out.print("built in +1"+"\n");
+                }
+            }
+            if(count != 1){
+                trigger = "";
+            }
+        return trigger;
+    }
+
+    private HashSet<String> findEntityCommands(){
+        HashSet<String> entityCommand = new HashSet<>();
+        for(String command : commands){
+            entityParser.locations.values().forEach(location -> {
+                if(location.charactersMap.containsKey(command)
+                        || location.furnituresMap.containsKey(command)
+                        || location.artefactsMap.containsKey(command)
+                        || player.carryings.contains(command)){
+                    entityCommand.add(command);
+                }
+            });
+        }
+        return entityCommand;
+    }
+
+//    private String triggerParser(HashSet<String> triggerWords){
+//        String trigger = "";
+//        int count = 0;
+//        if(triggerWords.size()>1) {
+//            for (String triggerWord : triggerWords) {
+//                if (actionParser.actions.containsKey(triggerWord)) {
+//                    //entity check?
+//                    for(String commandEntityCheck : commands){
+//                        for(GameAction gameAction: actionParser.actions.get(trigger)){
+//                            if (gameAction.subjects.contains(commandEntityCheck)){
+//                                trigger = triggerWord;
+//                                count+=1;
+//                            }
+//                        }
+//                    }
+//                } else if (builtinAction.contains(triggerWord)) {
+//                    trigger = triggerWord;
+//                    count+=1;
+//                }
+//            }
+//        }else if(triggerWords.size() == 1){
+//            String[] triggerArray = triggerWords.toArray(new String[0]);
+//            trigger = triggerArray[0];
+//        }
+//        if(count > 1){
+//            trigger = "";
+//        }
+//        return trigger;
+//    }
 
 
 }

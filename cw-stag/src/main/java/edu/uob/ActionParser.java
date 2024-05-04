@@ -14,9 +14,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class ActionParser {
-    public HashMap<String, GameAction> actions;
+    public HashMap<String, HashSet<GameAction>> actions;
     public ActionParser(File actionsFile){
         actions = new HashMap<>();
         actionParse(actionsFile);
@@ -74,7 +75,13 @@ public class ActionParser {
         gameAction.setNarration(narrationString);
 
         for(String trigger : triggersName){
-            this.actions.put(trigger, gameAction);
+            if(this.actions.containsKey(trigger)){
+                //this.actions.put(trigger, gameAction);
+                this.actions.get(trigger).add(gameAction);
+            }else{
+                this.actions.put(trigger, new HashSet<GameAction>());
+                this.actions.get(trigger).add(gameAction);
+            }
         }
     }
 
