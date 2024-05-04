@@ -43,12 +43,14 @@ public class ActionIntep {
                     return result;
                 }
 
-
+            //if consumed is health
             }else if(gameAction.consumed.equals("health")){
                 player.playerHealthMinus();
 
-
+            }else if(locationCheck()){
+                consumedPaths();
             }else{
+                //produced
                 boolean flag = false;
                 for (String item : gameAction.subjects) {
                     if(player.carryings.contains(item)){
@@ -70,6 +72,7 @@ public class ActionIntep {
                 }
             }
             result.append(gameAction.narration);
+
             if(!player.playerHealthdetect()){
                 result.append("\n"+"you died and lost all of your items, you must return to the start of the game");
                 player.playerReset();
@@ -149,6 +152,28 @@ public class ActionIntep {
             }
 
         return false;
+    }
+
+    private boolean locationCheck(){
+        for (Location locationCheck : entityParser.locations.values()){
+            if(gameAction.consumed.contains(locationCheck.getName())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void consumedPaths(){
+        String currentLocationName = this.player.currentlocation.getName();
+        String toName = gameAction.consumed;
+        if(entityParser.paths.containsKey(currentLocationName)
+                && entityParser.paths.get(currentLocationName).equals(toName)){
+            entityParser.paths.remove(currentLocationName,toName);
+        }else if(entityParser.multiplePaths.containsKey(currentLocationName)
+                && entityParser.multiplePaths.get(currentLocationName).equals(toName)){
+            entityParser.multiplePaths.get(currentLocationName).remove(toName);
+        }
+
     }
 
 }
