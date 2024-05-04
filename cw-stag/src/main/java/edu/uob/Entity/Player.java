@@ -121,9 +121,6 @@ public class Player extends GameEntity {
             result.append("\n");
         }
 
-        //TODO after open cellar ,the forest disappear (multiple paths ERROR)
-        //TODO health trigger word
-        //TODO dead -> drop all the artefact in current place
         //show paths:
         Iterable<Map.Entry<String, String>> entries = entityParser.paths.entrySet();
         for (Map.Entry<String, String> entry : entries) {
