@@ -141,23 +141,24 @@ public class CommandParser {
             int count = 0;
             String trigger = "";
             for(String triggerWord : triggerWords){
-                System.out.print("this triggerWord is :" +triggerWord+"\n");
                 if(actionParser.actions.containsKey(triggerWord)){
                     // open unlock -> check for further entity in command
-                    HashSet<String> entityCommand = findEntityCommands();
+                    HashSet<String> entityCommand = new HashSet<>();
+                    for(String command : commands){
+                        entityCommand = entityCount(command,entityCommand);
+                    }
+                    //HashSet<String> entityCommand = findEntityCommands();
                     HashSet<GameAction> gameActionHashSet = actionParser.actions.get(triggerWord);
                     for(GameAction gameAction : gameActionHashSet){
                         if(gameAction.subjects.containsAll(entityCommand) && !entityCommand.isEmpty()){
                             trigger = triggerWord;
                             count+=1;
-                            System.out.print("actions +1"+"\n");
                         }
                     }
 
                 }else if(builtinAction.contains(triggerWord)){
                     trigger = triggerWord;
                     count+=1;
-                    System.out.print("built in +1"+"\n");
                 }
             }
             if(count != 1){
@@ -165,51 +166,4 @@ public class CommandParser {
             }
         return trigger;
     }
-
-    private HashSet<String> findEntityCommands(){
-        HashSet<String> entityCommand = new HashSet<>();
-        for(String command : commands){
-            entityParser.locations.values().forEach(location -> {
-                if(location.charactersMap.containsKey(command)
-                        || location.furnituresMap.containsKey(command)
-                        || location.artefactsMap.containsKey(command)
-                        || player.carryings.contains(command)){
-                    entityCommand.add(command);
-                }
-            });
-        }
-        return entityCommand;
-    }
-
-//    private String triggerParser(HashSet<String> triggerWords){
-//        String trigger = "";
-//        int count = 0;
-//        if(triggerWords.size()>1) {
-//            for (String triggerWord : triggerWords) {
-//                if (actionParser.actions.containsKey(triggerWord)) {
-//                    //entity check?
-//                    for(String commandEntityCheck : commands){
-//                        for(GameAction gameAction: actionParser.actions.get(trigger)){
-//                            if (gameAction.subjects.contains(commandEntityCheck)){
-//                                trigger = triggerWord;
-//                                count+=1;
-//                            }
-//                        }
-//                    }
-//                } else if (builtinAction.contains(triggerWord)) {
-//                    trigger = triggerWord;
-//                    count+=1;
-//                }
-//            }
-//        }else if(triggerWords.size() == 1){
-//            String[] triggerArray = triggerWords.toArray(new String[0]);
-//            trigger = triggerArray[0];
-//        }
-//        if(count > 1){
-//            trigger = "";
-//        }
-//        return trigger;
-//    }
-
-
 }
