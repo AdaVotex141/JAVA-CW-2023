@@ -30,75 +30,53 @@ public class ActionIntep {
 
     public StringBuilder actionFileIntepreter(String trigger,StringBuilder result){
         gameAction = actionParser.actions.get(trigger);
-        //check whether consumed is in the player's carryings or current location
-
         if (entityCheck()){
-            //if consumed is potion:
-            if(gameAction.consumed.equals("potion")){
-                if(player.carryings.contains("potion")){
-                    player.playerHealthAdd();
-                    moveToStoreRoom("potion");
-                }else{
-                    result.append("[warning] You don't have potion in inventory");
-                    return result;
-                }
-
-            //if consumed is health
-            }else if(gameAction.consumed.equals("health")){
-                player.playerHealthMinus();
-
-            }else if(locationCheck()){
-                consumedPaths();
-            }else{
-                //produced
-                boolean flag = false;
-                for (String item : gameAction.subjects) {
-                    if(player.carryings.contains(item)){
-                        //check the carryings?
-                        moveToStoreRoom(gameAction.consumed);
-                        //Produced:
-                        for(String produced: gameAction.produced){
-                            producedItem(produced);
-                        }
-                        flag = true;
+            if (!gameAction.consumed.isEmpty()){
+                for(String consumed : gameAction.consumed){
+                    if(consumed.equals("potion")){
+                        result.append(drinkPotion(result));
+                    }else if(consumed.equals("health")){
+                        player.playerHealthMinus();
+                    }else if(locationCheck()){
+                        consumedPaths(consumed);
+                    }else{
+                        moveToStoreRoom(consumed);
                     }
                 }
-                if(flag){
-                    result.append(gameAction.narration);
-                    return result;
-                }else{
-                    result.append("[warning]missing item");
-                    return result;
+            }
+            if(!gameAction.subjects.isEmpty()){
+                for (String produced : gameAction.produced) {
+                    producedItem(produced);
+                }
+
+                if(!player.playerHealthdetect()){
+                    result.append("\n"+"you died and lost all of your items, you must return to the start of the game");
+                    player.playerReset();
                 }
             }
             result.append(gameAction.narration);
-
-            if(!player.playerHealthdetect()){
-                result.append("\n"+"you died and lost all of your items, you must return to the start of the game");
-                player.playerReset();
-            }
-            return result;
         }else{
             result.append("[warning]Can't do it");
         }
-        return result;
+            return result;
     }
 
+
     private void moveToStoreRoom(String consumed){
-        if(player.carryings.contains(gameAction.consumed)){
-            player.carryings.remove(gameAction.consumed);
+        if(player.carryings.contains(consumed)){
+            player.carryings.remove(consumed);
         }
         //loop all the locations
         for(Location locationCheck : entityParser.locations.values()){
-            if(locationCheck.artefactsMap.containsKey(gameAction.consumed)){
-                Artefact consumedItem = locationCheck.artefactsMap.get(gameAction.consumed);
+            if(locationCheck.artefactsMap.containsKey(consumed)){
+                Artefact consumedItem = locationCheck.artefactsMap.get(consumed);
                 entityParser.getStoreRoom().setArtefact(consumedItem);
-                locationCheck.artefactsMap.remove(gameAction.consumed);
+                locationCheck.artefactsMap.remove(consumed);
             }
-            if(locationCheck.furnituresMap.containsKey(gameAction.consumed)){
-                Furniture item = locationCheck.furnituresMap.get(gameAction.consumed);
+            if(locationCheck.furnituresMap.containsKey(consumed)){
+                Furniture item = locationCheck.furnituresMap.get(consumed);
                 entityParser.getStoreRoom().setFurniture(item);
-                locationCheck.furnituresMap.remove(gameAction.consumed);
+                locationCheck.furnituresMap.remove(consumed);
             }
         }
     }
@@ -117,7 +95,6 @@ public class ActionIntep {
                 //entityParser.paths.put(player.currentlocation.getName(),locationCheck.getName());
             }
         }
-        //TODO check for items in other rooms
         //check storeRoom for items:
         Location storeRoom = entityParser.getStoreRoom();
         if(storeRoom.artefactsMap.containsKey(produced)){
@@ -156,16 +133,15 @@ public class ActionIntep {
 
     private boolean locationCheck(){
         for (Location locationCheck : entityParser.locations.values()){
-            if(gameAction.consumed.contains(locationCheck.getName())){
+            if(gameAction.consumed.equals(locationCheck.getName())){
                 return true;
             }
         }
         return false;
     }
 
-    private void consumedPaths(){
+    private void consumedPaths(String toName){
         String currentLocationName = this.player.currentlocation.getName();
-        String toName = gameAction.consumed;
         if(entityParser.paths.containsKey(currentLocationName)
                 && entityParser.paths.get(currentLocationName).equals(toName)){
             entityParser.paths.remove(currentLocationName,toName);
@@ -173,7 +149,17 @@ public class ActionIntep {
                 && entityParser.multiplePaths.get(currentLocationName).equals(toName)){
             entityParser.multiplePaths.get(currentLocationName).remove(toName);
         }
+    }
 
+    private StringBuilder drinkPotion(StringBuilder result){
+        if(player.carryings.contains("potion")){
+            player.playerHealthAdd();
+            moveToStoreRoom("potion");
+        }else{
+            result.append("[warning] You don't have potion in inventory");
+            return result;
+        }
+        return result;
     }
 
 }

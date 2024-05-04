@@ -4,13 +4,13 @@ import java.util.HashSet;
 
 public class GameAction{
     public HashSet<String> subjects;
-    public String consumed;
+    public HashSet<String> consumed;
     public HashSet<String> produced;
     public String narration;
 
     public GameAction(){
         subjects = new HashSet<>();
-        consumed = "";
+        consumed = new HashSet<>();
         produced = new HashSet<>();
         narration = null;
     }
@@ -20,7 +20,7 @@ public class GameAction{
     }
 
     public void setConsumed(String name){
-        this.consumed = name;
+        this.consumed.add(name);
     }
 
     public void setProduced(String name){
