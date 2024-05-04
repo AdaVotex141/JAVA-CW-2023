@@ -66,9 +66,11 @@ public class ActionIntep {
 
 
     private void moveToStoreRoom(String consumed){
-        // in the carryings -> actually in the storeroom already
-        if(player.carryings.contains(consumed)){
+        // in the carryings -
+        if(player.carryings.containsKey(consumed)){
+            Artefact item = player.carryings.get(consumed);
             player.carryings.remove(consumed);
+            entityParser.getStoreRoom().setArtefact(item);
         }
         //loop all the locations
         for(Location locationCheck : entityParser.locations.values()){
@@ -116,6 +118,11 @@ public class ActionIntep {
             player.currentlocation.setCharacter(item);
             storeRoom.charactersMap.remove(item);
         }
+        //check carryings for items:
+        if(player.carryings.containsKey(produced)){
+            Artefact item = player.carryings.get(produced);
+            player.currentlocation.setArtefact(item);
+        }
     }
 // check whether subject needed for this gameAction is in currentSpace
     private boolean entityCheck(){
@@ -124,7 +131,7 @@ public class ActionIntep {
             for(String subject : gameAction.subjects){
                 if(player.currentlocation.furnituresMap.containsKey(subject)
                         || player.currentlocation.charactersMap.containsKey(subject)
-                        || player.carryings.contains(subject)
+                        || player.carryings.containsKey(subject)
                         || player.currentlocation.artefactsMap.containsKey(subject)){
                     entitySet.add(subject);
                 }
@@ -162,7 +169,7 @@ public class ActionIntep {
     }
 
     private StringBuilder drinkPotion(StringBuilder result){
-        if(player.carryings.contains("potion")){
+        if(player.carryings.containsKey("potion")){
             player.playerHealthAdd();
             moveToStoreRoom("potion");
         }else{

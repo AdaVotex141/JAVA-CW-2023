@@ -120,6 +120,8 @@ public class CommandParser {
                 entities.add(word);
             }else if(locationCheck.charactersMap.containsKey(word)){
                 entities.add(word);
+            }else if(player.carryings.containsKey(word)){
+                entities.add(word);
             }
         }
         return entities;

@@ -3,12 +3,13 @@ package edu.uob.Entity;
 import edu.uob.*;
 import edu.uob.Command.GameAction;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
 public class Player extends GameEntity {
     public Location currentlocation;
-    public HashSet<String> carryings;
+    public HashMap<String,Artefact> carryings;
     private int health;
     public EntityParser entityParser;
 
@@ -16,7 +17,7 @@ public class Player extends GameEntity {
         super(name, description);
         this.entityParser = entityParser;
         currentlocation = entityParser.getBornLocation();
-        this.carryings = new HashSet<>();
+        this.carryings = new HashMap<>();
         this.health = 3;
     }
 
@@ -26,7 +27,7 @@ public class Player extends GameEntity {
         StringBuilder result = new StringBuilder();
         //result.append("Current Location:"+this.currentlocation.getName());
         if (!carryings.isEmpty()) {
-            for (String carrying : carryings) {
+            for (String carrying : carryings.keySet()) {
                 result.append(carrying + " ");
             }
         } else {
@@ -65,10 +66,10 @@ public class Player extends GameEntity {
     public boolean playerGet(Artefact item) {
         if (item instanceof Artefact) {
             Artefact itemArtefact = item;
-            Location storeRoom = entityParser.getStoreRoom();
-            storeRoom.setArtefact(item);
-            currentlocation.artefactsMap.remove(itemArtefact.getName());
-            carryings.add(itemArtefact.getName());
+            //Location storeRoom = entityParser.getStoreRoom();
+            //storeRoom.setArtefact(item);
+            currentlocation.artefactsMap.remove(itemArtefact.getName(),itemArtefact);
+            carryings.put(itemArtefact.getName(),itemArtefact);
             return true;
         }
         return false;
@@ -168,7 +169,7 @@ public class Player extends GameEntity {
 
     public void playerReset() {
         //drop all the thing in current
-        for (String carrying : carryings){
+        for (String carrying : carryings.keySet()){
             Location storeRoom = entityParser.getStoreRoom();
             if(storeRoom.artefactsMap.containsKey(carrying)){
                 Artefact item = storeRoom.artefactsMap.get(carrying);
@@ -179,7 +180,7 @@ public class Player extends GameEntity {
 
         //this.entityParser =  entityParser;
         currentlocation = entityParser.getBornLocation();
-        this.carryings = new HashSet<>();
+        this.carryings = new HashMap<>();
         this.health = 3;
     }
 

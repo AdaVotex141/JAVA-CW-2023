@@ -60,11 +60,10 @@ public class BuiltInIntep {
             case "drop":
                 Location storeRoom = entityParser.getStoreRoom();
                 for(String command:commands){
-                    if (storeRoom.artefactsMap.containsKey(command)
-                                    && player.carryings.contains(command)){
-                            Artefact itemDrop = storeRoom.artefactsMap.get(command);
+                    if (player.carryings.containsKey(command)){
+                            Artefact itemDrop = player.carryings.get(command);
                             player.currentlocation.setArtefact(itemDrop);
-                            storeRoom.artefactsMap.remove(command);
+                            //storeRoom.artefactsMap.remove(command);
                             player.carryings.remove(command);
                             result.append("[Drop "+itemDrop.getName()+ " success]");
                             return result;
