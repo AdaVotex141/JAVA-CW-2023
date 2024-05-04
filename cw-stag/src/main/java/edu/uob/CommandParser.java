@@ -11,7 +11,7 @@ import java.util.HashSet;
 //TODO trigger->multiple gameAction???
 //TODO consumed -> Paths -> how to consumed
 //TODO there is more than one 'open' action possible - which one do you want to perform ?
-//TODO attack ll ->
+
 public class CommandParser {
     //find trigger->
     ArrayList<String> commands;

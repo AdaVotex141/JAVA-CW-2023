@@ -137,20 +137,4 @@
         <narration>You blow the horn and as if by magic, a lumberjack appears !</narration>
     </action>
 
-    <action>
-        <triggers>
-            <keyphrase>burn</keyphrase>
-        </triggers>
-        <subjects>
-            <entity>log</entity>
-            <entity>forest</entity>
-        </subjects>
-        <consumed>
-            <entity>cabin</entity>
-        </consumed>
-        <produced>
-        </produced>
-        <narration>Your burn your path with a log</narration>
-    </action>
-
 </actions>
