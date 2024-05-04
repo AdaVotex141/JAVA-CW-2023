@@ -104,7 +104,7 @@ public class BuiltInIntep {
     }
 
     private Artefact itemParse(ArrayList<String> commands) {
-        Artefact itemPlayer = null;
+        Artefact itemPlayer;
         for(String oneCommand : commands){
             itemPlayer = player.currentlocation.artefactsMap.get(oneCommand);
             if(itemPlayer!=null){
@@ -129,10 +129,7 @@ public class BuiltInIntep {
                 }
             }
         }
-        if(count>1){
-            return false;
-        }
-        return true;
+        return count <= 1;
 
     }
 

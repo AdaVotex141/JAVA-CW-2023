@@ -94,7 +94,7 @@ public class ActionIntep {
             if(gameAction.produced.contains(locationCheck.getName())){
                 String currentLocationName = this.player.currentlocation.getName();
                 String toName = locationCheck.getName();
-                entityParser.multiplePaths.put(currentLocationName,new HashSet<String>());
+                entityParser.multiplePaths.put(currentLocationName,new HashSet<>());
                 entityParser.multiplePaths.get(currentLocationName).add(entityParser.paths.get(currentLocationName));
                 entityParser.multiplePaths.get(currentLocationName).add(toName);
                 entityParser.paths.remove(currentLocationName);
@@ -136,15 +136,12 @@ public class ActionIntep {
                     entitySet.add(subject);
                 }
             }
-            if(gameAction.subjects.equals(entitySet)){
-                return true;
-            }
-        return false;
+        return gameAction.subjects.equals(entitySet);
     }
 
     private boolean locationCheck(){
         for (Location locationCheck : entityParser.locations.values()){
-            if(gameAction.consumed.equals(locationCheck.getName())){
+            if(gameAction.consumed.contains(locationCheck.getName())){
                 return true;
             }
         }
