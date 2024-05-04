@@ -66,6 +66,7 @@ public class ActionIntep {
 
 
     private void moveToStoreRoom(String consumed){
+        // in the carryings -> actually in the storeroom already
         if(player.carryings.contains(consumed)){
             player.carryings.remove(consumed);
         }
@@ -123,7 +124,8 @@ public class ActionIntep {
             for(String subject : gameAction.subjects){
                 if(player.currentlocation.furnituresMap.containsKey(subject)
                         || player.currentlocation.charactersMap.containsKey(subject)
-                        || player.carryings.contains(subject)){
+                        || player.carryings.contains(subject)
+                        || player.currentlocation.artefactsMap.containsKey(subject)){
                     entitySet.add(subject);
                 }
             }
@@ -148,10 +150,12 @@ public class ActionIntep {
                 && entityParser.paths.get(currentLocationName).equals(toName)){
             entityParser.paths.remove(currentLocationName,toName);
         }else if(entityParser.multiplePaths.containsKey(currentLocationName)
-                && entityParser.multiplePaths.get(currentLocationName).equals(toName)){
+        && entityParser.multiplePaths.get(currentLocationName).contains(toName)){
             entityParser.multiplePaths.get(currentLocationName).remove(toName);
+            // if there are only one elemtn in multiplePaths, put this into paths set
             if(entityParser.multiplePaths.get(currentLocationName).size() == 1){
-                entityParser.paths.put(currentLocationName,toName);
+                String leftName = entityParser.multiplePaths.get(currentLocationName).iterator().next();
+                entityParser.paths.put(currentLocationName,leftName);
                 entityParser.multiplePaths.remove(currentLocationName);
             }
         }
