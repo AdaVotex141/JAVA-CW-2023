@@ -53,18 +53,14 @@ public class Extended {
 
     @Test
     void testHIT(){
-        String response = sendCommandToServer("Simon: get potion");
-        response = sendCommandToServer("Simon: get axe");
-        response = sendCommandToServer("Simon: get potion");
-        response = sendCommandToServer("Simon: goto forest");
-        response = sendCommandToServer("Simon: cut down tree and drink potion");
-        System.out.print(response+"\n");
-        System.out.print("============="+"\n");
-        response = sendCommandToServer("Simon: drink potion and look");
-        System.out.print(response+"\n");
-        System.out.print("============="+"\n");
-        response = sendCommandToServer("Simon: look and inv");
-        System.out.print(response+"\n"+"\n");
+        String response = sendCommandToServer("Simon: goto forest");
+        response = sendCommandToServer("Simon: get key");
+        response = sendCommandToServer("Simon: goto cabin");
+        //response = sendCommandToServer("Simon: unlock open key");
+        System.out.print(response);
+        response = sendCommandToServer("Simon: unlock key");
+        System.out.print(response);
+
     }
 
 
